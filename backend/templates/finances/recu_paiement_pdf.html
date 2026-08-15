@@ -1,0 +1,41 @@
+{% load finances_extras %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<style>
+    @page { size: A5; margin: 1.5cm; }
+    body { font-family: 'Helvetica', 'Arial', sans-serif; font-size: 10pt; color: #1a1a1a; }
+    .entete { text-align: center; border-bottom: 3px solid #1e3a8a; padding-bottom: 10px; margin-bottom: 16px; }
+    .entete .institut { font-size: 14pt; font-weight: bold; color: #1e3a8a; }
+    .entete .numero { font-size: 11pt; margin-top: 6px; color: #64748b; }
+    table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+    td { padding: 6px 4px; font-size: 10pt; }
+    td.label { color: #64748b; width: 40%; }
+    td.valeur { font-weight: 600; }
+    .montant-box { background-color: #eff6ff; border: 2px solid #1e3a8a; border-radius: 6px; padding: 12px; margin-top: 16px; text-align: center; }
+    .montant-box .montant { font-size: 18pt; font-weight: bold; color: #1e3a8a; }
+</style>
+</head>
+<body>
+    <div class="entete">
+        <div class="institut">IFP Perle d'Or</div>
+        <div class="numero">Reçu N° {{ paiement.numero_recu }}</div>
+    </div>
+    <table>
+        <tr><td class="label">Étudiant</td><td class="valeur">{{ paiement.inscription.etudiant.nom }} {{ paiement.inscription.etudiant.prenom }}</td></tr>
+        <tr><td class="label">Matricule</td><td class="valeur">{{ paiement.inscription.etudiant.matricule }}</td></tr>
+        <tr><td class="label">Type de frais</td><td class="valeur">{{ paiement.type_paiement }}</td></tr>
+        <tr><td class="label">Mode de paiement</td><td class="valeur">{{ paiement.get_mode_paiement_display }}</td></tr>
+        <tr><td class="label">Date</td><td class="valeur">{{ paiement.date_paiement }}</td></tr>
+        <tr><td class="label">Statut</td><td class="valeur">{{ paiement.get_statut_display }}</td></tr>
+    </table>
+    <div class="montant-box">
+        <div>Montant réglé</div>
+        <div class="montant">{{ paiement.montant|devise }}</div>
+    </div>
+    <div style="text-align:center; font-size:8pt; color:#9ca3af; margin-top:24px;">
+        Document généré automatiquement — {{ date_generation }}
+    </div>
+</body>
+</html>

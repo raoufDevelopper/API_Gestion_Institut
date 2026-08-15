@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<style>
+    @page { size: A4; margin: 1.5cm; }
+    body { font-family: 'Helvetica', 'Arial', sans-serif; font-size: 9.5pt; color: #1a1a1a; }
+    .entete { background-color: #991b1b; color: white; padding: 12px 18px; border-radius: 6px; margin-bottom: 16px; }
+    .entete .titre { font-size: 14pt; font-weight: bold; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #e2e8f0; padding: 6px 8px; font-size: 8.5pt; text-align: left; }
+    th { background-color: #fef2f2; color: #991b1b; }
+    .retard { color: #991b1b; font-weight: bold; }
+</style>
+</head>
+<body>
+    <div class="entete">
+        <div class="titre">Liste des emprunts en retard</div>
+        <div>Au {{ aujourd_hui }}</div>
+    </div>
+    <table>
+        <tr><th>Livre</th><th>Emprunteur</th><th>Date emprunt</th><th>Retour prévu</th><th>Jours de retard</th></tr>
+        {% for e in emprunts %}
+        <tr>
+            <td>{{ e.exemplaire.livre.titre }}</td>
+            <td>{{ e.emprunteur }}</td>
+            <td>{{ e.date_emprunt }}</td>
+            <td>{{ e.date_retour_prevue }}</td>
+            <td class="retard">{{ e.date_retour_prevue|timesince:aujourd_hui }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5">Aucun retard.</td></tr>
+        {% endfor %}
+    </table>
+    <div style="text-align:center; font-size:8pt; color:#9ca3af; margin-top:20px;">
+        Document généré automatiquement — IFP Perle d'Or — {{ date_generation }}
+    </div>
+</body>
+</html>

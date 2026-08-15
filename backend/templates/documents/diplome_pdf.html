@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<style>
+    @page { size: A4 landscape; margin: 2.5cm; }
+    body { font-family: 'Helvetica', 'Arial', sans-serif; color: #1a1a1a; }
+    .cadre { border: 4px double #1e3a8a; padding: 40px; height: 100%; text-align: center; }
+    .institut { font-size: 12pt; letter-spacing: 2px; text-transform: uppercase; color: #64748b; }
+    .titre { font-size: 28pt; font-weight: bold; color: #1e3a8a; margin: 20px 0; }
+    .texte { font-size: 13pt; line-height: 1.8; margin: 20px 0; }
+    .nom-etudiant { font-size: 18pt; font-weight: bold; text-decoration: underline; }
+    .mention { font-size: 14pt; font-style: italic; color: #1e3a8a; margin-top: 10px; }
+    .numero { position: absolute; bottom: 40px; left: 40px; font-size: 9pt; color: #9ca3af; }
+    .date { position: absolute; bottom: 40px; right: 40px; font-size: 10pt; }
+    .signature-zone { margin-top: 60px; display: flex; justify-content: space-around; }
+    .signature-bloc { text-align: center; font-size: 9pt; color: #64748b; }
+    .signature-ligne { border-top: 1px solid #9ca3af; width: 180px; margin-top: 50px; padding-top: 6px; }
+</style>
+</head>
+<body>
+    <div class="cadre">
+        <div class="institut">IFP Perle d'Or — Institut de Formation Professionnelle</div>
+        <div class="titre">DIPLÔME</div>
+        <div class="texte">
+            Ce document certifie que
+        </div>
+        <div class="nom-etudiant">{{ diplome.etudiant.nom }} {{ diplome.etudiant.prenom }}</div>
+        <div class="texte">
+            a satisfait à l'ensemble des exigences académiques et obtient
+            ce diplôme au titre de l'année académique
+            <strong>{{ diplome.deliberation.annee_academique }}</strong>.
+        </div>
+        {% if diplome.mention %}
+        <div class="mention">Mention : {{ diplome.mention }}</div>
+        {% endif %}
+        <div class="signature-zone">
+            <div class="signature-bloc">
+                <div class="signature-ligne">Le Directeur Général</div>
+            </div>
+            <div class="signature-bloc">
+                <div class="signature-ligne">Cachet de l'institut</div>
+            </div>
+        </div>
+        <div class="numero">N° {{ diplome.numero_diplome }}</div>
+        <div class="date">Délivré le {{ diplome.date_obtention }}</div>
+    </div>
+</body>
+</html>

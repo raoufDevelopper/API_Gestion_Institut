@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<style>
+    @page { size: A4; margin: 2.5cm; }
+    body { font-family: 'Helvetica', 'Arial', sans-serif; color: #1a1a1a; }
+    .entete { text-align: center; border-bottom: 3px solid #1e3a8a; padding-bottom: 16px; margin-bottom: 30px; }
+    .entete .institut { font-size: 15pt; font-weight: bold; color: #1e3a8a; }
+    .titre { font-size: 18pt; font-weight: bold; text-align: center; text-transform: uppercase; margin: 20px 0; }
+    .texte { font-size: 12pt; line-height: 2; margin: 30px 20px; text-align: justify; }
+    .nom-etudiant { font-weight: bold; }
+    .footer-info { margin-top: 60px; display: flex; justify-content: space-between; font-size: 9pt; color: #64748b; }
+    .signature-zone { margin-top: 60px; text-align: right; padding-right: 40px; }
+    .signature-ligne { display: inline-block; border-top: 1px solid #9ca3af; width: 180px; padding-top: 6px; font-size: 9pt; color: #64748b; }
+</style>
+</head>
+<body>
+    <div class="entete">
+        <div class="institut">IFP Perle d'Or</div>
+        <div>Institut de Formation Professionnelle</div>
+    </div>
+    <div class="titre">{{ certificat.type_certificat.nom }}</div>
+    <div class="texte">
+        Nous soussignés, direction de l'IFP Perle d'Or, certifions que
+        <span class="nom-etudiant">{{ certificat.etudiant.nom }} {{ certificat.etudiant.prenom }}</span>,
+        matricule <strong>{{ certificat.etudiant.matricule }}</strong>,
+        est régulièrement inscrit(e) au sein de notre établissement.
+        <br><br>
+        Ce document est délivré à l'intéressé(e) pour servir et valoir ce que de droit.
+    </div>
+    <div class="signature-zone">
+        <div class="signature-ligne">Le Directeur Général</div>
+    </div>
+    <div class="footer-info">
+        <span>N° {{ certificat.numero }}</span>
+        <span>Émis le {{ certificat.date_emission }}</span>
+    </div>
+</body>
+</html>

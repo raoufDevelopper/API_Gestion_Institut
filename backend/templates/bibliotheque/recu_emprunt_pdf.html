@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<style>
+    @page { size: A5; margin: 1.5cm; }
+    body { font-family: 'Helvetica', 'Arial', sans-serif; font-size: 10pt; color: #1a1a1a; }
+    .entete { text-align: center; border-bottom: 3px solid #1e3a8a; padding-bottom: 10px; margin-bottom: 16px; }
+    .entete .institut { font-size: 14pt; font-weight: bold; color: #1e3a8a; }
+    table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+    td { padding: 6px 4px; font-size: 10pt; }
+    td.label { color: #64748b; width: 40%; }
+    td.valeur { font-weight: 600; }
+</style>
+</head>
+<body>
+    <div class="entete">
+        <div class="institut">IFP Perle d'Or — Bibliothèque</div>
+        <div>Reçu d'emprunt N° {{ emprunt.pk }}</div>
+    </div>
+    <table>
+        <tr><td class="label">Livre</td><td class="valeur">{{ emprunt.exemplaire.livre.titre }}</td></tr>
+        <tr><td class="label">Exemplaire</td><td class="valeur">{{ emprunt.exemplaire.code_exemplaire }}</td></tr>
+        <tr><td class="label">Emprunteur</td><td class="valeur">{{ emprunt.emprunteur }}</td></tr>
+        <tr><td class="label">Date d'emprunt</td><td class="valeur">{{ emprunt.date_emprunt }}</td></tr>
+        <tr><td class="label">Date de retour prévue</td><td class="valeur">{{ emprunt.date_retour_prevue }}</td></tr>
+    </table>
+    <div style="text-align:center; font-size:8pt; color:#9ca3af; margin-top:24px;">
+        Document généré automatiquement — {{ date_generation }}
+    </div>
+</body>
+</html>

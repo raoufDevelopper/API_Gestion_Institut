@@ -1,0 +1,61 @@
+{% load finances_extras %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<style>
+    @page { size: A4; margin: 1.5cm; }
+    body { font-family: 'Helvetica', 'Arial', sans-serif; font-size: 9.5pt; color: #1a1a1a; }
+    .entete { background-color: #1e3a8a; color: white; padding: 12px 18px; border-radius: 6px; margin-bottom: 16px; }
+    .entete .titre { font-size: 14pt; font-weight: bold; }
+    .recap { display: flex; gap: 10px; margin-bottom: 16px; }
+    .recap-item { flex: 1; text-align: center; padding: 10px; border-radius: 4px; background-color: #f8fafc; border: 1px solid #e2e8f0; }
+    .recap-item .valeur { font-size: 13pt; font-weight: bold; color: #1e3a8a; }
+    .recap-item .label { font-size: 8pt; color: #64748b; text-transform: uppercase; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+    th, td { border: 1px solid #e2e8f0; padding: 6px 8px; font-size: 8.5pt; text-align: left; }
+    th { background-color: #eff6ff; color: #1e3a8a; }
+    .section-titre { font-size: 10pt; font-weight: bold; color: #1e3a8a; margin: 12px 0 6px 0; }
+</style>
+</head>
+<body>
+    <div class="entete">
+        <div class="titre">Rapport de caisse — {{ session.date_session }}</div>
+        <div>Statut : {{ session.get_statut_display }}</div>
+    </div>
+    <div class="recap">
+        <div class="recap-item"><div class="valeur">{{ session.solde_ouverture|devise }}</div><div class="label">Solde ouverture</div></div>
+        <div class="recap-item"><div class="valeur">{{ session.total_encaisse_especes|devise }}</div><div class="label">Encaissé espèces</div></div>
+        <div class="recap-item"><div class="valeur">{{ session.total_depense_especes|devise }}</div><div class="label">Dépensé espèces</div></div>
+        <div class="recap-item"><div class="valeur">{{ session.solde_theorique|devise }}</div><div class="label">Solde théorique</div></div>
+        {% if session.solde_reel_fermeture is not None %}
+        <div class="recap-item"><div class="valeur">{{ session.solde_reel_fermeture|devise }}</div><div class="label">Solde réel</div></div>
+        {% endif %}
+    </div>
+    <div class="section-titre">Encaissements (espèces)</div>
+    <table>
+        <tr><th>Reçu</th><th>Étudiant</th><th>Type</th><th>Montant</th></tr>
+        {% for p in mouvements_paiements %}
+        <tr><td>{{ p.numero_recu }}</td><td>{{ p.inscription.etudiant }}</td><td>{{ p.type_paiement }}</td><td>{{ p.montant|devise }}</td></tr>
+        {% empty %}
+        <tr><td colspan="4">Aucun encaissement.</td></tr>
+        {% endfor %}
+    </table>
+    <div class="section-titre">Dépenses (espèces)</div>
+    <table>
+        <tr><th>Libellé</th><th>Catégorie</th><th>Montant</th></tr>
+        {% for d in mouvements_depenses %}
+        <tr><td>{{ d.libelle }}</td><td>{{ d.categorie }}</td><td>{{ d.montant|devise }}</td></tr>
+        {% empty %}
+        <tr><td colspan="3">Aucune dépense.</td></tr>
+        {% endfor %}
+    </table>
+    {% if session.observation %}
+    <div class="section-titre">Observation</div>
+    <p>{{ session.observation }}</p>
+    {% endif %}
+    <div style="text-align:center; font-size:8pt; color:#9ca3af; margin-top:20px;">
+        Document généré automatiquement — IFP Perle d'Or — {{ date_generation }}
+    </div>
+</body>
+</html>

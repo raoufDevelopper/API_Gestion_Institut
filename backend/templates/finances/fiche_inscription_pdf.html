@@ -1,0 +1,80 @@
+{% load finances_extras %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<style>
+    @page { size: A4; margin: 2cm 1.5cm; }
+    body { font-family: 'Helvetica', 'Arial', sans-serif; font-size: 11pt; color: #1a1a1a; }
+    .entete { background-color: #1e3a8a; color: white; padding: 14px 20px; border-radius: 6px; margin-bottom: 20px; }
+    .entete .titre { font-size: 15pt; font-weight: bold; }
+    .section { margin-bottom: 18px; }
+    .section-titre { font-size: 11pt; font-weight: bold; color: #1e3a8a; border-bottom: 1px solid #cbd5e1; padding-bottom: 4px; margin-bottom: 8px; text-transform: uppercase; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #e2e8f0; padding: 6px 8px; font-size: 9.5pt; text-align: left; }
+    th { background-color: #eff6ff; color: #1e3a8a; }
+    .total-row { font-weight: bold; background-color: #f8fafc; }
+    .statut-badge { display: inline-block; padding: 3px 10px; border-radius: 10px; font-size: 9pt; font-weight: bold; }
+    .statut-PAYE { background-color: #dcfce7; color: #166534; }
+    .statut-PARTIEL { background-color: #fef9c3; color: #854d0e; }
+    .statut-NON_PAYE { background-color: #fee2e2; color: #991b1b; }
+</style>
+</head>
+<body>
+    <div class="entete">
+        <div class="titre">Fiche d'inscription</div>
+        <div>{{ inscription.etudiant.matricule }} — {{ inscription.etudiant.nom }} {{ inscription.etudiant.prenom }}</div>
+    </div>
+    <div class="section">
+        <div class="section-titre">Informations</div>
+        <table>
+            <tr><td><strong>Classe</strong></td><td>{{ inscription.classe }}</td></tr>
+            <tr><td><strong>Année académique</strong></td><td>{{ inscription.annee_academique }}</td></tr>
+            <tr><td><strong>Date d'inscription</strong></td><td>{{ inscription.date_inscription }}</td></tr>
+            <tr><td><strong>Statut</strong></td><td>{{ inscription.get_statut_display }}</td></tr>
+        </table>
+    </div>
+    <div class="section">
+        <div class="section-titre">Frais appliqués</div>
+        <table>
+            <tr><th>Type</th><th>Montant dû</th><th>Payé</th><th>Reste</th><th>Statut</th></tr>
+            {% for f in inscription.frais.all %}
+            <tr>
+                <td>{{ f.type_paiement }}</td>
+                <td>{{ f.montant_du|devise }}</td>
+                <td>{{ f.montant_paye|devise }}</td>
+                <td>{{ f.reste_a_payer|devise }}</td>
+                <td><span class="statut-badge statut-{{ f.statut_paiement }}">{{ f.statut_paiement|statut_label }}</span></td>
+            </tr>
+            {% endfor %}
+            <tr class="total-row">
+                <td colspan="1">Total</td>
+                <td>{{ inscription.total_du|devise }}</td>
+                <td>{{ inscription.montant_paye|devise }}</td>
+                <td>{{ inscription.reste_a_payer|devise }}</td>
+                <td><span class="statut-badge statut-{{ inscription.statut_paiement }}">{{ inscription.statut_paiement|statut_label }}</span></td>
+            </tr>
+        </table>
+    </div>
+    <div class="section">
+        <div class="section-titre">Historique des paiements</div>
+        <table>
+            <tr><th>Reçu</th><th>Type</th><th>Montant</th><th>Date</th><th>Mode</th></tr>
+            {% for p in inscription.paiements.all %}
+            <tr>
+                <td>{{ p.numero_recu }}</td>
+                <td>{{ p.type_paiement }}</td>
+                <td>{{ p.montant|devise }}</td>
+                <td>{{ p.date_paiement }}</td>
+                <td>{{ p.get_mode_paiement_display }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">Aucun paiement enregistré.</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div style="text-align:center; font-size:8pt; color:#9ca3af; margin-top:20px;">
+        Document généré automatiquement — IFP Perle d'Or — {{ date_generation }}
+    </div>
+</body>
+</html>

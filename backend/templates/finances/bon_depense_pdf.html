@@ -1,0 +1,41 @@
+{% load finances_extras %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<style>
+    @page { size: A5; margin: 1.5cm; }
+    body { font-family: 'Helvetica', 'Arial', sans-serif; font-size: 10pt; color: #1a1a1a; }
+    .entete { text-align: center; border-bottom: 3px solid #1e3a8a; padding-bottom: 10px; margin-bottom: 16px; }
+    .entete .institut { font-size: 14pt; font-weight: bold; color: #1e3a8a; }
+    table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+    td { padding: 6px 4px; font-size: 10pt; }
+    td.label { color: #64748b; width: 40%; }
+    td.valeur { font-weight: 600; }
+    .montant-box { background-color: #fef2f2; border: 2px solid #991b1b; border-radius: 6px; padding: 12px; margin-top: 16px; text-align: center; }
+    .montant-box .montant { font-size: 18pt; font-weight: bold; color: #991b1b; }
+</style>
+</head>
+<body>
+    <div class="entete">
+        <div class="institut">IFP Perle d'Or</div>
+        <div>Bon de dépense N° {{ depense.pk }}</div>
+    </div>
+    <table>
+        <tr><td class="label">Libellé</td><td class="valeur">{{ depense.libelle }}</td></tr>
+        <tr><td class="label">Catégorie</td><td class="valeur">{{ depense.categorie }}</td></tr>
+        <tr><td class="label">Mode de paiement</td><td class="valeur">{{ depense.get_mode_paiement_display }}</td></tr>
+        <tr><td class="label">Date</td><td class="valeur">{{ depense.date_depense }}</td></tr>
+        <tr><td class="label">Statut</td><td class="valeur">{{ depense.get_statut_display }}</td></tr>
+        <tr><td class="label">Demandé par</td><td class="valeur">{{ depense.demande_par|default:"—" }}</td></tr>
+        <tr><td class="label">Approuvé par</td><td class="valeur">{{ depense.approuve_par|default:"—" }}</td></tr>
+    </table>
+    <div class="montant-box">
+        <div>Montant</div>
+        <div class="montant">{{ depense.montant|devise }}</div>
+    </div>
+    <div style="text-align:center; font-size:8pt; color:#9ca3af; margin-top:24px;">
+        Document généré automatiquement — {{ date_generation }}
+    </div>
+</body>
+</html>

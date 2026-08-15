@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<style>
+    @page { size: A4; margin: 1.5cm; }
+    body { font-family: 'Helvetica', 'Arial', sans-serif; font-size: 9pt; color: #1a1a1a; }
+    .entete { background-color: #1e3a8a; color: white; padding: 12px 18px; border-radius: 6px; margin-bottom: 18px; }
+    .entete .titre { font-size: 14pt; font-weight: bold; }
+    .entete .details { font-size: 9pt; opacity: 0.9; margin-top: 3px; }
+    .fiche-etudiant { page-break-inside: avoid; margin-bottom: 24px; border: 1px solid #cbd5e1; border-radius: 4px; padding: 12px; }
+    .fiche-etudiant h2 { font-size: 11pt; color: #1e3a8a; margin: 0 0 8px 0; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+    th, td { border: 1px solid #e2e8f0; padding: 5px 6px; text-align: left; font-size: 8pt; }
+    th { background-color: #eff6ff; color: #1e3a8a; }
+    .moyenne-generale { font-weight: bold; color: #1e3a8a; }
+    .mention { display: inline-block; background-color: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 10px; font-size: 8pt; }
+</style>
+</head>
+<body>
+    <div class="entete">
+        <div class="titre">Relevé de notes — {{ classe }}</div>
+        <div class="details">Année académique : {{ annee_academique }} — Période : {{ periode }}</div>
+    </div>
+    {% for releve in releves %}
+    <div class="fiche-etudiant">
+        <h2>{{ releve.etudiant.matricule }} — {{ releve.etudiant.nom }} {{ releve.etudiant.prenom }}</h2>
+        {% for detail in releve.details_semestres %}
+        <table>
+            <tr><th colspan="3">{{ detail.semestre }}</th></tr>
+            <tr><th>Matière</th><th>Coefficient</th><th>Moyenne</th></tr>
+            {% for ligne in detail.detail_matieres %}
+            <tr>
+                <td>{{ ligne.matiere }}</td>
+                <td>{{ ligne.coefficient }}</td>
+                <td>{{ ligne.moyenne|default:"—" }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="2" class="moyenne-generale">Moyenne générale</td>
+                <td class="moyenne-generale">{{ detail.moyenne_generale|default:"—" }}</td>
+            </tr>
+        </table>
+        <span class="mention">{{ detail.mention }}</span>
+        {% endfor %}
+        {% if releve.moyenne_annuelle %}
+        <p style="margin-top:10px;"><strong>Moyenne annuelle :</strong> {{ releve.moyenne_annuelle }} — <span class="mention">{{ releve.mention_annuelle }}</span></p>
+        {% endif %}
+    </div>
+    {% endfor %}
+    <div style="text-align:center; font-size:8pt; color:#9ca3af; margin-top:20px;">
+        Document généré automatiquement — IFP Perle d'Or — {{ date_generation }}
+    </div>
+</body>
+</html>

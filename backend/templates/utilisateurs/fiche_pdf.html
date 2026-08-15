@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<style>
+    @page {
+        size: A4;
+        margin: 2cm 1.5cm;
+    }
+    body {
+        font-family: 'Helvetica', 'Arial', sans-serif;
+        color: #1a1a1a;
+        font-size: 11pt;
+    }
+    .entete {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 3px solid #1e3a8a;
+        padding-bottom: 12px;
+        margin-bottom: 24px;
+    }
+    .entete .institut {
+        font-size: 16pt;
+        font-weight: bold;
+        color: #1e3a8a;
+    }
+    .entete .sous-titre {
+        font-size: 9pt;
+        color: #64748b;
+        margin-top: 2px;
+    }
+   .entete .type-fiche {
+        background-color: #1e3a8a;
+        color: white;
+        padding: 6px 16px;
+        border-radius: 4px;
+        font-size: 10pt;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    .bloc-profil {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 28px;
+    }
+    .photo-container {
+        width: 110px;
+        height: 130px;
+        border: 2px solid #1e3a8a;
+        border-radius: 4px;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+    .photo-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .photo-placeholder {
+        width: 100%;
+        height: 100%;
+        background-color: #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #9ca3af;
+        font-size: 9pt;
+        text-align: center;
+    }
+    .identite h1 {
+        font-size: 18pt;
+        margin: 0 0 4px 0;
+        color: #111827;
+    }
+    .identite .matricule {
+        display: inline-block;
+        background-color: #eff6ff;
+        color: #1e3a8a;
+        padding: 3px 10px;
+        border-radius: 12px;
+        font-size: 10pt;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+    .identite .statut {
+        display: inline-block;
+        margin-left: 6px;
+        padding: 3px 10px;
+        border-radius: 12px;
+        font-size: 9pt;
+        font-weight: bold;
+        background-color: #dcfce7;
+        color: #166534;
+    }
+    .section {
+        margin-bottom: 20px;
+    }
+    .section-titre {
+        font-size: 11pt;
+        font-weight: bold;
+        color: #1e3a8a;
+        border-bottom: 1px solid #cbd5e1;
+        padding-bottom: 4px;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+    }
+    table.infos {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    table.infos td {
+        padding: 6px 4px;
+        vertical-align: top;
+        width: 50%;
+    }
+    table.infos .label {
+        color: #64748b;
+        font-size: 9pt;
+        text-transform: uppercase;
+        display: block;
+    }
+    table.infos .valeur {
+        font-size: 11pt;
+        font-weight: 600;
+        color: #111827;
+    }
+    .documents-liste {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .documents-liste li {
+        padding: 6px 10px;
+        background-color: #f8fafc;
+        border-left: 3px solid #1e3a8a;
+        margin-bottom: 6px;
+        font-size: 10pt;
+    }
+    .pied-page {
+        position: fixed;
+        bottom: -1.2cm;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 8pt;
+        color: #9ca3af;
+        border-top: 1px solid #e5e7eb;
+        padding-top: 6px;
+    }
+</style>
+</head>
+<body>
+    <div class="entete">
+        <div>
+            <div class="institut">IFP Perle d'Or</div>
+            <div class="sous-titre">Institut de Formation Professionnelle</div>
+        </div>
+        <div class="type-fiche">Fiche {{ type_fiche }}</div>
+    </div>
+    <div class="bloc-profil">
+        <div class="photo-container">
+            {% if photo_url %}
+                <img src="{{ photo_url }}" alt="Photo">
+            {% else %}
+                <div class="photo-placeholder">Aucune photo</div>
+            {% endif %}
+        </div>
+        <div class="identite">
+            <h1>{{ nom }} {{ prenom }}</h1>
+            <span class="matricule">{{ matricule }}</span>
+            {% if statut %}<span class="statut">{{ statut }}</span>{% endif %}
+        </div>
+    </div>
+    <div class="section">
+        <div class="section-titre">Informations personnelles</div>
+        <table class="infos">
+            <tr>
+                <td><span class="label">Sexe</span><span class="valeur">{{ sexe }}</span></td>
+                <td><span class="label">Date de naissance</span><span class="valeur">{{ date_naissance }}</span></td>
+            </tr>
+            <tr>
+                <td><span class="label">Téléphone</span><span class="valeur">{{ telephone|default:"—" }}</span></td>
+                <td><span class="label">Email</span><span class="valeur">{{ email|default:"—" }}</span></td>
+            </tr>
+            <tr>
+                <td colspan="2"><span class="label">Adresse</span><span class="valeur">{{ adresse|default:"—" }}</span></td>
+            </tr>
+        </table>
+    </div>
+    {% if type_fiche == "Étudiant" %}
+    <div class="section">
+        <div class="section-titre">Informations académiques</div>
+        <table class="infos">
+            <tr>
+                <td><span class="label">Spécialité</span><span class="valeur">{{ specialite|default:"—" }}</span></td>
+                <td><span class="label">Date d'inscription</span><span class="valeur">{{ date_inscription }}</span></td>
+            </tr>
+        </table>
+    </div>
+    <div class="section">
+        <div class="section-titre">Tuteur / Contact d'urgence</div>
+        <table class="infos">
+            <tr>
+                <td><span class="label">Nom du tuteur</span><span class="valeur">{{ nom_tuteur|default:"—" }}</span></td>
+                <td><span class="label">Téléphone du tuteur</span><span class="valeur">{{ telephone_tuteur|default:"—" }}</span></td>
+            </tr>
+        </table>
+    </div>
+    {% endif %}
+    {% if type_fiche == "Personnel" or type_fiche == "Formateur" %}
+    <div class="section">
+        <div class="section-titre">Informations professionnelles</div>
+        <table class="infos">
+            <tr>
+                <td><span class="label">Poste</span><span class="valeur">{{ poste|default:"—" }}</span></td>
+                <td><span class="label">Fonction</span><span class="valeur">{{ fonction|default:"—" }}</span></td>
+            </tr>
+            <tr>
+                <td><span class="label">Date d'embauche</span><span class="valeur">{{ date_embauche|default:"—" }}</span></td>
+                {% if type_fiche == "Formateur" %}
+                <td><span class="label">Type de contrat</span><span class="valeur">{{ type_contrat|default:"—" }}</span></td>
+                {% endif %}
+            </tr>
+        </table>
+    </div>
+    {% endif %}
+    {% if type_fiche == "Formateur" %}
+    <div class="section">
+        <div class="section-titre">Enseignement</div>
+        <table class="infos">
+            <tr>
+                <td><span class="label">Filière</span><span class="valeur">{{ filiere|default:"—" }}</span></td>
+                <td><span class="label">Spécialité</span><span class="valeur">{{ specialite|default:"—" }}</span></td>
+            </tr>
+        </table>
+    </div>
+    {% endif %}
+    <div class="section">
+        <div class="section-titre">Documents joints</div>
+        <ul class="documents-liste">
+            {% for doc in documents %}
+                <li>{{ doc }}</li>
+            {% empty %}
+                <li>Aucun document renseigné.</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="pied-page">
+        Document généré automatiquement par le système de gestion IFP Perle d'Or — {{ date_generation }}
+    </div>
+</body>
+</html>

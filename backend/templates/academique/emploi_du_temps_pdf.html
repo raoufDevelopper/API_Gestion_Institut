@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<style>
+    @page {
+        size: A4 landscape;
+        margin: 1.5cm 1cm;
+    }
+    body {
+        font-family: 'Helvetica', 'Arial', sans-serif;
+        color: #1a1a1a;
+        font-size: 9pt;
+    }
+    .entete-semaine {
+        background-color: #1e3a8a;
+        color: white;
+        padding: 14px 20px;
+        border-radius: 6px;
+        margin-bottom: 18px;
+    }
+    .entete-semaine .titre {
+        font-size: 15pt;
+        font-weight: bold;
+        margin-bottom: 4px;
+    }
+    .entete-semaine .details {
+        font-size: 9pt;
+        opacity: 0.9;
+    }
+    .grille {
+        display: table;
+        width: 100%;
+        border-spacing: 6px;
+    }
+    .ligne-jours {
+        display: table-row;
+    }
+    .bloc-jour {
+        display: table-cell;
+        width: 14.28%;
+        vertical-align: top;
+        border: 1px solid #cbd5e1;
+        border-radius: 4px;
+    }
+    .bloc-jour .jour-entete {
+        background-color: #1e3a8a;
+        color: white;
+        text-align: center;
+        font-weight: bold;
+        font-size: 9pt;
+        padding: 6px 2px;
+        text-transform: uppercase;
+    }
+    .bloc-jour .contenu-jour {
+        padding: 6px 4px;
+        min-height: 300px;
+    }
+    .seance {
+        background-color: #eff6ff;
+        border-left: 3px solid #1e3a8a;
+        border-radius: 3px;
+        padding: 5px 6px;
+        margin-bottom: 6px;
+        font-size: 7.5pt;
+    }
+    .seance .horaire {
+        font-weight: bold;
+        color: #1e3a8a;
+        display: block;
+        margin-bottom: 2px;
+    }
+    .seance .matiere {
+        font-weight: 600;
+        display: block;
+    }
+    .seance .details-seance {
+        color: #64748b;
+        display: block;
+        margin-top: 2px;
+    }
+    .seance .type-badge {
+        display: inline-block;
+        background-color: #1e3a8a;
+        color: white;
+        font-size: 6.5pt;
+        padding: 1px 5px;
+        border-radius: 8px;
+        margin-top: 3px;
+    }
+    .aucune-seance {
+        color: #9ca3af;
+        font-size: 7.5pt;
+        text-align: center;
+        padding: 10px 0;
+        font-style: italic;
+    }
+    .pied-page {
+        position: fixed;
+        bottom: -1cm;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 8pt;
+        color: #9ca3af;
+    }
+</style>
+</head>
+<body>
+    <div class="entete-semaine">
+        <div class="titre">{{ nom_affiche }}</div>
+        <div class="details">
+            Classe : {{ classe }} — Semestre : {{ semestre }}
+            {% if annee_academique %} — Année académique : {{ annee_academique }}{% endif %}
+            {% if semaine_debut %} — Semaine du {{ semaine_debut }} au {{ semaine_fin }}{% endif %}
+        </div>
+    </div>
+    <div class="grille">
+        <div class="ligne-jours">
+            {% for jour_code, jour_nom, seances_jour in jours %}
+            <div class="bloc-jour">
+                <div class="jour-entete">{{ jour_nom }}</div>
+                <div class="contenu-jour">
+                    {% for seance in seances_jour %}
+                    <div class="seance">
+                        <span class="horaire">{{ seance.heure_debut }} - {{ seance.heure_fin }}</span>
+                        <span class="matiere">{{ seance.matiere }}</span>
+                        <span class="details-seance">{{ seance.formateur }}</span>
+                        <span class="details-seance">Salle : {{ seance.salle }}</span>
+                        <span class="type-badge">{{ seance.type_seance }}</span>
+                    </div>
+                    {% empty %}
+                    <div class="aucune-seance">Aucune séance</div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="pied-page">
+        Emploi du temps généré automatiquement — IFP Perle d'Or — {{ date_generation }}
+    </div>
+</body>
+</html>

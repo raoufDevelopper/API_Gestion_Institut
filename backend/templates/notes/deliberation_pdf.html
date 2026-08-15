@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<style>
+    @page { size: A4 landscape; margin: 1.5cm; }
+    body { font-family: 'Helvetica', 'Arial', sans-serif; font-size: 9pt; color: #1a1a1a; }
+    .entete { background-color: #1e3a8a; color: white; padding: 12px 18px; border-radius: 6px; margin-bottom: 16px; }
+    .entete .titre { font-size: 14pt; font-weight: bold; }
+    .entete .details { font-size: 9pt; opacity: 0.9; margin-top: 3px; }
+    .recap { display: flex; gap: 10px; margin-bottom: 16px; }
+    .recap-item { flex: 1; text-align: center; padding: 8px; border-radius: 4px; font-size: 9pt; font-weight: bold; }
+    .recap-admis { background-color: #dcfce7; color: #166534; }
+    .recap-rattrapage { background-color: #fef9c3; color: #854d0e; }
+    .recap-redoublant { background-color: #fee2e2; color: #991b1b; }
+    .recap-incomplet { background-color: #e5e7eb; color: #374151; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #e2e8f0; padding: 6px 8px; text-align: left; font-size: 8.5pt; }
+    th { background-color: #eff6ff; color: #1e3a8a; }
+    .decision { padding: 2px 8px; border-radius: 10px; font-size: 8pt; font-weight: bold; }
+    .decision-ADMIS { background-color: #dcfce7; color: #166534; }
+    .decision-RATTRAPAGE { background-color: #fef9c3; color: #854d0e; }
+    .decision-REDOUBLANT { background-color: #fee2e2; color: #991b1b; }
+    .decision-INCOMPLET { background-color: #e5e7eb; color: #374151; }
+</style>
+</head>
+<body>
+    <div class="entete">
+        <div class="titre">Procès-verbal de délibération — {{ classe }}</div>
+        <div class="details">Année académique : {{ annee_academique }} — Période : {{ periode }}</div>
+    </div>
+    <div class="recap">
+        <div class="recap-item recap-admis">Admis : {{ recapitulatif.admis }}</div>
+        <div class="recap-item recap-rattrapage">Rattrapage : {{ recapitulatif.rattrapage }}</div>
+        <div class="recap-item recap-redoublant">Redoublant : {{ recapitulatif.redoublant }}</div>
+        <div class="recap-item recap-incomplet">Incomplet : {{ recapitulatif.incomplet }}</div>
+    </div>
+    <table>
+        <tr>
+            <th>Matricule</th><th>Nom & Prénom</th><th>Moyenne</th>
+            <th>Crédits obtenus</th><th>Crédits requis</th><th>Décision</th>
+        </tr>
+        {% for r in resultats %}
+        <tr>
+            <td>{{ r.etudiant.matricule }}</td>
+            <td>{{ r.etudiant.nom }} {{ r.etudiant.prenom }}</td>
+            <td>{{ r.moyenne_generale|default:"—" }}</td>
+            <td>{{ r.credits_obtenus }}</td>
+            <td>{{ r.credits_requis }}</td>
+            <td><span class="decision decision-{{ r.decision }}">{{ r.get_decision_display }}</span></td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div style="text-align:center; font-size:8pt; color:#9ca3af; margin-top:20px;">
+        Document généré automatiquement — IFP Perle d'Or — {{ date_generation }}
+    </div>
+</body>
+</html>

@@ -1,0 +1,30 @@
+from django.urls import path
+from . import views
+app_name = 'finances'
+urlpatterns = [
+    path('dashboard/', views.dashboard, name='dashboard'),
+    path('categories-depense/', views.liste_creer_categories_depense, name='liste_creer_categories_depense'),
+    path('categories-depense/<int:pk>/', views.detail_categorie_depense, name='detail_categorie_depense'),
+    path('types-paiement/', views.liste_creer_types_paiement, name='liste_creer_types_paiement'),
+    path('types-paiement/<int:pk>/', views.detail_type_paiement, name='detail_type_paiement'),
+    path('tarifs/', views.liste_creer_tarifs, name='liste_creer_tarifs'),
+    path('tarifs/<int:pk>/', views.detail_tarif, name='detail_tarif'),
+    path('tarifs/simulateur/', views.simulateur_tarif, name='simulateur_tarif'),
+    path('inscriptions/', views.liste_creer_inscriptions, name='liste_creer_inscriptions'),
+    path('inscriptions/<int:pk>/', views.detail_inscription, name='detail_inscription'),
+    path('inscriptions/<int:pk>/pdf/', views.fiche_inscription_pdf, name='fiche_inscription_pdf'),
+    path('inscriptions/<int:inscription_pk>/frais/ajouter/', views.frais_ajouter, name='frais_ajouter'),
+    path('tarif-suggere/', views.tarif_suggere, name='tarif_suggere'),
+    path('paiements/', views.liste_creer_paiements, name='liste_creer_paiements'),
+    path('paiements/<int:pk>/', views.detail_paiement, name='detail_paiement'),
+    path('paiements/<int:pk>/pdf/', views.recu_paiement_pdf, name='recu_paiement_pdf'),
+    path('depenses/', views.liste_creer_depenses, name='liste_creer_depenses'),
+    path('depenses/<int:pk>/', views.detail_depense, name='detail_depense'),
+    path('depenses/<int:pk>/pdf/', views.bon_depense_pdf, name='bon_depense_pdf'),
+    path('caisse/', views.liste_ouvrir_caisse, name='liste_ouvrir_caisse'),
+    path('caisse/<int:pk>/', views.detail_caisse, name='detail_caisse'),
+    path('caisse/<int:pk>/fermer/', views.fermer_caisse, name='fermer_caisse'),
+    path('caisse/<int:pk>/pdf/', views.rapport_caisse_pdf, name='rapport_caisse_pdf'),
+    path('bourses/', views.liste_creer_bourses, name='liste_creer_bourses'),
+    path('bourses/<int:pk>/', views.detail_bourse, name='detail_bourse'),
+]
