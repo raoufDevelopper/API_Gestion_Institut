@@ -4,6 +4,10 @@ export const login = (email, password) => {
   return api.post('auth/login/', { email, password });
 };
 
+export const logout = (refreshToken) => {
+  return api.post('auth/logout/', { refresh: refreshToken });
+};
+
 export const register = (formData) => {
   return api.post('auth/register/', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },

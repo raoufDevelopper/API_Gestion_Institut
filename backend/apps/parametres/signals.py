@@ -19,6 +19,7 @@ def notifier_connexion(sender, request, user, **kwargs):
         message=f"Vous vous êtes connecté avec succès.",
         type_notification='info',
     )
+
 @receiver(user_logged_out)
 def notifier_deconnexion(sender, request, user, **kwargs):
     if user:
@@ -41,6 +42,8 @@ def notifier_etudiant(sender, instance, created, **kwargs):
             message=f"{instance.matricule} - {instance.nom} {instance.prenom}",
             type_notification='succes' if created else 'info',
         )
+
+
 @receiver(post_save, sender=Personnel)
 def notifier_personnel(sender, instance, created, **kwargs):
     for admin in _superusers_et_admins():
@@ -50,6 +53,8 @@ def notifier_personnel(sender, instance, created, **kwargs):
             message=f"{instance.matricule} - {instance.nom} {instance.prenom}",
             type_notification='succes' if created else 'info',
         )
+
+
 @receiver(post_save, sender=Formateur)
 def notifier_formateur(sender, instance, created, **kwargs):
     for admin in _superusers_et_admins():
@@ -86,6 +91,9 @@ def notifier_seance(sender, instance, created, **kwargs):
 
 
 
+
+
+
 # ---------- NOTES / DELIBERATIONS ----------
 @receiver(post_save, sender=Deliberation)
 def notifier_deliberation(sender, instance, created, **kwargs):
@@ -97,6 +105,8 @@ def notifier_deliberation(sender, instance, created, **kwargs):
             type_notification='succes' if instance.decision == 'ADMIS' else 'avertissement',
             envoyer_email=True,
         )
+
+
 
 
 
@@ -156,6 +166,8 @@ def notifier_caisse(sender, instance, created, **kwargs):
 
 
 from apps.bibliotheque.models import Livre, Emprunt, Reservation, Penalite
+
+
 # ---------- LIVRE (catalogue) ----------
 @receiver(post_save, sender=Livre)
 def notifier_livre(sender, instance, created, **kwargs):
@@ -166,6 +178,11 @@ def notifier_livre(sender, instance, created, **kwargs):
             message=f"{instance.titre} — {instance.auteur}",
             type_notification='succes' if created else 'info',
         )
+
+
+
+
+
 # ---------- EMPRUNT ----------
 @receiver(post_save, sender=Emprunt)
 def notifier_emprunt(sender, instance, created, **kwargs):
@@ -194,6 +211,11 @@ def notifier_emprunt(sender, instance, created, **kwargs):
             message=str(instance),
             type_notification='info',
         )
+
+
+
+
+
 # ---------- RESERVATION ----------
 @receiver(post_save, sender=Reservation)
 def notifier_reservation(sender, instance, created, **kwargs):
@@ -217,6 +239,11 @@ def notifier_reservation(sender, instance, created, **kwargs):
             type_notification='succes',
             envoyer_email=True,
         )
+
+
+
+
+
 # ---------- PENALITE ----------
 @receiver(post_save, sender=Penalite)
 def notifier_penalite(sender, instance, created, **kwargs):

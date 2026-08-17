@@ -12,6 +12,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from django.contrib.auth import authenticate
 
+from apps.parametres.services import creer_notification
+
 from .models import User, Role, Permission
 
 from .serializers import UserSerializer, RoleSerializer, PermissionSerializer
@@ -50,6 +52,13 @@ def login_view(request):
 
     permissions = list(user.role.permissions.values_list('code', flat=True)) if user.role else []
 
+    creer_notification(
+        destinataire=user,
+        titre="Connexion réussie",
+        message="Vous vous êtes connecté avec succès.",
+        type_notification='info',
+    )
+
     return Response({
         'access': str(refresh.access_token),
         'refresh': str(refresh),
@@ -58,19 +67,49 @@ def login_view(request):
             'username': user.username,
             'email': user.email,
             'role': user.role.nom if user.role else None,
+            'photo_profil': request.build_absolute_uri(user.photo_profil.url) if user.photo_profil else None,
             'permissions': permissions,
         }
     })
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def me_view(request):
     user = request.user
     permissions = list(user.role.permissions.values_list('code', flat=True)) if user.role else []
-    serializer = UserSerializer(user)
-    data = serializer.data
-    data['permissions'] = permissions
-    return Response(data)
+    return Response({
+        'id': user.id,
+        'username': user.username,
+        'email': user.email,
+        'role': user.role.nom if user.role else None,
+        'photo_profil': request.build_absolute_uri(user.photo_profil.url) if user.photo_profil else None,
+        'permissions': permissions,
+    })
+
+
+
+
+
+def logout_view(request):
+    refresh_token = request.data.get('refresh')
+    if refresh_token:
+        try:
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+        except Exception:
+            pass  # token déjà invalide/expiré : rien à faire de plus
+    creer_notification(
+        destinataire=request.user,
+        titre="Déconnexion",
+        message="Vous avez été déconnecté.",
+        type_notification='info',
+    )
+    return Response({'detail': 'Déconnexion réussie.'})
+
+
+
+
 
 
 
@@ -87,41 +126,70 @@ def me_view(request):
 @permission_classes([AllowAny])
 @parser_classes([MultiPartParser, FormParser])
 def register_view(request):
+
     username = request.data.get('username')
+
     email = request.data.get('email')
+
     password1 = request.data.get('password1')
     password2 = request.data.get('password2')
-    role_nom = request.data.get('role')  # "Formateur" ou "Étudiant"
+
+    role_nom = request.data.get('role')
+
     photo_profil = request.FILES.get('photo_profil')
+
     if not all([username, email, password1, password2, role_nom]):
         return Response({'detail': 'Tous les champs obligatoires doivent être renseignés.'}, status=status.HTTP_400_BAD_REQUEST)
+
     if password1 != password2:
         return Response({'detail': 'Les mots de passe ne correspondent pas.'}, status=status.HTTP_400_BAD_REQUEST)
+
     if role_nom not in ('Formateur', 'Étudiant'):
         return Response({'detail': 'Rôle invalide.'}, status=status.HTTP_400_BAD_REQUEST)
+
     if User.objects.filter(email=email).exists():
         return Response({'detail': 'Cet email est déjà utilisé.'}, status=status.HTTP_400_BAD_REQUEST)
+
     if User.objects.filter(username=username).exists():
         return Response({'detail': "Ce nom d'utilisateur est déjà pris."}, status=status.HTTP_400_BAD_REQUEST)
+
     try:
         validate_password(password1)
     except Exception as e:
         return Response({'detail': list(e.messages)}, status=status.HTTP_400_BAD_REQUEST)
+
     role = Role.objects.filter(nom=role_nom).first()
+
     user = User(
         username=username,
         email=email,
         role=role,
-        is_active=False,  # en attente de validation par un administrateur
+        is_active=False,
     )
+
     user.set_password(password1)
+
     if photo_profil:
         user.photo_profil = photo_profil
+
     user.save()
+
+
+    # Notifie tous les administrateurs qu'un compte attend validation
+    for admin in User.objects.filter(is_superuser=True):
+        creer_notification(
+            destinataire=admin,
+            titre="Nouveau compte en attente de validation",
+            message=f"{user.username} ({user.email}) s'est inscrit en tant que {role_nom} et attend une validation.",
+            type_notification='avertissement',
+            envoyer_email=True,
+        )
+
     return Response(
         {'detail': "Votre compte a été créé et est en attente de validation par un administrateur."},
         status=status.HTTP_201_CREATED
     )
+
 
 
 
