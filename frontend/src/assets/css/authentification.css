@@ -21,7 +21,7 @@
 }
 
 
-.alert {
+.auth-container  .alert {
   width: 100%;
   max-width: 420px;
   padding: 8px 20px;
@@ -35,17 +35,17 @@
   margin-bottom: 10px;
 }
 
-.alert-error {
+.auth-container  .alert-error {
   background:rgba(239,68,68,.2);
   color:#ef4444 !important;
 }
 
-.alert-success {
+.auth-container  .alert-success {
   background:rgba(34,197,94,.2);
   color:#22c55e !important;
 }
 
-.auth-body {
+.auth-container  .auth-body {
   width: 100%;
   max-width: 420px;
   padding: 30px;
@@ -84,7 +84,7 @@
   }
 }
 
-.form {
+.auth-container .form {
   height: 450px !important;
   overflow: hidden;
   overflow-y: auto;
@@ -139,11 +139,11 @@
   color: #c2c1c1;
 }
 
-.form-group{
+.auth-container  .form-group{
   margin-bottom: 15px;
 }
 
-.form-group label{
+.auth-container .form-group label{
   display:block;
   font-size:13px;
   margin-top: 10px;
@@ -151,10 +151,8 @@
   line-height: 25px;
 }
 
-.auth-body 
-input, 
-select,
-textarea
+.auth-body input,
+.auth-body select
 {
   width:100%;
   padding:15px;
@@ -165,6 +163,7 @@ textarea
   color:#fff;
   margin-bottom: 10px;
 }
+
 
 .forgot-remember {
   margin: -5px 0 15px 0;
@@ -177,10 +176,10 @@ textarea
 
 .text-error {
   font-size: 13px;
-  color: rgb(255, 74, 74);
+  color: rgb(252, 72, 72);
 }
 
-.btn-primary{
+.btn-auth{
   width:100%;
   padding:13px;
   border:none;
@@ -191,16 +190,23 @@ textarea
   font-weight:bold;
   cursor:pointer;  
   text-decoration: none;
-  text-align: center;
+  
+  display: flex;
+  justify-content: center;
   transition: .3s;          
 }
 
-.btn-primary:hover{
+.btn-auth:hover{
   background: rgba(255,255,255, 0.2);
   color: white;
 }
 
-.tabs button {
+.auth-container .tabs {
+  border-bottom: none !important;
+  padding: 0 !important;
+}
+
+.auth-container .tabs button {
   font-size:13px;
   font-weight: 600;
   text-align: center;
@@ -212,7 +218,7 @@ textarea
   transition: .3s;
 }
 
-.tabs button:hover, 
+.auth-container .tabs button:hover, 
 .forgot-remember a:hover {
   text-decoration: underline;
 }

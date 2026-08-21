@@ -55,7 +55,7 @@ def login_view(request):
     creer_notification(
         destinataire=user,
         titre="Connexion réussie",
-        message="Vous vous êtes connecté avec succès.",
+        message=f"L'utilisateur {user} s'est connecté avec succès.",
         type_notification='info',
     )
 
@@ -102,7 +102,7 @@ def logout_view(request):
     creer_notification(
         destinataire=request.user,
         titre="Déconnexion",
-        message="Vous avez été déconnecté.",
+        message=f"L'utilisateur {request.user} s'est déconnecté.",
         type_notification='info',
     )
     return Response({'detail': 'Déconnexion réussie.'})

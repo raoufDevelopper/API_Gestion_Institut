@@ -14,6 +14,7 @@ img {
 
 
 
+
 /* ===========================
   STATUS
 =========================== */
@@ -43,6 +44,11 @@ img {
 .badge-danger{
   background:rgba(239,68,68,.2);
   color:#ef4444 !important;
+}
+
+.badge-blue { 
+  background: rgba(5, 5, 233, 0.28); 
+  color: #4441ff !important; 
 }
 
 .badge-orange{
@@ -146,7 +152,7 @@ body{
     left:0;
     top:0;
     height:100%;
-    transition:.3s;
+    transition:.5s;
     /*z-index:1000;*/
 }
 
@@ -239,7 +245,7 @@ body{
     width: 25px;
     height: 25px;
     color: var(--text);
-    transition: .3s;
+    transition: .2s;
 }
 
 .profile-box .contact a i:hover{
@@ -312,7 +318,11 @@ body{
 .dropdown-btn {
     color: #969393;
     text-transform: uppercase;
+    padding: 10px 12px !important;
     font-size: 12px !important; 
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.2px;
+    line-height: 22px;
 }
 
 
@@ -324,25 +334,18 @@ body{
     padding: 20px 10px;
 }
 
-.dropdown-btn span i{
-    width: 20px;
-    height: 20px;
-}
 
-.dropdown-content a{
+.dropdown-content a, .menu-vide, .recherche-vide{
     display:block;
     padding: 10px;
     letter-spacing: 2px;
+    line-height: 20px;
     font-family: Arial, Helvetica, sans-serif;
     text-decoration:none;
     color:var(--text);
     font-size: 13px;
     border-radius: 5px;
-}
-
-.dropdown-content a i {
-    width: 20px;
-    height: 20px;
+    margin-left: 5px;
 }
 
 .dropdown-content a:hover {
@@ -357,6 +360,16 @@ body{
     border-radius: 0;
     border-left: solid 2.5px rgb(127, 10, 182);
     border-right: solid 2.5px rgb(127, 10, 182);
+}
+
+.dropdown-content a i {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+}
+
+.menu-vide {
+    padding: 3px 8px !important;
 }
 
 .dropdown.active .dropdown-content{
@@ -407,7 +420,7 @@ body{
     display:flex;
     flex-direction:column;
     width:100%;
-    animation: slide-down 0.3s ease;
+    transition: .5s;
 }
 
 
@@ -495,16 +508,6 @@ button:hover,
     }
 }
 
-
-
-
-
-
-/*
-#root {
-  background: red;
-}
-*/
 
 
 
@@ -600,239 +603,23 @@ button:hover,
     padding: 15px;
 }
 
-.errorlist {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    margin-bottom: 20px;
-    margin-top: 5px;
+
+
+
+.notificationBtn {
+    position: relative; 
+    display: inline-flex; 
+    margin-left: auto;
 }
 
-.errorlist li {
-    text-decoration: none;
-    list-style: none;
-    background:rgba(239,68,68,.2);
-    color:#ef4444 !important;
-    border: none;
-    padding: 5px 15px;
-    font-size: 13px;
-    line-height: 22px;
+.notif-badge {
+    position:absolute; 
+    top:-6px; right:-8px; 
+    background:rgb(120, 14, 196); color:#fff; 
+    font-size:10px; font-weight:700; 
+    border-radius:20px; padding:1px 5px; 
+    min-width:16px; text-align:center;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* ============== NOTIFICATIONS ================= */
-/* --- Fond du modal --- */
-.modalNotif {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background:rgba(15,23,42,.75);
-    backdrop-filter:blur(5px);
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-}
-
-/* --- Contenu du modal --- */
-.modal-content-notif {
-    background: var(--card);
-    border-radius: 8px;
-    width: 100%;
-    max-width: 800px;
-    padding: 30px 40px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    max-height: 95vh;
-    position: relative;
-    overflow: hidden;
-    animation: slide-down 0.3s ease-out;
-}
-
-/* --- Bouton de fermeture --- */
-.closeNotif {
-    position: absolute;
-    top: 0;
-    right: 0;
-    font-size: 20px;
-    padding: 1px 6px;
-    background:linear-gradient(
-        135deg,
-        #400c7c,
-        #a14fff
-    );
-    border: none;
-    border-radius: 0 0 0 12px;
-    color: white;
-    cursor: pointer;
-    transition: .2s;
-}
-
-.closeNotif:hover {
-    background:linear-gradient(
-        135deg,
-        #a14fff,
-        #400c7c
-    );
-}
-
-.header_notif {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.header_notif h2 {
-    color: var(--text);
-    text-align: center;
-}
-
-.filter {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-.filter button {
-    background: var(--bg);
-    border: none;
-    border-radius: 5px;
-    padding: 6px 12px;
-    cursor: pointer;
-    color: var(--text);
-    font-weight: 500;
-    transition: 0.2s;
-}
-
-.filter button.active,
-.filter button:hover {
-    background:linear-gradient(
-        135deg,
-        #400c7c,
-        #a14fff
-    );
-    color: #fff;
-}
-
-/* --- Notifications --- */
-.notifications-container {
-    height: 400px;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    overflow: hidden;
-    overflow-y: auto;
-    scrollbar-width: none;
-}
-
-.notification {
-    line-height: 25px;
-    background: var(--bg);
-    border: none;
-    padding: 15px 18px;
-    border-radius: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: 0.3s;
-}
-
-.notification.unread {
-    background: var(--outline);
-    border-left: 5px solid green;
-}
-
-.notification-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.notification-title {
-    font-size: 15px;
-    font-weight: 600;
-    margin-bottom: 5px;
-}
-
-.notification-message {
-    font-size: 14px;
-    color: var(--text);
-    width: 95%;
-}
-
-.notification-time {
-    font-size: 12px;
-    color: #777;
-    margin-top: 4px;
-}
-
-.mark-read {
-    background: none;
-    border: 1px solid green;
-    color: green;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.mark-read:hover {
-    background: green;
-    color: #fff;
-}
-
-
-@media(max-width : 800px) 
-{
-
-    .notifications-container {
-        padding: 20px 0;
-    }
-
-    .notification-message {
-        width: 100%;
-    }
-
-    .header_notif h2 {
-        margin-bottom: 10px;
-    }
-
-    .notification {
-        flex-direction: column;
-        align-items: normal;
-        gap: 10px;
-    }
-
-    .notification button {
-        width: 100%;
-    }
-  
-    .mark-read {
-        align-self: flex-end;
-    }
-    
-}
 
 

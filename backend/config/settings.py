@@ -89,19 +89,6 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 #ajouté
-CORS_ALLOW_HEADERS = [
-    'accapt',
-    'accept-encoding',
-    'authorization',
-    'content-type',
-    'dnt',
-    'origin',
-    'user-agent',
-    'x-csrftoken',
-    'x-requested-with',
-]
-
-#ajouté
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',

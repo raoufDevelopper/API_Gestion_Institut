@@ -1,58 +1,86 @@
 import { useState, useEffect } from 'react';
-import api from '../../api/axiosConfig';
+import { useNavigate } from 'react-router-dom';
+import { getNotifications, toggleLecture } from '../../api/notifications';
+import { useAuth } from '../../context/AuthContext';
+import '../../assets/css/NotificationsModal.css'
+
+
+
+
+
+const ICONES_TYPE = {
+  info: 'fa-circle-info',
+  succes: 'fa-circle-check',
+  avertissement: 'fa-triangle-exclamation',
+  erreur: 'fa-circle-xmark',
+};
+function tempsEcoule(dateString) {
+  const minutes = Math.max(1, Math.round((Date.now() - new Date(dateString)) / 60000));
+  if (minutes < 60) return `il y a ${minutes} min`;
+  const heures = Math.round(minutes / 60);
+  if (heures < 24) return `il y a ${heures} h`;
+  return new Date(dateString).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+}
 function NotificationsModal({ ouvert, onFermer }) {
   const [notifications, setNotifications] = useState([]);
-  const [filtre, setFiltre] = useState('all');
+  const { rafraichirNotifications } = useAuth();
+  const navigate = useNavigate();
   useEffect(() => {
     if (ouvert) {
-      api.get('parametres/notifications/').then((res) => setNotifications(res.data));
+      getNotifications().then((res) => {
+        setNotifications(res.data.filter((n) => !n.lue));
+      });
     }
   }, [ouvert]);
   const marquerLue = async (id) => {
-    await api.patch(`parametres/notifications/${id}/lue/`);
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, lue: true } : n))
-    );
+    await toggleLecture(id);
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
+    rafraichirNotifications();
   };
-  const notificationsFiltrees = notifications.filter((n) => {
-    if (filtre === 'unread') return !n.lue;
-    if (filtre === 'read') return n.lue;
-    return true;
-  });
+  const voirToutes = () => {
+    onFermer();
+    navigate('/parametres/notifications');
+  };
   if (!ouvert) return null;
+  
+  
+  
   return (
-    <div id="notificationsModal" className="modalNotif">
-      <div className="modal-content-notif">
-        <span className="closeNotif" onClick={onFermer}>&times;</span>
-        <div className="header_notif">
-          <h2>Notifications</h2>
-          <div className="filter">
-            <button className={filtre === 'all' ? 'active' : ''} onClick={() => setFiltre('all')}>Toutes</button>
-            <button className={filtre === 'unread' ? 'active' : ''} onClick={() => setFiltre('unread')}>Non lues</button>
-            <button className={filtre === 'read' ? 'active' : ''} onClick={() => setFiltre('read')}>Lues</button>
-          </div>
-        </div>
-        <div className="notifications-container" id="notificationsList">
-          {notificationsFiltrees.map((notif) => (
-            <div key={notif.id} className={`notification ${!notif.lue ? 'unread' : ''}`}>
-              <div className="notification-info">
-                <div className="notification-title">{notif.titre}</div>
-                <div className="notification-message">{notif.message}</div>
-                <div className="notification-time">
-                  {new Date(notif.date_creation).toLocaleString('fr-FR')}
-                </div>
+    <div className="notif-modal-overlay" onClick={onFermer}>
+      <div className="notif-modal-panel" onClick={(e) => e.stopPropagation()}>
+        
+        
+        
+        
+        <div className="notif-modal-body">
+          {notifications.length === 0 && (
+            <div className="notif-modal-empty">
+              <i className="fas fa-bell-slash"></i>
+              <p>Aucune notification non lue.</p>
+            </div>
+          )}
+          {notifications.map((n, index) => (
+            <div
+              key={n.id}
+              className={`notif-modal-item type-${n.type_notification}`}
+              style={{ animationDelay: `${index * 0.08}s` }}
+            >
+              <div className={`notif-modal-icon type-${n.type_notification}`}>
+                <i className={`fas ${ICONES_TYPE[n.type_notification] || 'fa-bell'}`}></i>
               </div>
-              {!notif.lue && (
-                <button className="mark-read" onClick={() => marquerLue(notif.id)}>
-                  Marquer comme lue
-                </button>
-              )}
+              <div className="notif-modal-content">
+                <p className="notif-modal-title">{n.titre}</p>
+                <p className="notif-modal-message">{n.message}</p>
+                <span className="notif-modal-time">{tempsEcoule(n.date_creation)}</span>
+              </div>
+              <button className="notif-modal-check" onClick={() => marquerLue(n.id)} title="Marquer comme lue">
+                <i className="fas fa-check"></i>
+              </button>
             </div>
           ))}
-          {notificationsFiltrees.length === 0 && (
-            <p style={{ textAlign: 'center', padding: '20px' }}>Aucune notification.</p>
-          )}
         </div>
+
+      
       </div>
     </div>
   );

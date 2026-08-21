@@ -7,39 +7,65 @@ import Dashboard from './pages/Dashboard';
 import AbonnementExpire from './pages/AbonnementExpire';
 import NonAutorise from './pages/NonAutorise';
 import { ThemeProvider } from './context/ThemeContext';
+import Notifications from './pages/parametres/Notifications';
+import ParametresInstitut from './pages/parametres/ParametresInstitut';
+import { AlertProvider } from './context/AlertContext';
+import AlertPopup from './components/AlertPopup';
+import { ParametreProvider } from './context/ParametreContext';
+import Permissions from './pages/authentification/Permissions';
 
 
 function App() {
-  
   return (
-    
-    <BrowserRouter>
-    
-      <ThemeProvider>
-    
-        <AuthProvider>
-    
-          <Routes>
-            
-            <Route path="/login" element={<LoginRegister />} />
-            
-            <Route path="/abonnement-expire" element={<AbonnementExpire />} />
-            
-            <Route path="/non-autorise" element={<NonAutorise />} />
-            
-            <Route element={ <RouteProtegee> <Layout /> </RouteProtegee> }>
-              <Route path="/" element={<Dashboard />} />
-            </Route>
+    <ThemeProvider>
+      <AuthProvider>
+        <ParametreProvider>
+          <AlertProvider>
+            <BrowserRouter>
+              <Routes>
+                  
+                  <Route path="/login" element={<LoginRegister />} />
+                  
+                  <Route path="/abonnement-expire" element={<AbonnementExpire />} />
+                  
+                  <Route path="/non-autorise" element={<NonAutorise />} />
+                  
+                
+                  <Route element={ <RouteProtegee> <Layout /> </RouteProtegee> }>
+                    
+                    <Route path="/" element={<Dashboard />} />
+                    
+                    <Route path="/parametres/notifications" element={
+                      <RouteProtegee permission="gerer_parametres">
+                        <Notifications />
+                      </RouteProtegee>
+                    } />
 
-          </Routes>
-        
-        </AuthProvider>
-      
-      </ThemeProvider>
-    
-    </BrowserRouter>
+                    <Route path="/parametres/institut" element={
+                      <RouteProtegee permission="gerer_parametres">
+                        <ParametresInstitut />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/utilisateurs/permissions" element={
+                      <RouteProtegee permission="voir_permissions">
+                        <Permissions />
+                      </RouteProtegee>
+                    } />
+                                        
+                  </Route>
+                
+                </Routes>
+
+            </BrowserRouter>
+
+            <AlertPopup />
+          
+          </AlertProvider>
+        </ParametreProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
-
 }
 
 

@@ -155,7 +155,7 @@ function LoginRegister() {
                 pour le recupérer.
               </div>
 
-              <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
+              <button type="submit" className="btn btn-auth" disabled={isSubmitting}>
                 {isSubmitting ? 'Connexion...' : 'Se connecter'}
               </button>
           
@@ -243,7 +243,7 @@ function LoginRegister() {
     
               </div>
 
-              <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
+              <button type="submit" className="btn btn-auth" disabled={isSubmitting}>
                 {isSubmitting ? 'Création...' : 'Créer mon compte'}
               </button>
 

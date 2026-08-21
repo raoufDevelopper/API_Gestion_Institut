@@ -24,11 +24,13 @@ class ParametreInstitut(models.Model):
     directeur_general = models.CharField(max_length=150, blank=True, null=True)
     date_creation_institut = models.DateField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
-    # ---- 2. Identité visuelle ----
     logo = models.ImageField(upload_to='institut/logo/', blank=True, null=True)
+
+    # ---- 2. Identité visuelle ----
     favicon = models.ImageField(upload_to='institut/favicon/', blank=True, null=True)
     couleur_primaire = models.CharField(max_length=7, default='#1e3a8a')
     couleur_secondaire = models.CharField(max_length=7, default='#f59e0b')
+
     # ---- 3. Contact & adresse ----
     telephone = models.CharField(max_length=20, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
@@ -37,42 +39,49 @@ class ParametreInstitut(models.Model):
     ville = models.CharField(max_length=100, blank=True, null=True)
     pays = models.CharField(max_length=100, blank=True, null=True)
     boite_postale = models.CharField(max_length=50, blank=True, null=True)
+
     # ---- 4. Informations légales ----
     numero_agrement = models.CharField(max_length=100, blank=True, null=True)
     numero_rccm = models.CharField(max_length=100, blank=True, null=True)
     numero_contribuable = models.CharField(max_length=100, blank=True, null=True)
     representant_legal = models.CharField(max_length=150, blank=True, null=True)
+
     # ---- 5. Paramètres académiques ----
     note_admission_minimale = models.DecimalField(max_digits=4, decimal_places=2, default=10.00)
     credits_requis_semestre = models.PositiveIntegerField(default=30)
     credits_requis_annee = models.PositiveIntegerField(default=60)
     date_modification = models.DateTimeField(auto_now=True)
-    # ---- Bibliothèque ----
+    inscriptions_en_ligne = models.BooleanField(default=True)
+    notation_enseignants_en_ligne = models.BooleanField(default=True)
+    redoublement_automatique = models.BooleanField(default=False)
+    notifications_parents = models.BooleanField(default=False)
+
+    # ---- 6. Bibliothèque et Réduction bourse (scolarité) ----
     duree_emprunt_jours = models.PositiveIntegerField(default=14)
     nb_emprunts_max_simultanes = models.PositiveIntegerField(default=3)
     penalite_par_jour_retard = models.DecimalField(max_digits=10, decimal_places=2, default=100)
-    # ---- Réduction bourse (scolarité) ----
+
     TYPE_REDUCTION_CHOICES = (
         ('pourcentage', 'Pourcentage'),
         ('montant_fixe', 'Montant fixe'),
     )
-    type_reduction_bourse_defaut = models.CharField(
-        max_length=15, choices=TYPE_REDUCTION_CHOICES, default='pourcentage'
-    )
-    valeur_reduction_bourse_defaut = models.DecimalField(
-        max_digits=10, decimal_places=2, default=0,
-        help_text="Si pourcentage : entrer un nombre entre 0 et 100. Si montant fixe : entrer une somme."
-    )
+    type_reduction_bourse_defaut = models.CharField(max_length=15, choices=TYPE_REDUCTION_CHOICES, default='pourcentage')
+    valeur_reduction_bourse_defaut = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text="Si pourcentage : entrer un nombre entre 0 et 100. Si montant fixe : entrer une somme.")
+
     class Meta:
         verbose_name = "Paramètre de l'institut"
         verbose_name_plural = "Paramètres de l'institut"
+
     def __str__(self):
         return self.nom
+    
     def save(self, *args, **kwargs):
         self.pk = 1  # force le singleton : toujours la même ligne
         super().save(*args, **kwargs)
+
     def delete(self, *args, **kwargs):
         pass  # empêche la suppression du singleton
+
     @classmethod
     def get_solo(cls):
         obj, _ = cls.objects.get_or_create(pk=1)

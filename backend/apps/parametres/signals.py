@@ -1,10 +1,20 @@
 from django.db.models.signals import post_save, post_delete
+
 from django.dispatch import receiver
+
 from django.contrib.auth.signals import user_logged_in, user_logged_out
+
 from apps.utilisateurs.models import Etudiant, Personnel, Formateur
+
 from apps.academique.models import Seance, EmploiDuTemps
+
 from apps.notes.models import Deliberation
+
 from .services import creer_notification
+
+
+
+
 def _superusers_et_admins():
     from apps.authentification.models import User
     return User.objects.filter(is_superuser=True)
@@ -16,7 +26,7 @@ def notifier_connexion(sender, request, user, **kwargs):
     creer_notification(
         destinataire=user,
         titre="Connexion réussie",
-        message=f"Vous vous êtes connecté avec succès.",
+        message=f"L'utilisateur {user} connecté avec succès.",
         type_notification='info',
     )
 
@@ -26,7 +36,7 @@ def notifier_deconnexion(sender, request, user, **kwargs):
         creer_notification(
             destinataire=user,
             titre="Déconnexion",
-            message="Vous avez été déconnecté.",
+            message= f"L'utilisateur {user} a été déconnecté.",
             type_notification='info',
         )
 

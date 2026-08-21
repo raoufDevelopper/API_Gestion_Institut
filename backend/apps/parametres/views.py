@@ -1,19 +1,37 @@
 from django.contrib.auth import update_session_auth_hash
+
 from rest_framework.decorators import api_view, permission_classes, parser_classes
+
 from rest_framework.permissions import IsAuthenticated
+
 from rest_framework.parsers import MultiPartParser, FormParser
+
 from rest_framework.response import Response
+
 from rest_framework import status
+
 from apps.authentification.decorators import permission_requise
+
 from apps.authentification.serializers import UserSerializer
+
 from apps.academique.models import AnneeAcademique
+
 from apps.notes.models import Note, Deliberation
+
 from apps.utilisateurs.models import Etudiant
+
 from .models import ParametreInstitut, ConfigurationMatricule, Sauvegarde, ArchiveAnneeAcademique, Notification
-from .serializers import (
-    ParametreInstitutSerializer, ConfigurationMatriculeSerializer,
-    SauvegardeSerializer, ArchiveAnneeAcademiqueSerializer, NotificationSerializer
-)
+
+from .serializers import ParametreInstitutSerializer, ConfigurationMatriculeSerializer, SauvegardeSerializer, ArchiveAnneeAcademiqueSerializer, NotificationSerializer
+
+
+
+
+
+
+
+
+
 # ================= PARAMETRE INSTITUT (singleton) =================
 @api_view(['GET', 'PATCH'])
 @permission_classes([IsAuthenticated])
@@ -22,12 +40,23 @@ from .serializers import (
 def parametre_institut(request):
     parametre = ParametreInstitut.get_solo()
     if request.method == 'GET':
-        return Response(ParametreInstitutSerializer(parametre).data)
-    serializer = ParametreInstitutSerializer(parametre, data=request.data, partial=True)
+        return Response(ParametreInstitutSerializer(parametre, context = {'request': request}).data)
+    serializer = ParametreInstitutSerializer(parametre, data=request.data, partial=True, context = {'request': request})
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
+
+
+
+
+
 # ================= CONFIGURATION MATRICULE =================
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
@@ -56,6 +85,17 @@ def detail_configuration_matricule(request, pk):
         serializer.save()
         return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
+
+
+
+
+
 # ================= SAUVEGARDE =================
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -99,6 +139,16 @@ def supprimer_sauvegarde(request, pk):
         sauvegarde.fichier.delete(save=False)
     sauvegarde.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+
+
+
+
+
+
 # ================= ARCHIVE (années académiques) =================
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -131,6 +181,17 @@ def archiver_annee_academique(request, pk):
     annee.statut = False
     annee.save(update_fields=['statut'])
     return Response(ArchiveAnneeAcademiqueSerializer(archive).data, status=status.HTTP_201_CREATED)
+
+
+
+
+
+
+
+
+
+
+
 # ================= NOTIFICATIONS =================
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -161,6 +222,31 @@ def supprimer_notification(request, pk):
         return Response({'detail': 'Notification introuvable.'}, status=status.HTTP_404_NOT_FOUND)
     notification.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def toggle_lecture_notification(request, pk):
+    try:
+        notification = Notification.objects.get(pk=pk, destinataire=request.user)
+    except Notification.DoesNotExist:
+        return Response({'detail': 'Notification introuvable.'}, status=status.HTTP_404_NOT_FOUND)
+    notification.lue = not notification.lue
+    notification.save(update_fields=['lue'])
+    return Response(NotificationSerializer(notification).data)
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def effacer_notifications_lues(request):
+    Notification.objects.filter(destinataire=request.user, lue=True).delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+
+
+
+
+
+
 # ================= PROFIL (utilisateur connecté) =================
 @api_view(['GET', 'PATCH'])
 @permission_classes([IsAuthenticated])
@@ -203,3 +289,5 @@ def activer_abonnement(request):
     if succes:
         return Response({'detail': message, **AbonnementSerializer(abonnement).data})
     return Response({'detail': message}, status=status.HTTP_400_BAD_REQUEST)
+
+

@@ -37,6 +37,7 @@ class Command(BaseCommand):
             {'code': 'gerer_parametres', 'nom': 'Gérer les paramètres', 'description': "Modifier les paramètres de l'institut et la configuration du matricule"},
             {'code': 'gerer_sauvegardes', 'nom': 'Gérer les sauvegardes', 'description': 'Lancer, télécharger et supprimer les sauvegardes de la base de données'},
             {'code': 'gerer_archives', 'nom': 'Gérer les archives', 'description': "Archiver les années académiques terminées"},
+            {'code': 'gerer_notifications', 'nom': 'Gérer les notifications', 'description': "gestion des lectures et de contrôle des notifications"},
             # Finances
             {'code': 'voir_finances', 'nom': 'Voir le tableau de bord finances', 'description': "Consulter le tableau de bord financier de l'institut"},
             {'code': 'voir_inscriptions', 'nom': 'Voir les inscriptions', 'description': 'Consulter et gérer les inscriptions des étudiants'},
