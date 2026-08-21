@@ -21,24 +21,6 @@ def _superusers_et_admins():
 
 
 # ---------- CONNEXION / DECONNEXION ----------
-@receiver(user_logged_in)
-def notifier_connexion(sender, request, user, **kwargs):
-    creer_notification(
-        destinataire=user,
-        titre="Connexion réussie",
-        message=f"L'utilisateur {user} connecté avec succès.",
-        type_notification='info',
-    )
-
-@receiver(user_logged_out)
-def notifier_deconnexion(sender, request, user, **kwargs):
-    if user:
-        creer_notification(
-            destinataire=user,
-            titre="Déconnexion",
-            message= f"L'utilisateur {user} a été déconnecté.",
-            type_notification='info',
-        )
 
 
 

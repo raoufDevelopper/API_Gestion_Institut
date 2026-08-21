@@ -42,7 +42,7 @@ from .services import calculer_moyenne_matiere, calculer_deliberation_etudiant, 
 # ================= TYPE EVALUATION =================
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_notes')
+@permission_requise('gerer_notes')
 def liste_creer_types_evaluation(request):
     if request.method == 'GET':
         types_evaluation = TypeEvaluation.objects.all()
@@ -55,7 +55,7 @@ def liste_creer_types_evaluation(request):
 
 @api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_notes')
+@permission_requise('gerer_notes')
 def detail_type_evaluation(request, pk):
     try:
         type_evaluation = TypeEvaluation.objects.get(pk=pk)
@@ -91,7 +91,7 @@ def detail_type_evaluation(request, pk):
 # ================= 1. SAISIE DES NOTES =================
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_notes')
+@permission_requise('gerer_notes')
 def contexte_saisie_notes(request):
     """
     Renvoie la liste des étudiants d'une classe + leur note existante
@@ -138,7 +138,7 @@ def contexte_saisie_notes(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_notes')
+@permission_requise('gerer_notes')
 def saisir_notes(request):
     """
     Enregistrement en masse des notes d'une classe pour un contexte précis.
@@ -225,7 +225,7 @@ def saisir_notes(request):
 # ================= 2. CONSULTATION DES NOTES =================
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_notes')
+@permission_requise('gerer_notes')
 def consultation_notes(request):
     classe_id = request.GET.get('classe')
     matiere_id = request.GET.get('matiere')
@@ -291,7 +291,7 @@ def consultation_notes(request):
 # ================= 3. RELEVÉ DES NOTES =================
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_notes')
+@permission_requise('gerer_notes')
 def releve_notes(request):
     classe_id = request.GET.get('classe')
     annee_academique_id = request.GET.get('annee_academique')
@@ -346,7 +346,7 @@ def releve_notes(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_notes')
+@permission_requise('gerer_notes')
 def releve_notes_pdf(request):
     classe_id = request.GET.get('classe')
     annee_academique_id = request.GET.get('annee_academique')
@@ -408,7 +408,7 @@ def releve_notes_pdf(request):
 # ================= 4. DÉLIBÉRATION =================
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_notes')
+@permission_requise('gerer_notes')
 def deliberation(request):
     classe_id = request.GET.get('classe') or request.data.get('classe')
     annee_academique_id = request.GET.get('annee_academique') or request.data.get('annee_academique')
@@ -456,7 +456,7 @@ def deliberation(request):
 
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_notes')
+@permission_requise('gerer_notes')
 def deliberation_verrouiller(request, pk):
     try:
         deliberation_obj = Deliberation.objects.get(pk=pk)
@@ -473,7 +473,7 @@ def deliberation_verrouiller(request, pk):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_notes')
+@permission_requise('gerer_notes')
 def deliberation_pdf(request):
     classe_id = request.GET.get('classe')
     annee_academique_id = request.GET.get('annee_academique')
@@ -540,7 +540,7 @@ def deliberation_pdf(request):
 # ================= (correction ponctuelle) =================
 @api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_notes')
+@permission_requise('gerer_notes')
 def detail_note(request, pk):
     try:
         note = Note.objects.get(pk=pk)

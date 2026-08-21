@@ -1,20 +1,49 @@
 from django.template.loader import render_to_string
+
 from django.core.files.base import ContentFile
+
 from django.http import HttpResponse, FileResponse
+
 from django.utils import timezone
+
 from weasyprint import HTML
+
 from rest_framework.decorators import api_view, permission_classes, parser_classes
+
 from rest_framework.permissions import IsAuthenticated
+
 from rest_framework.parsers import MultiPartParser, FormParser
+
 from rest_framework.response import Response
+
 from rest_framework import status
+
 from apps.authentification.decorators import permission_requise
+
 from apps.utilisateurs.models import Etudiant
+
 from apps.finances.models import Inscription
+
 from apps.notes.services import mention as calculer_mention
+
 from .models import Diplome, TypeCertificat, Certificat, Document
+
 from .serializers import DiplomeSerializer, TypeCertificatSerializer, CertificatSerializer, DocumentSerializer
+
+
+
+
+
+
+
+
+
+
+
+
+
 # ================= DIPLOME =================
+
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_documents')
@@ -81,6 +110,16 @@ def telecharger_diplome(request, pk):
     if not diplome.fichier:
         return Response({'detail': 'Aucun fichier disponible.'}, status=status.HTTP_404_NOT_FOUND)
     return FileResponse(diplome.fichier.open('rb'), as_attachment=True, filename=f"diplome_{diplome.numero_diplome}.pdf")
+
+
+
+
+
+
+
+
+
+
 # ================= TYPE CERTIFICAT =================
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
@@ -112,6 +151,20 @@ def detail_type_certificat(request, pk):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     type_certificat.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # ================= CERTIFICAT =================
 def _generer_certificat_pdf(certificat, request):
     html_string = render_to_string('documents/certificat_pdf.html', {
@@ -196,6 +249,15 @@ def telecharger_certificat(request, pk):
     if not certificat.fichier:
         return Response({'detail': 'Aucun fichier disponible.'}, status=status.HTTP_404_NOT_FOUND)
     return FileResponse(certificat.fichier.open('rb'), as_attachment=True, filename=f"certificat_{certificat.numero}.pdf")
+
+
+
+
+
+
+
+
+
 # ================= DOCUMENT =================
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])

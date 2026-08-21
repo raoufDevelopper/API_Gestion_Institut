@@ -74,6 +74,8 @@ function Permissions() {
       setSuppressionEnCours(false);
     }
   };
+
+
   return (
     <div className="container-principal">
       <div className="department-page">
@@ -82,7 +84,7 @@ function Permissions() {
         <div className="panel-head">
           <div>
             <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>Gestion des permissions</h3>
-            <div className="sub">{permissions.length} permission(s)</div>
+            <div className="sub">{permissions.length} permissions</div>
           </div>
           <button className="btn-primary addInscr" onClick={() => setModalOuvert(true)}>
             <i className="fas fa-plus"></i>
@@ -163,7 +165,7 @@ function Permissions() {
         
         <div className="modal-content">
         
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #7a5503, #d3b429)' }}>
+          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #400c7c, #a14fff)' }}>
             <h2>Nouvelle permission</h2>
             <button className="btn-primary addInscr" onClick={() => setModalOuvert(false)}>
               <i className="fas fa-times"></i>
@@ -264,7 +266,7 @@ function Permissions() {
       <ConfirmationModal
         ouvert={!!permissionASupprimer}
         titre="Supprimer la permission"
-        message={`Voulez-vous vraiment supprimer la permission « ${permissionASupprimer?.nom} » ? Cette action est irréversible.`}
+        message={`Voulez-vous vraiment supprimer la permission « ${permissionASupprimer?.nom} » ?`}
         onConfirmer={confirmerSuppression}
         onAnnuler={() => setPermissionASupprimer(null)}
         chargement={suppressionEnCours}

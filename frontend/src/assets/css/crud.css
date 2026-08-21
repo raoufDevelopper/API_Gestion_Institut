@@ -1,5 +1,34 @@
+/* =====================================================
+    ANIMATIONS
+===================================================== */
 
-/* Animation simple */
+@keyframes fadeIn{
+
+    from{
+        opacity:0;
+    }
+
+    to{
+        opacity:1;
+    }
+}
+
+
+@keyframes slideDown{
+
+    from{
+        opacity:0;
+        transform:translateY(-100px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+
 @keyframes pop {
     from {
         transform: scale(0.02);
@@ -85,8 +114,8 @@ main {
 .addInscr{
     background:linear-gradient(
         135deg,
-        #7a5503,
-        #d3b429
+        #400c7c,
+        #a14fff
     );
     color:#fff;
 }
@@ -94,8 +123,8 @@ main {
 .addInscr:hover{
     background:linear-gradient(
         135deg,
-        #d3b429,
-        #7a5503
+        #a14fff,
+        #400c7c
     ) !important;
 }
 
@@ -585,7 +614,7 @@ td:not(:first-of-type){
     border-radius: 5px;
     overflow:hidden;
     box-shadow:0 15px 45px rgba(0,0,0,.45);
-    animation: slideDown .3s ease;
+    animation: slideDown .5s ease;
 }
 
 .modal-header{
@@ -741,9 +770,78 @@ td:not(:first-of-type){
 
 .modal-footer{
     display:flex;
+    flex-wrap: wrap;
     padding: 0 20px 20px 20px;
     gap:12px;
 }
+
+
+
+
+/* =====================================================
+    MODAL SUPPRIMER
+===================================================== */
+
+.btn-light, .btn-danger {
+    max-width: 100%;
+    padding: 8px 20px !important;
+    font-size: 13px;
+    font-weight: 600; 
+}
+
+.confirme-header {
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    line-height: 25px;
+    letter-spacing: 2px;
+    padding: 20px;
+    text-align: center;
+}
+
+.confirmation-modal .confirmation-body {
+    padding: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+
+    font-size: 12px;
+    font-weight: 500;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 22px;
+    letter-spacing: 1.5px;
+
+    border-top: solid 1px var(--input);
+    border-bottom: solid 1px var(--input);
+}
+
+.confirmation-modal .confirmation-body i {
+    color:#ef4444;
+    font-size: 12px;
+}
+
+.confirmation-modal .confirmation-body div {
+    display: flex;
+    flex-direction: column;
+    text-align: start !important;
+    padding: 12px 12px 12px 20px;
+    background:rgba(239,68,68,.2);
+    border-left: solid 2px #ef4444;
+}
+
+#attention {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    gap: 5px;
+    font-weight: 700;
+    color: #ef4444;
+}
+
 
 /* =====================================================
     EMPTY STATE
@@ -798,35 +896,7 @@ td:not(:first-of-type){
     transform:scale(1.1);
 }
 
-/* =====================================================
-    ANIMATIONS
-===================================================== */
 
-@keyframes fadeIn{
-
-    from{
-        opacity:0;
-    }
-
-    to{
-        opacity:1;
-    }
-}
-
-
-@keyframes slideDown{
-
-    from{
-        opacity:0;
-        transform:translateY(-30px);
-    }
-
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
-
-}
 
 /* =====================================================
     RESPONSIVE

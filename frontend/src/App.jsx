@@ -48,7 +48,7 @@ function App() {
                     } />
 
                     <Route path="/utilisateurs/permissions" element={
-                      <RouteProtegee permission="voir_permissions">
+                      <RouteProtegee permission="gerer_permissions">
                         <Permissions />
                       </RouteProtegee>
                     } />

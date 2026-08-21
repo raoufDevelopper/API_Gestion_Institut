@@ -74,7 +74,7 @@ def personnel_disponible_formateur(request):
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
-@permission_requise('voir_etudiants')
+@permission_requise('gerer_etudiants')
 def liste_creer_etudiants(request):
     if request.method == 'GET':
         etudiants = Etudiant.objects.all()
@@ -89,7 +89,7 @@ def liste_creer_etudiants(request):
 @api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
-@permission_requise('voir_etudiants')
+@permission_requise('gerer_etudiants')
 def detail_etudiant(request, pk):
     try:
         etudiant = Etudiant.objects.get(pk=pk)
@@ -122,7 +122,7 @@ def detail_etudiant(request, pk):
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
-@permission_requise('voir_personnel')
+@permission_requise('gerer_personnel')
 def liste_creer_personnel(request):
     if request.method == 'GET':
         personnel = Personnel.objects.all()
@@ -137,7 +137,7 @@ def liste_creer_personnel(request):
 @api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
-@permission_requise('voir_personnel')
+@permission_requise('gerer_personnel')
 def detail_personnel(request, pk):
     try:
         personnel = Personnel.objects.get(pk=pk)
@@ -169,7 +169,7 @@ def detail_personnel(request, pk):
 # ---------- FORMATEURS ----------
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_formateurs')
+@permission_requise('gerer_formateurs')
 def liste_creer_formateurs(request):
     if request.method == 'GET':
         formateurs = Formateur.objects.all()
@@ -184,7 +184,7 @@ def liste_creer_formateurs(request):
 
 @api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_formateurs')
+@permission_requise('gerer_formateurs')
 def detail_formateur(request, pk):
     try:
         formateur = Formateur.objects.get(pk=pk)
@@ -222,7 +222,7 @@ def detail_formateur(request, pk):
 #export PDF
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_etudiants')
+@permission_requise('gerer_etudiants')
 def export_fiche_etudiant_pdf(request, pk):
     try:
         etudiant = Etudiant.objects.get(pk=pk)
@@ -272,7 +272,7 @@ def export_fiche_etudiant_pdf(request, pk):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_personnel')
+@permission_requise('gerer_personnel')
 def export_fiche_personnel_pdf(request, pk):
     try:
         personnel = Personnel.objects.get(pk=pk)
@@ -324,7 +324,7 @@ def export_fiche_personnel_pdf(request, pk):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_formateurs')
+@permission_requise('gerer_formateurs')
 def export_fiche_formateur_pdf(request, pk):
     try:
         formateur = Formateur.objects.get(pk=pk)

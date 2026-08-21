@@ -73,11 +73,15 @@ def login_view(request):
     })
 
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def me_view(request):
+
     user = request.user
+
     permissions = list(user.role.permissions.values_list('code', flat=True)) if user.role else []
+
     return Response({
         'id': user.id,
         'username': user.username,
@@ -87,26 +91,42 @@ def me_view(request):
         'permissions': permissions,
     })
 
+# ---------- AUTHENTIFICATION ----------
 
 
 
+
+
+
+
+
+
+
+# ---------- DECONNEXION ----------
 
 def logout_view(request):
+
     refresh_token = request.data.get('refresh')
+
     if refresh_token:
+
         try:
             token = RefreshToken(refresh_token)
             token.blacklist()
+
         except Exception:
             pass  # token déjà invalide/expiré : rien à faire de plus
+
     creer_notification(
         destinataire=request.user,
         titre="Déconnexion",
         message=f"L'utilisateur {request.user} s'est déconnecté.",
         type_notification='info',
     )
+
     return Response({'detail': 'Déconnexion réussie.'})
 
+# ---------- DECONNEXION ----------
 
 
 
@@ -119,8 +139,7 @@ def logout_view(request):
 
 
 
-
-
+# ---------- CREATION D'UN COMPTE ----------
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -132,6 +151,7 @@ def register_view(request):
     email = request.data.get('email')
 
     password1 = request.data.get('password1')
+
     password2 = request.data.get('password2')
 
     role_nom = request.data.get('role')
@@ -155,6 +175,7 @@ def register_view(request):
 
     try:
         validate_password(password1)
+
     except Exception as e:
         return Response({'detail': list(e.messages)}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -177,6 +198,7 @@ def register_view(request):
 
     # Notifie tous les administrateurs qu'un compte attend validation
     for admin in User.objects.filter(is_superuser=True):
+
         creer_notification(
             destinataire=admin,
             titre="Nouveau compte en attente de validation",
@@ -189,6 +211,9 @@ def register_view(request):
         {'detail': "Votre compte a été créé et est en attente de validation par un administrateur."},
         status=status.HTTP_201_CREATED
     )
+
+# ---------- CREATION D'UN COMPTE ----------
+
 
 
 
@@ -206,39 +231,73 @@ def register_view(request):
 
 
 # ---------- UTILISATEURS ----------
+
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
+@permission_requise('gerer_utilisateurs')
 def liste_creer_utilisateurs(request):
+
     if request.method == 'GET':
+
         users = User.objects.all()
+
         serializer = UserSerializer(users, many=True)
+
         return Response(serializer.data)
+
     serializer = UserSerializer(data=request.data)
+
+
     if serializer.is_valid():
+
         serializer.save()
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 
 
 @api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
+@permission_requise('gerer_utilisateurs')
 def detail_utilisateur(request, pk):
+
     try:
         user = User.objects.get(pk=pk)
+
     except User.DoesNotExist:
         return Response({'detail': 'Utilisateur introuvable.'}, status=status.HTTP_404_NOT_FOUND)
+
     if request.method == 'GET':
         return Response(UserSerializer(user).data)
+
+
     if request.method == 'PATCH':
+
         serializer = UserSerializer(user, data=request.data, partial=True)
+
         if serializer.is_valid():
+
             serializer.save()
+
             return Response(serializer.data)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     user.delete()
+
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+# ---------- UTILISATEURS ----------
+
+
+
+
 
 
 
@@ -252,36 +311,70 @@ def detail_utilisateur(request, pk):
 
 
 # ---------- ROLES ----------
+
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
+@permission_requise('gerer_roles')
 def liste_creer_roles(request):
+
     if request.method == 'GET':
+
         roles = Role.objects.all()
+
         return Response(RoleSerializer(roles, many=True).data)
+
     serializer = RoleSerializer(data=request.data)
+
+
     if serializer.is_valid():
+
         serializer.save()
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 @api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([IsAuthenticated])
+@permission_requise('gerer_roles')
 def detail_role(request, pk):
+
     try:
         role = Role.objects.get(pk=pk)
+
     except Role.DoesNotExist:
         return Response({'detail': 'Rôle introuvable.'}, status=status.HTTP_404_NOT_FOUND)
+
     if request.method == 'GET':
         return Response(RoleSerializer(role).data)
+
+
     if request.method == 'PATCH':
+
         serializer = RoleSerializer(role, data=request.data, partial=True)
+
         if serializer.is_valid():
+
             serializer.save()
+
             return Response(serializer.data)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     role.delete()
+
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+# ---------- ROLES ----------
+
+
+
+
+
+
 
 
 
@@ -294,33 +387,60 @@ def detail_role(request, pk):
 
 
 # ---------- PERMISSIONS ----------
+
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
+@permission_requise('gerer_permissions')
 def liste_creer_permissions(request):
+
     if request.method == 'GET':
+
         permissions = Permission.objects.all()
+
         return Response(PermissionSerializer(permissions, many=True).data)
+
     serializer = PermissionSerializer(data=request.data)
+
+
     if serializer.is_valid():
+
         serializer.save()
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 @api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([IsAuthenticated])
+@permission_requise('gerer_permissions')
 def detail_permission(request, pk):
+
     try:
         permission = Permission.objects.get(pk=pk)
+
     except Permission.DoesNotExist:
         return Response({'detail': 'Permission introuvable.'}, status=status.HTTP_404_NOT_FOUND)
+
     if request.method == 'GET':
         return Response(PermissionSerializer(permission).data)
+
+
     if request.method == 'PATCH':
+
         serializer = PermissionSerializer(permission, data=request.data, partial=True)
+
         if serializer.is_valid():
+
             serializer.save()
+
             return Response(serializer.data)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     permission.delete()
+
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+# ---------- PERMISSIONS ----------

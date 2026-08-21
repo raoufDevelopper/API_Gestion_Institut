@@ -18,10 +18,18 @@ from .serializers import (
     InscriptionSerializer, FraisInscriptionSerializer, PaiementSerializer,
     DepenseSerializer, CaisseSessionSerializer,
 )
+
+
+
+
+
+
+
+
 # ================= TABLEAU DE BORD =================
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_finances')
+@permission_requise('gerer_finances')
 def dashboard(request):
     total_encaisse = Paiement.objects.filter(statut=Paiement.Statut.VALIDE).aggregate(s=Sum("montant"))["s"] or 0
     depenses_operationnelles = Depense.objects.exclude(categorie__est_tresorerie=True)
@@ -51,7 +59,7 @@ def dashboard(request):
 # ================= CATEGORIE DEPENSE =================
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_depenses')
+@permission_requise('gerer_depenses')
 def liste_creer_categories_depense(request):
     if request.method == 'GET':
         categories = CategorieDepense.objects.all()
@@ -63,7 +71,7 @@ def liste_creer_categories_depense(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 @api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_depenses')
+@permission_requise('gerer_depenses')
 def detail_categorie_depense(request, pk):
     try:
         categorie = CategorieDepense.objects.get(pk=pk)
@@ -188,7 +196,7 @@ def simulateur_tarif(request):
 # ================= INSCRIPTION =================
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_inscriptions')
+@permission_requise('gerer_inscriptions')
 def liste_creer_inscriptions(request):
     if request.method == 'GET':
         inscriptions = Inscription.objects.select_related('etudiant', 'classe').all()
@@ -208,7 +216,7 @@ def liste_creer_inscriptions(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 @api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_inscriptions')
+@permission_requise('gerer_inscriptions')
 def detail_inscription(request, pk):
     try:
         inscription = Inscription.objects.select_related('etudiant', 'classe').get(pk=pk)
@@ -226,7 +234,7 @@ def detail_inscription(request, pk):
     return Response(status=status.HTTP_204_NO_CONTENT)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_inscriptions')
+@permission_requise('gerer_inscriptions')
 def frais_ajouter(request, inscription_pk):
     try:
         inscription = Inscription.objects.get(pk=inscription_pk)
@@ -245,7 +253,7 @@ def frais_ajouter(request, inscription_pk):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_inscriptions')
+@permission_requise('gerer_inscriptions')
 def tarif_suggere(request):
     type_paiement_id = request.GET.get('type_paiement')
     inscription_id = request.GET.get('inscription')
@@ -266,7 +274,7 @@ def tarif_suggere(request):
 # ================= PAIEMENT =================
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_paiements')
+@permission_requise('gerer_paiements')
 def liste_creer_paiements(request):
     if request.method == 'GET':
         paiements = Paiement.objects.select_related('inscription__etudiant', 'caisse_session', 'type_paiement').all()
@@ -284,7 +292,7 @@ def liste_creer_paiements(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 @api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_paiements')
+@permission_requise('gerer_paiements')
 def detail_paiement(request, pk):
     try:
         paiement = Paiement.objects.select_related('inscription__etudiant', 'caisse_session', 'type_paiement').get(pk=pk)
@@ -303,7 +311,7 @@ def detail_paiement(request, pk):
 # ================= DEPENSE =================
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_depenses')
+@permission_requise('gerer_depenses')
 def liste_creer_depenses(request):
     if request.method == 'GET':
         depenses = Depense.objects.select_related('categorie', 'caisse_session').all()
@@ -321,7 +329,7 @@ def liste_creer_depenses(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 @api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_depenses')
+@permission_requise('gerer_depenses')
 def detail_depense(request, pk):
     try:
         depense = Depense.objects.select_related('categorie').get(pk=pk)
@@ -340,7 +348,7 @@ def detail_depense(request, pk):
 # ================= CAISSE =================
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_caisse')
+@permission_requise('gerer_caisse')
 def liste_ouvrir_caisse(request):
     if request.method == 'GET':
         sessions = CaisseSession.objects.all()
@@ -354,7 +362,7 @@ def liste_ouvrir_caisse(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_caisse')
+@permission_requise('gerer_caisse')
 def detail_caisse(request, pk):
     try:
         session = CaisseSession.objects.get(pk=pk)
@@ -372,7 +380,7 @@ def detail_caisse(request, pk):
     })
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_caisse')
+@permission_requise('gerer_caisse')
 def fermer_caisse(request, pk):
     try:
         session = CaisseSession.objects.get(pk=pk, statut=CaisseSession.Statut.OUVERTE)
@@ -393,7 +401,7 @@ def fermer_caisse(request, pk):
 # ================= EXPORTS PDF =================
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_inscriptions')
+@permission_requise('gerer_inscriptions')
 def fiche_inscription_pdf(request, pk):
     try:
         inscription = Inscription.objects.select_related('etudiant', 'classe').prefetch_related(
@@ -411,7 +419,7 @@ def fiche_inscription_pdf(request, pk):
     return response
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_paiements')
+@permission_requise('gerer_paiements')
 def recu_paiement_pdf(request, pk):
     try:
         paiement = Paiement.objects.select_related('inscription__etudiant', 'type_paiement').get(pk=pk)
@@ -427,7 +435,7 @@ def recu_paiement_pdf(request, pk):
     return response
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_depenses')
+@permission_requise('gerer_depenses')
 def bon_depense_pdf(request, pk):
     try:
         depense = Depense.objects.select_related('categorie').get(pk=pk)
@@ -443,7 +451,7 @@ def bon_depense_pdf(request, pk):
     return response
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_caisse')
+@permission_requise('gerer_caisse')
 def rapport_caisse_pdf(request, pk):
     try:
         session = CaisseSession.objects.get(pk=pk)

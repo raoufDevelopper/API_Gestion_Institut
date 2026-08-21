@@ -5,15 +5,28 @@ function ConfirmationModal({ ouvert, titre, message, onConfirmer, onAnnuler, cha
     return (
   
         <div className="department-modal" style={{ display: 'flex' }}>
-            <div className="modal-content confirmation-modal" style={{ animation: 'pop .3s ease' }}>
-                <div className="modal-header" style={{ background: 'linear-gradient(135deg, #7a0303, #d32929)' }}>
+            
+            <div className="modal-content confirmation-modal" style={{ animation: 'pop .3s ease'}}>
+            
+                <div className="confirme-header">
                     <h2>{titre}</h2>
                 </div>
+            
                 <div className="confirmation-body">
-                    <i className="fas fa-triangle-exclamation confirmation-icon"></i>
-                    <p>{message}</p>
+                    <p>Vous êtes sur le point de supprimer un enregistrement</p>
+                    <div>
+                        <p id="attention">
+                            <i className="fas fa-triangle-exclamation confirmation-icon"></i>
+                            Attention
+                        </p>
+                        <p id="message2">
+                            {message}
+                        </p>
+                    </div>
+                    <p>Plutôt que de supprimer cet enregistrement, vous pouvez modifier son statut car cette action est irreversible !</p>
                 </div>
-                <div className="modal-footer">
+            
+                <div className="modal-footer" style={{ justifyContent: "center" }}>
                     <button type="button" className="btn-light" onClick={onAnnuler} disabled={chargement}>
                         Annuler
                     </button>
@@ -21,7 +34,9 @@ function ConfirmationModal({ ouvert, titre, message, onConfirmer, onAnnuler, cha
                         {chargement ? 'Suppression...' : 'Confirmer la suppression'}
                     </button>
                 </div>
+            
             </div>
+        
         </div>
 
     );
