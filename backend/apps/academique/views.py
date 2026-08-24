@@ -22,7 +22,7 @@ from django.utils import timezone
 
 from weasyprint import HTML
 
-
+from django.db.models import Count
 
 
 
@@ -106,11 +106,21 @@ def liste_creer_filieres(request):
 
     if request.method == 'GET':
 
-        filieres = Filiere.objects.all()
+        filieres = Filiere.objects.select_related('responsable').all()
 
-        return Response(FiliereSerializer(filieres, many=True).data)
+        kpis = {
+            'total': Filiere.objects.count(),
+            'actif': Filiere.objects.filter(statut='actif').count(),
+            'inactif': Filiere.objects.filter(statut='inactif').count(),
+            'suspendu': Filiere.objects.filter(statut='suspendu').count(),
+        }
 
-    serializer = FiliereSerializer(data=request.data)
+        return Response({
+            'resultats': FiliereSerializer(filieres, many=True, context={'request': request}).data,
+            'kpis': kpis,
+        })
+
+    serializer = FiliereSerializer(data=request.data, context={'request': request})
 
 
     if serializer.is_valid():
@@ -176,11 +186,21 @@ def liste_creer_specialites(request):
 
     if request.method == 'GET':
 
-        specialites = Specialite.objects.all()
+        specialites = Specialite.objects.select_related('filiere').all()
 
-        return Response(SpecialiteSerializer(specialites, many=True).data)
+        kpis = {
+            'total': Specialite.objects.count(),
+            'actif': Specialite.objects.filter(statut='actif').count(),
+            'inactif': Specialite.objects.filter(statut='inactif').count(),
+            'suspendu': Specialite.objects.filter(statut='suspendu').count(),
+        }
 
-    serializer = SpecialiteSerializer(data=request.data)
+        return Response({
+            'resultats': SpecialiteSerializer(specialites, many=True, context={'request': request}).data,
+            'kpis': kpis,
+        })
+
+    serializer = SpecialiteSerializer(data=request.data, context={'request': request})
 
 
     if serializer.is_valid():
@@ -317,12 +337,22 @@ def liste_creer_salles(request):
 
     if request.method == 'GET':
 
-        salles = Salle.objects.all()
+        salles = Salle.objects.select_related('type_salle').all()
 
-        return Response(SalleSerializer(salles, many=True).data)
+        kpis = {
+            'total': Salle.objects.count(),
+            'disponible': Salle.objects.filter(statut='disponible').count(),
+            'indisponible': Salle.objects.filter(statut='indisponible').count(),
+            'maintenance': Salle.objects.filter(statut='maintenance').count(),
+        }
 
-    serializer = SalleSerializer(data=request.data)
+        return Response({
+            'resultats': SalleSerializer(salles, many=True, context={'request': request}).data,
+            'kpis': kpis,
+        })
 
+    serializer = SalleSerializer(data=request.data, context={'request': request})
+    
 
     if serializer.is_valid():
 
@@ -388,11 +418,21 @@ def liste_creer_matieres(request):
 
     if request.method == 'GET':
 
-        matieres = Matiere.objects.all()
+        matieres = Matiere.objects.prefetch_related('specialite', 'niveau').all()
 
-        return Response(MatiereSerializer(matieres, many=True).data)
+        kpis = {
+            'total': Matiere.objects.count(),
+            'actif': Matiere.objects.filter(statut='actif').count(),
+            'inactif': Matiere.objects.filter(statut='inactif').count(),
+            'suspendu': Matiere.objects.filter(statut='suspendu').count(),
+        }
 
-    serializer = MatiereSerializer(data=request.data)
+        return Response({
+            'resultats': MatiereSerializer(matieres, many=True, context={'request': request}).data,
+            'kpis': kpis,
+        })
+
+    serializer = MatiereSerializer(data=request.data, context={'request': request})
 
 
     if serializer.is_valid():
@@ -402,7 +442,6 @@ def liste_creer_matieres(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 @api_view(['GET', 'PATCH', 'DELETE'])
@@ -463,9 +502,18 @@ def liste_creer_annees_academiques(request):
 
         annees = AnneeAcademique.objects.all()
 
-        return Response(AnneeAcademiqueSerializer(annees, many=True).data)
+        kpis = {
+            'total': AnneeAcademique.objects.count(),
+            'active': AnneeAcademique.objects.filter(statut=True).count(),
+            'archivee': AnneeAcademique.objects.filter(statut=False).count(),
+        }
 
-    serializer = AnneeAcademiqueSerializer(data=request.data)
+        return Response({
+            'resultats': AnneeAcademiqueSerializer(annees, many=True, context={'request': request}).data,
+            'kpis': kpis,
+        })
+
+    serializer = AnneeAcademiqueSerializer(data=request.data, context={'request': request})
 
 
     if serializer.is_valid():
@@ -605,11 +653,21 @@ def liste_creer_emplois_du_temps(request):
 
     if request.method == 'GET':
 
-        emplois = EmploiDuTemps.objects.all()
+        emplois = EmploiDuTemps.objects.select_related('classe', 'annee_academique').annotate(nb_seances=Count('seances'))
 
-        return Response(EmploiDuTempsSerializer(emplois, many=True).data)
+        kpis = {
+            'total': EmploiDuTemps.objects.count(),
+            'brouillon': EmploiDuTemps.objects.filter(statut='brouillon').count(),
+            'publie': EmploiDuTemps.objects.filter(statut='publie').count(),
+            'archive': EmploiDuTemps.objects.filter(statut='archive').count(),
+        }
 
-    serializer = EmploiDuTempsSerializer(data=request.data)
+        return Response({
+            'resultats': EmploiDuTempsSerializer(emplois, many=True, context={'request': request}).data,
+            'kpis': kpis,
+        })
+
+    serializer = EmploiDuTempsSerializer(data=request.data, context={'request': request})
 
 
     if serializer.is_valid():
@@ -653,6 +711,69 @@ def detail_emploi_du_temps(request, pk):
 
     return Response(status=status.HTTP_204_NO_CONTENT)
 
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@permission_requise('gerer_emplois_du_temps')
+def dupliquer_emploi_du_temps(request, pk):
+
+    try:
+        original = EmploiDuTemps.objects.get(pk=pk)
+
+    except EmploiDuTemps.DoesNotExist:
+        return Response({'detail': 'Emploi du temps introuvable.'}, status=status.HTTP_404_NOT_FOUND)
+
+    nouvelle_semaine_debut = None
+
+    nouvelle_semaine_fin = None
+
+
+    if original.semaine_debut and original.semaine_fin:
+
+        from datetime import timedelta
+
+        nouvelle_semaine_debut = original.semaine_debut + timedelta(days=7)
+
+        nouvelle_semaine_fin = original.semaine_fin + timedelta(days=7)
+
+
+    copie = EmploiDuTemps.objects.create(
+        classe=original.classe,
+        semestre=original.semestre,
+        annee_academique=original.annee_academique,
+        titre=f"{original.titre} (copie)" if original.titre else '',
+        semaine_debut=nouvelle_semaine_debut,
+        semaine_fin=nouvelle_semaine_fin,
+        statut='brouillon',
+    )
+
+    erreurs = []
+
+    for seance in original.seances.all():
+
+        try:
+            Seance.objects.create(
+                emploi_du_temps=copie,
+                matiere=seance.matiere,
+                formateur=seance.formateur,
+                salle=seance.salle,
+                type_seance=seance.type_seance,
+                jour=seance.jour,
+                heure_debut=seance.heure_debut,
+                heure_fin=seance.heure_fin,
+            )
+
+        except DjangoValidationError:
+            erreurs.append(f"{seance.matiere} ({seance.get_jour_display()}) — conflit détecté, non dupliquée.")
+
+    reponse = EmploiDuTempsSerializer(copie, context={'request': request}).data
+
+    if erreurs:
+        reponse['avertissements'] = erreurs
+
+    return Response(reponse, status=status.HTTP_201_CREATED)
+
 # ================= EMPLOI DU TEMPS =================
 
 
@@ -677,11 +798,16 @@ def liste_creer_seances(request):
 
     if request.method == 'GET':
 
-        seances = Seance.objects.all()
+        seances = Seance.objects.select_related('matiere', 'formateur__personnel', 'salle').all()
 
-        return Response(SeanceSerializer(seances, many=True).data)
+        emploi_id = request.GET.get('emploi_du_temps')
 
-    serializer = SeanceSerializer(data=request.data)
+        if emploi_id:
+            seances = seances.filter(emploi_du_temps_id=emploi_id)
+
+        return Response(SeanceSerializer(seances, many=True, context={'request': request}).data)
+
+    serializer = SeanceSerializer(data=request.data, context={'request': request})
 
 
     if serializer.is_valid():
@@ -758,10 +884,20 @@ def liste_creer_sanctions(request):
     if request.method == 'GET':
 
         sanctions = Sanction.objects.all()
+    
+        kpis = {
+            'total': Sanction.objects.count(),
+            'actif': Sanction.objects.filter(statut='actif').count(),
+            'inactif': Sanction.objects.filter(statut='inactif').count(),
+            'suspendu': Sanction.objects.filter(statut='suspendu').count(),
+        }
 
-        return Response(SanctionSerializer(sanctions, many=True).data)
+        return Response({
+            'resultats': SanctionSerializer(sanctions, many=True, context={'request': request}).data,
+            'kpis': kpis,
+        })
 
-    serializer = SanctionSerializer(data=request.data)
+    serializer = SanctionSerializer(data=request.data, context={'request': request})
 
 
     if serializer.is_valid():

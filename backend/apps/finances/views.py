@@ -27,6 +27,7 @@ from .serializers import (
 
 
 # ================= TABLEAU DE BORD =================
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_finances')
@@ -56,7 +57,19 @@ def dashboard(request):
             many=True
         ).data,
     })
+
+
+
+
+
+
+
+
+
+
+
 # ================= CATEGORIE DEPENSE =================
+
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_depenses')
@@ -69,6 +82,9 @@ def liste_creer_categories_depense(request):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 @api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_depenses')
@@ -90,7 +106,17 @@ def detail_categorie_depense(request, pk):
 
 
 
+
+
+
+
+
+
+
+
+
 # ================= TYPE PAIEMENT =================
+
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_tarifs')
@@ -103,6 +129,9 @@ def liste_creer_types_paiement(request):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 @api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_tarifs')
@@ -124,7 +153,19 @@ def detail_type_paiement(request, pk):
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 # ================= TARIF =================
+
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_tarifs')
@@ -144,6 +185,10 @@ def liste_creer_tarifs(request):
             )
         return Response(reponse, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
 @api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_tarifs')
@@ -162,6 +207,10 @@ def detail_tarif(request, pk):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     tarif.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_tarifs')
@@ -193,7 +242,21 @@ def simulateur_tarif(request):
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 # ================= INSCRIPTION =================
+
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_inscriptions')
@@ -214,6 +277,10 @@ def liste_creer_inscriptions(request):
         serializer.save(cree_par=request.user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
 @api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_inscriptions')
@@ -232,6 +299,9 @@ def detail_inscription(request, pk):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     inscription.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_inscriptions')
@@ -251,6 +321,10 @@ def frais_ajouter(request, inscription_pk):
         serializer.save(inscription=inscription, ajoute_par=request.user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_inscriptions')
@@ -264,13 +338,26 @@ def tarif_suggere(request):
         return Response({'detail': 'Contexte invalide.'}, status=status.HTTP_404_NOT_FOUND)
     tarif = Tarif.objects.resoudre(
         type_paiement=type_paiement,
-        specialite=inscription.classe.nom,
+        specialite=inscription.classe.specialite,
         niveau=inscription.classe.niveau,
         annee_academique=inscription.annee_academique,
     )
     if tarif is None:
         return Response({'trouve': False})
     return Response({'trouve': True, 'montant': str(tarif.montant), 'portee': tarif.decrire_portee()})
+
+
+
+
+
+
+
+
+
+
+
+
+
 # ================= PAIEMENT =================
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
@@ -290,6 +377,9 @@ def liste_creer_paiements(request):
         serializer.save(enregistre_par=request.user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 @api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_paiements')
@@ -308,6 +398,23 @@ def detail_paiement(request, pk):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     paiement.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # ================= DEPENSE =================
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
@@ -327,6 +434,9 @@ def liste_creer_depenses(request):
         serializer.save(demande_par=request.user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 @api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_depenses')
@@ -345,7 +455,27 @@ def detail_depense(request, pk):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     depense.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # ================= CAISSE =================
+
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_caisse')
@@ -360,6 +490,9 @@ def liste_ouvrir_caisse(request):
         serializer.save(ouverte_par=request.user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_caisse')
@@ -378,6 +511,9 @@ def detail_caisse(request, pk):
         'mouvements_depenses': DepenseSerializer(mouvements_depenses, many=True).data,
         'nb_mouvements': mouvements_paiements.count() + mouvements_depenses.count(),
     })
+
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_caisse')
@@ -395,6 +531,73 @@ def fermer_caisse(request, pk):
     except Exception as e:
         return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
     return Response(CaisseSessionSerializer(session).data)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
+@permission_requise('gerer_bourses')
+def liste_creer_bourses(request):
+    if request.method == 'GET':
+        bourses = Bourse.objects.select_related('etudiant').all()
+        return Response(BourseSerializer(bourses, many=True).data)
+    serializer = BourseSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['GET', 'PATCH', 'DELETE'])
+@permission_classes([IsAuthenticated])
+@permission_requise('gerer_bourses')
+def detail_bourse(request, pk):
+    try:
+        bourse = Bourse.objects.get(pk=pk)
+    except Bourse.DoesNotExist:
+        return Response({'detail': 'Bourse introuvable.'}, status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'GET':
+        return Response(BourseSerializer(bourse).data)
+    if request.method == 'PATCH':
+        serializer = BourseSerializer(bourse, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    bourse.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -417,6 +620,12 @@ def fiche_inscription_pdf(request, pk):
     response = HttpResponse(pdf_file, content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="fiche_inscription_{inscription.etudiant.matricule}.pdf"'
     return response
+
+
+
+
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_paiements')
@@ -433,6 +642,12 @@ def recu_paiement_pdf(request, pk):
     response = HttpResponse(pdf_file, content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="recu_{paiement.numero_recu}.pdf"'
     return response
+
+
+
+
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_depenses')
@@ -449,6 +664,12 @@ def bon_depense_pdf(request, pk):
     response = HttpResponse(pdf_file, content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="bon_depense_{depense.pk}.pdf"'
     return response
+
+
+
+
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_caisse')
@@ -472,33 +693,5 @@ def rapport_caisse_pdf(request, pk):
     response['Content-Disposition'] = f'attachment; filename="rapport_caisse_{session.date_session}.pdf"'
     return response
 
-@api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated])
-@permission_requise('gerer_bourses')
-def liste_creer_bourses(request):
-    if request.method == 'GET':
-        bourses = Bourse.objects.select_related('etudiant').all()
-        return Response(BourseSerializer(bourses, many=True).data)
-    serializer = BourseSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-@api_view(['GET', 'PATCH', 'DELETE'])
-@permission_classes([IsAuthenticated])
-@permission_requise('gerer_bourses')
-def detail_bourse(request, pk):
-    try:
-        bourse = Bourse.objects.get(pk=pk)
-    except Bourse.DoesNotExist:
-        return Response({'detail': 'Bourse introuvable.'}, status=status.HTTP_404_NOT_FOUND)
-    if request.method == 'GET':
-        return Response(BourseSerializer(bourse).data)
-    if request.method == 'PATCH':
-        serializer = BourseSerializer(bourse, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    bourse.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
+
+

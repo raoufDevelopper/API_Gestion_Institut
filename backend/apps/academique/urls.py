@@ -43,6 +43,7 @@ urlpatterns = [
     path('emplois-du-temps/', views.liste_creer_emplois_du_temps, name='liste_creer_emplois_du_temps'),
     path('emplois-du-temps/<int:pk>/', views.detail_emploi_du_temps, name='detail_emploi_du_temps'),
     path('emplois-du-temps/<int:pk>/export-pdf/', views.export_emploi_du_temps_pdf, name='export_emploi_du_temps_pdf'),
+    path('emplois-du-temps/<int:pk>/dupliquer/', views.dupliquer_emploi_du_temps, name='dupliquer_emploi_du_temps'),
 
     # Seance
     path('seances/', views.liste_creer_seances, name='liste_creer_seances'),

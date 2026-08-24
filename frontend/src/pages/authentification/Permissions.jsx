@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { getPermissions, creerPermission, modifierPermission, supprimerPermission } from '../../api/permissions';
+import { getPermissions } from '../../api/permissions';
 import { useAlert } from '../../context/AlertContext';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import '../../assets/css/crud.css'
@@ -10,70 +10,24 @@ function Permissions() {
   const [permissions, setPermissions] = useState([]);
   const [recherche, setRecherche] = useState('');
   const [modalOuvert, setModalOuvert] = useState(false);
-  const [permissionASupprimer, setPermissionASupprimer] = useState(null);
-  const [suppressionEnCours, setSuppressionEnCours] = useState(false);
-  const [permissionEnEdition, setPermissionEnEdition] = useState(null);
   const [permissionEnDetail, setPermissionEnDetail] = useState(null);
   const { afficherSucces, afficherErreur } = useAlert();
   const { register, handleSubmit, reset, formState: { isSubmitting, errors } } = useForm();
-  const {
-    register: registerEdition,
-    handleSubmit: handleSubmitEdition,
-    reset: resetEdition,
-    formState: { isSubmitting: isSubmittingEdition },
-  } = useForm();
+
   const charger = async () => {
     const res = await getPermissions();
     setPermissions(res.data);
   };
+
   useEffect(() => {
     charger();
   }, []);
+  
   const permissionsFiltrees = permissions.filter((p) => {
     const texte = (p.code + ' ' + p.nom + ' ' + (p.description || '')).toLowerCase();
     return texte.includes(recherche.toLowerCase());
   });
-  const onSubmit = async (data) => {
-    try {
-      await creerPermission(data);
-      afficherSucces('Permission créée avec succès.');
-      reset();
-      setModalOuvert(false);
-      charger();
-    } catch (err) {
-      afficherErreur(err.response?.data?.code?.[0] || "Erreur lors de la création de la permission.");
-    }
-  };
-  const ouvrirEdition = (permission) => {
-    setPermissionEnEdition(permission.id);
-    resetEdition(permission);
-  };
-  const annulerEdition = () => {
-    setPermissionEnEdition(null);
-  };
-  const onSubmitEdition = async (data) => {
-    try {
-      await modifierPermission(permissionEnEdition, data);
-      afficherSucces('Permission modifiée avec succès.');
-      setPermissionEnEdition(null);
-      charger();
-    } catch (err) {
-      afficherErreur(err.response?.data?.code?.[0] || "Erreur lors de la modification.");
-    }
-  };
-  const confirmerSuppression = async () => {
-    setSuppressionEnCours(true);
-    try {
-      await supprimerPermission(permissionASupprimer.id);
-      afficherSucces('Permission supprimée.');
-      setPermissionASupprimer(null);
-      charger();
-    } catch (err) {
-      afficherErreur('Erreur lors de la suppression.');
-    } finally {
-      setSuppressionEnCours(false);
-    }
-  };
+
 
 
   return (
@@ -86,10 +40,7 @@ function Permissions() {
             <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>Gestion des permissions</h3>
             <div className="sub">{permissions.length} permissions</div>
           </div>
-          <button className="btn-primary addInscr" onClick={() => setModalOuvert(true)}>
-            <i className="fas fa-plus"></i>
-            Nouvelle permission
-          </button>
+          
         </div>
         
         {/* TOOLBAR */}
@@ -121,7 +72,7 @@ function Permissions() {
                   <th>Nom</th>
                   <th>Ajoutée le</th>
                   <th>Description</th>
-                  <th>Action</th>
+                  <th style={{ textAlign: "right"}}>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -131,15 +82,9 @@ function Permissions() {
                     <td>{p.nom}</td>
                     <td>{new Date(p.date_ajout).toLocaleDateString('fr-FR')}</td>
                     <td><div className="cell-sub description">{p.description || '—'}</div></td>
-                    <td>
+                    <td style={{ textAlign: "right"}}>
                       <button className="table-btn view" onClick={() => setPermissionEnDetail(p)}>
-                        <i className="fas fa-eye"></i>
-                      </button>
-                      <button className="table-btn edit" onClick={() => ouvrirEdition(p)}>
-                        <i className="fas fa-pen"></i>
-                      </button>
-                      <button className="table-btn delete" onClick={() => setPermissionASupprimer(p)}>
-                        <i className="fas fa-trash"></i>
+                        <i className="fas fa-eye"></i> 
                       </button>
                     </td>
                   </tr>
@@ -156,72 +101,6 @@ function Permissions() {
           </div>
         </div>
       </div>
-
-
-
-
-      {/* MODAL DE CREATION */}
-      <div className="department-modal" style={{ display: modalOuvert ? 'flex' : 'none' }}>
-        
-        <div className="modal-content">
-        
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #400c7c, #a14fff)' }}>
-            <h2>Nouvelle permission</h2>
-            <button className="btn-primary addInscr" onClick={() => setModalOuvert(false)}>
-              <i className="fas fa-times"></i>
-            </button>
-          </div>
-        
-        
-          <form onSubmit={handleSubmit(onSubmit)} id='departmentForm'>
-           
-            <div className="form-grid">
-              
-              <div className="form-group">
-                <div>
-                  <label>Code</label>
-                  <span className="required" style={{ color: 'red' }}>*</span>
-                </div>
-                <input type="text" {...register('code', { required: 'Le code est requis' })} />
-                <div className="text-help">Identifiant technique, ex. "gerer_etudiants".</div>
-                {errors.code && <div className="form-errors">{errors.code.message}</div>}
-              </div>
-              
-              <div className="form-group">
-                <div>
-                  <label>Nom</label>
-                  <span className="required" style={{ color: 'red' }}>*</span>
-                </div>
-                <input type="text" {...register('nom', { required: 'Le nom est requis' })} />
-                {errors.nom && <div className="form-errors">{errors.nom.message}</div>}
-              </div>
-              
-              <div className="form-group">
-                <label>Description</label>
-                <textarea rows="3" {...register('description')}></textarea>
-              </div>
-            </div>
-            
-            <div className="modal-footer">
-              <button type="submit" className="btn-primary addInscr" disabled={isSubmitting}>
-                {isSubmitting ? 'Enregistrement...' : 'Enregistrer'}
-              </button>
-            </div>
-        
-          </form>
-        
-
-          <hr />
-        
-          <p id="consigne">
-            Le remplissage des champs marqués avec (*) est obligatoire. 
-            Soumettez le formulaire si consigne respectée !
-          </p>
-        
-        </div>
-      
-      </div>
-
 
 
 
@@ -260,17 +139,6 @@ function Permissions() {
         </div>
       </div>
 
-
-
-      {/* MODAL DE CONFIRMATION SUPPRESSION */}
-      <ConfirmationModal
-        ouvert={!!permissionASupprimer}
-        titre="Supprimer la permission"
-        message={`Voulez-vous vraiment supprimer la permission « ${permissionASupprimer?.nom} » ?`}
-        onConfirmer={confirmerSuppression}
-        onAnnuler={() => setPermissionASupprimer(null)}
-        chargement={suppressionEnCours}
-      />
     </div>
 
   );

@@ -240,13 +240,20 @@ def liste_creer_utilisateurs(request):
 
     if request.method == 'GET':
 
-        users = User.objects.all()
+        users = User.objects.select_related('role').all()
 
-        serializer = UserSerializer(users, many=True)
+        kpis = {
+            'total': User.objects.count(),
+            'actifs': User.objects.filter(is_active=True).count(),
+            'desactives': User.objects.filter(is_active=False).count(),
+        }
 
-        return Response(serializer.data)
+        return Response({
+            'resultats': UserSerializer(users, many=True, context={'request': request}).data,
+            'kpis': kpis,
+        })
 
-    serializer = UserSerializer(data=request.data)
+    serializer = UserSerializer(data=request.data, context={'request': request})
 
 
     if serializer.is_valid():

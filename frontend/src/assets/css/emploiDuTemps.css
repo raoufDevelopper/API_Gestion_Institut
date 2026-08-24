@@ -1,0 +1,245 @@
+/* ---- Page blocs ---- */
+.edt-blocs-page { padding: 20px; }
+.edt-blocs-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 30px;
+}
+.edt-blocs-header h1 { font-size: 22px; font-weight: 700; color: #1f2937; }
+.edt-blocs-filtres {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.edt-blocs-filtres select {
+  padding: 9px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 13px;
+  background: #ffffff;
+}
+.edt-groupe-annee { margin-bottom: 36px; }
+.edt-titre-annee {
+  font-size: 17px;
+  font-weight: 700;
+  color: #400c7c;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 2px solid #ede4fb;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+}
+.edt-groupe-semestre { margin-bottom: 22px; margin-left: 8px; }
+.edt-titre-semestre { font-size: 14px; font-weight: 700; color: #374151; margin-bottom: 12px; }
+.edt-groupe-semaine { margin-bottom: 18px; margin-left: 16px; }
+.edt-titre-semaine { font-size: 12.5px; font-weight: 600; color: #6b7280; margin-bottom: 10px; }
+.edt-cartes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+}
+.edt-carte {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 14px;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+.edt-carte:hover { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08); transform: translateY(-2px); }
+.edt-carte-header { margin-bottom: 8px; }
+.edt-carte-classe { font-size: 15px; font-weight: 700; color: #1f2937; }
+.edt-carte-titre { font-size: 12.5px; color: #6b7280; margin-top: 2px; margin-bottom: 12px; }
+.edt-carte-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 10px;
+}
+.edt-carte-seances { font-size: 12px; color: #6b7280; display: flex; align-items: center; gap: 5px; }
+.edt-btn-pdf {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: none;
+  background: #fef2f2;
+  color: #dc2626;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.edt-btn-pdf:hover { background: #dc2626; color: #ffffff; }
+/* ---- Toggle vue Blocs / Calendrier ---- */
+.edt-toggle-vue {
+  display: flex;
+  background: #f1f5f9;
+  border-radius: 8px;
+  padding: 3px;
+  gap: 3px;
+}
+.edt-toggle-vue button {
+  border: none;
+  background: transparent;
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.edt-toggle-vue button.active {
+  background: #ffffff;
+  color: #400c7c;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+/* ---- Alerte conflits ---- */
+.edt-alerte-conflits {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 18px;
+  display: flex;
+  gap: 10px;
+  color: #991b1b;
+  font-size: 13px;
+}
+.edt-alerte-conflits i { margin-top: 2px; }
+/* ---- Formulaire / détail : blocs par jour ---- */
+.edt-form-principal { padding: 20px; margin-bottom: 24px; }
+.edt-jours-conteneur { display: flex; flex-direction: column; gap: 14px; }
+.edt-jour-bloc {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.edt-jour-entete {
+  background: linear-gradient(135deg, #400c7c, #a14fff);
+  color: #ffffff;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 13.5px;
+  letter-spacing: 0.3px;
+}
+.edt-jour-entete-lecture { background: #6b7280; }
+.edt-btn-ajouter {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.edt-btn-ajouter:hover { background: rgba(255, 255, 255, 0.35); }
+.edt-seances-liste { padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+.edt-jour-vide { font-size: 12.5px; color: #9ca3af; font-style: italic; padding: 6px 0; }
+.edt-seance-ligne {
+  display: grid;
+  grid-template-columns: 90px 1.4fr 1.4fr 1fr 100px 100px 36px;
+  gap: 8px;
+  align-items: center;
+}
+.edt-seance-ligne select,
+.edt-seance-ligne input {
+  padding: 7px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+  font-size: 12.5px;
+}
+.edt-btn-supprimer {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: none;
+  background: #fef2f2;
+  color: #dc2626;
+  cursor: pointer;
+}
+.edt-btn-supprimer:hover { background: #dc2626; color: #ffffff; }
+.edt-form-footer { margin-top: 24px; padding: 0; border: none; }
+/* ---- Détail en lecture seule ---- */
+.edt-jours-lecture .edt-seance-carte-lecture {
+  background: #f8fafc;
+  border-left: 3px solid #400c7c;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.edt-seance-type {
+  display: inline-block;
+  background: #ede4fb;
+  color: #400c7c;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  margin-bottom: 6px;
+}
+.edt-seance-matiere { font-size: 13.5px; font-weight: 700; color: #1f2937; margin-bottom: 6px; }
+.edt-seance-details { display: flex; flex-direction: column; gap: 3px; font-size: 11.5px; color: #6b7280; }
+.edt-seance-details span { display: flex; align-items: center; gap: 6px; }
+/* ---- Vue calendrier ---- */
+.edt-calendrier-wrapper { margin-top: 10px; }
+.edt-calendrier {
+  display: grid;
+  grid-template-columns: 60px repeat(6, 1fr);
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #ffffff;
+}
+.edt-calendrier-coin { background: #f8fafc; border-bottom: 1px solid #e5e7eb; }
+.edt-calendrier-jour-entete {
+  background: #400c7c;
+  color: #ffffff;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 8px 4px;
+}
+.edt-calendrier-heure {
+  font-size: 10.5px;
+  color: #9ca3af;
+  text-align: right;
+  padding: 4px 6px;
+  border-top: 1px solid #f1f5f9;
+  border-right: 1px solid #f1f5f9;
+}
+.edt-calendrier-case {
+  border-top: 1px solid #f1f5f9;
+  border-right: 1px solid #f1f5f9;
+  min-height: 34px;
+  padding: 2px;
+}
+.edt-calendrier-seance {
+  background: #ede4fb;
+  border-left: 3px solid #400c7c;
+  border-radius: 4px;
+  padding: 3px 6px;
+  font-size: 10px;
+  margin-bottom: 2px;
+}
+.edt-calendrier-seance strong { display: block; color: #400c7c; }
+.edt-calendrier-seance span { color: #6b7280; }
+.edt-calendrier-note {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #9ca3af;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+@media (max-width: 900px) {
+  .edt-seance-ligne { grid-template-columns: 1fr 1fr; }
+  .edt-calendrier { grid-template-columns: 50px repeat(6, minmax(80px, 1fr)); overflow-x: auto; }
+}

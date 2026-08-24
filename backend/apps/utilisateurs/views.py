@@ -16,7 +16,7 @@ from apps.authentification.decorators import permission_requise
 
 from .models import Etudiant, Personnel, Formateur
 
-from .serializers import EtudiantSerializer, PersonnelSerializer, FormateurSerializer
+from .serializers import EtudiantCompletSerializer, EtudiantSerializer, FormateurCompletSerializer, PersonnelCompletSerializer, PersonnelSerializer, FormateurSerializer
 
 from django.template.loader import render_to_string
 
@@ -29,35 +29,94 @@ from weasyprint import HTML
 
 
 
+
+# ########################## creer_etudiant_complet
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
+@permission_requise('gerer_etudiants')
+def creer_etudiant_complet(request):
+    serializer = EtudiantCompletSerializer(data=request.data)
+    if serializer.is_valid():
+        etudiant = serializer.save()
+        return Response(EtudiantSerializer(etudiant, context={'request': request}).data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+# ########################## creer_personnel_complet
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
+@permission_requise('gerer_personnel')
+def creer_personnel_complet(request):
+    serializer = PersonnelCompletSerializer(data=request.data)
+    if serializer.is_valid():
+        personnel = serializer.save()
+        return Response(PersonnelSerializer(personnel, context={'request': request}).data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+# ########################## creer_formateur_complet
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
+@permission_requise('gerer_formateurs')
+def creer_formateur_complet(request):
+    serializer = FormateurCompletSerializer(data=request.data)
+    if serializer.is_valid():
+        formateur = serializer.save()
+        return Response(FormateurSerializer(formateur, context={'request': request}).data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # ---------- UTILISATEURS DISPONIBLES (pour les selects) ----------
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def utilisateurs_disponibles_etudiant(request):
-    """Users sans profil Étudiant ni Personnel - pour le select de création."""
-    exclus = list(Etudiant.objects.values_list('user_id', flat=True)) + \
-             list(Personnel.objects.values_list('user_id', flat=True))
-    users = User.objects.exclude(id__in=exclus)
-    return Response(UserSerializer(users, many=True).data)
-
+    """Users avec le rôle Étudiant, pas encore liés à un profil Étudiant."""
+    deja_lies = Etudiant.objects.values_list('user_id', flat=True)
+    users = User.objects.filter(role__nom='Étudiant').exclude(id__in=deja_lies)
+    return Response(UserSerializer(users, many=True, context={'request': request}).data)
 
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def utilisateurs_disponibles_personnel(request):
-    exclus = list(Etudiant.objects.values_list('user_id', flat=True)) + \
-             list(Personnel.objects.values_list('user_id', flat=True))
-    users = User.objects.exclude(id__in=exclus)
-    return Response(UserSerializer(users, many=True).data)
-
+    """Users avec un rôle autre qu'Étudiant, pas encore liés à un profil Personnel."""
+    deja_lies = Personnel.objects.values_list('user_id', flat=True)
+    users = User.objects.exclude(role__nom='Étudiant').exclude(role__isnull=True).exclude(id__in=deja_lies)
+    return Response(UserSerializer(users, many=True, context={'request': request}).data)
 
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def personnel_disponible_formateur(request):
-    """Personnel n'ayant pas encore de profil Formateur - pour le select."""
-    exclus = Formateur.objects.values_list('personnel_id', flat=True)
-    personnel = Personnel.objects.exclude(id__in=exclus)
-    return Response(PersonnelSerializer(personnel, many=True).data)
+    """Personnel dont le User a le rôle Formateur, pas encore lié à un profil Formateur."""
+    deja_lies = Formateur.objects.values_list('personnel_id', flat=True)
+    personnel = Personnel.objects.filter(user__role__nom='Formateur').exclude(id__in=deja_lies)
+    return Response(PersonnelSerializer(personnel, many=True, context={'request': request}).data)
 
 
 

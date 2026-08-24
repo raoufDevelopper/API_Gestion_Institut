@@ -6,6 +6,12 @@ from . import views
 
 
 urlpatterns = [
+
+    # creation complete
+    path('etudiants/creer-complet/', views.creer_etudiant_complet, name='creer_etudiant_complet'),
+    path('personnel/creer-complet/', views.creer_personnel_complet, name='creer_personnel_complet'),
+    path('formateurs/creer-complet/', views.creer_formateur_complet, name='creer_formateur_complet'),
+
     # Selects filtrés
     path('utilisateurs-disponibles/etudiant/', views.utilisateurs_disponibles_etudiant),
     path('utilisateurs-disponibles/personnel/', views.utilisateurs_disponibles_personnel),

@@ -4,11 +4,17 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
+
+
+
 class TimeStampedModel(models.Model):
     cree_le = models.DateTimeField(auto_now_add=True)
     modifie_le = models.DateTimeField(auto_now=True)
     class Meta:
         abstract = True
+
+
+
 # ---------------------------------------------------------------------------
 # Paramétrage — Dépenses
 # ---------------------------------------------------------------------------
@@ -28,6 +34,12 @@ class CategorieDepense(models.Model):
         ordering = ["nom"]
     def __str__(self):
         return self.nom
+
+
+
+
+
+
 # ---------------------------------------------------------------------------
 # Paramétrage — Types de frais & Tarification
 # ---------------------------------------------------------------------------
@@ -42,6 +54,10 @@ class TypePaiement(models.Model):
         ordering = ["ordre", "nom"]
     def __str__(self):
         return self.nom
+
+
+
+
 class TarifQuerySet(models.QuerySet):
     def resoudre(self, type_paiement, specialite, niveau, annee_academique):
         candidats = self.filter(
@@ -59,6 +75,10 @@ class TarifQuerySet(models.QuerySet):
             if priorite > meilleure_priorite:
                 meilleure_priorite, meilleur = priorite, tarif
         return meilleur
+
+
+
+
 class Tarif(models.Model):
     type_paiement = models.ForeignKey(TypePaiement, on_delete=models.PROTECT, related_name="tarifs")
     specialites = models.ManyToManyField(
@@ -113,6 +133,15 @@ class Tarif(models.Model):
             type_paiement=self.type_paiement, annee_academique=self.annee_academique, actif=True,
         ).exclude(pk=self.pk)
         return [t for t in candidats if self.chevauche(t)]
+
+
+
+
+
+
+
+
+
 # ---------------------------------------------------------------------------
 # Inscription
 # ---------------------------------------------------------------------------
@@ -147,7 +176,7 @@ class Inscription(TimeStampedModel):
         for type_paiement in TypePaiement.objects.filter(obligatoire_a_inscription=True):
             tarif = Tarif.objects.resoudre(
                 type_paiement=type_paiement,
-                specialite=self.classe.nom,
+                specialite=self.classe.specialite,
                 niveau=self.classe.niveau,
                 annee_academique=self.annee_academique,
             )

@@ -69,7 +69,7 @@ class AnneeAcademiqueSerializer(serializers.ModelSerializer):
 
 
 class ClasseSerializer(serializers.ModelSerializer):
-    specialite_nom = serializers.CharField(source='nom.nom', read_only=True)
+    specialite_code = serializers.CharField(source='specialite.code', read_only=True)
     niveau_nom = serializers.CharField(source='niveau.nom', read_only=True)
     filiere_nom = serializers.CharField(source='filiere.nom', read_only=True)
     class Meta:
@@ -82,9 +82,15 @@ class ClasseSerializer(serializers.ModelSerializer):
 class EmploiDuTempsSerializer(serializers.ModelSerializer):
     classe_str = serializers.CharField(source='classe.__str__', read_only=True)
     nom_affiche = serializers.CharField(read_only=True)
+    nb_seances = serializers.IntegerField(read_only=True, default=0)
+    annee_academique_libelle = serializers.CharField(source='annee_academique.libelle', read_only=True)
+    formateurs_ids = serializers.SerializerMethodField()
     class Meta:
         model = EmploiDuTemps
         fields = '__all__'
+
+    def formateurs_ids(self, obj):
+        return list(obj.seances.exclude(formateurs__isnull = True).values_list('formateurs_ids', flat = True).distinct())
 
 
 

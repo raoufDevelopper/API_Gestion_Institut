@@ -20,14 +20,18 @@ const MENUS = [
       // à enrichir quand l'app statistiques sera construite
     ],
   },
+
   {
     id: 'authentification',
     titre: 'Auth et Autorisations',
     classe: 'gaa',
     items: [
-      { label: 'Permissions', to: '/utilisateurs/permissions', icone: 'fa-user-tag', permission: 'voir_permissions' },
+      { label: 'Permissions', to: '/utilisateurs/permissions', icone: 'fa-key', permission: 'voir_permissions' },
+      { label: 'Rôles', to: '/utilisateurs/roles', icone: 'fa-user-tag', permission: 'gerer_roles' },
+      { label: 'Utilisateurs', to: '/utilisateurs/comptes', icone: 'fa-user', permission: 'gerer_utilisateurs' },
     ],
   },
+  
   {
     id: 'utilisateurs',
     titre: 'Gestion des Utilisateurs',
@@ -35,41 +39,56 @@ const MENUS = [
     items: [
       // { label: 'Personnel', to: '/utilisateurs/personnel', icone: 'fa-users', permission: 'voir_personnel' },
       // { label: 'Formateur', to: '/utilisateurs/formateurs', icone: 'fa-person-chalkboard', permission: 'voir_formateurs' },
-      // { label: 'Apprenant', to: '/utilisateurs/etudiants', icone: 'fa-user-graduate', permission: 'voir_etudiants' },
-      // { label: 'Utilisateur', to: '/utilisateurs/comptes', icone: 'fa-user', permission: 'voir_utilisateurs' },
-      // { label: 'Rôle', to: '/utilisateurs/roles', icone: 'fa-user-tag', permission: 'voir_roles' },
+      { label: 'Apprenant', to: '/utilisateurs/etudiants', icone: 'fa-user-graduate', permission: 'voir_etudiants' },
     ],
   },
+  
   {
     id: 'academique',
     titre: 'Gestion Académique',
     classe: 'ga',
-    items: [],
+    items: [
+      { label: 'Filières', to: '/academique/filieres', icone: 'fa-sitemap', permission: 'gerer_filieres' },
+      { label: 'Spécialités', to: '/academique/specialites', icone: 'fa-diagram-project', permission: 'gerer_specialites' },
+      { label: 'Salles', to: '/academique/salles', icone: 'fa-door-open', permission: 'gerer_salles' },
+      { label: 'Matières', to: '/academique/matieres', icone: 'fa-book-open', permission: 'gerer_matieres' },
+      { label: 'Niveaux', to: '/academique/niveaux', icone: 'fa-layer-group', permission: 'gerer_niveaux' },
+      { label: 'Types de salle', to: '/academique/types-salle', icone: 'fa-tags', permission: 'gerer_salles' },
+      { label: 'Classes', to: '/academique/classes', icone: 'fa-users-rectangle', permission: 'gerer_classes' },
+      { label: 'Sanctions', to: '/academique/sanctions', icone: 'fa-gavel', permission: 'gerer_sanctions' },
+      { label: 'Année.Aca', to: '/academique/annees-academiques', icone: 'fa-calendar-days', permission: 'gerer_annees_academiques' },
+      { label: 'Emplois du temps', to: '/academique/emplois-du-temps', icone: 'fa-table-list', permission: 'gerer_emplois_du_temps' },
+    ],
   },
+  
   {
     id: 'notes',
     titre: 'Gestion des Notes',
     classe: 'gn',
     items: [],
   },
+  
   {
     id: 'finances',
     titre: 'Gestion Financière',
     classe: 'gf',
     items: [],
   },
+  
   {
     id: 'documents',
     titre: 'Gestion Documentaire',
     classe: 'gd',
     items: [],
   },
+  
   {
     id: 'bibliotheque',
     titre: 'Bibliothèque',
     classe: 'gb',
     items: [],
   },
+  
   {
     id: 'parametres',
     titre: 'Paramètre et Sécurité',
@@ -81,7 +100,11 @@ const MENUS = [
       { label: 'Sauvegarde', to: '/parametres/sauvegardes', icone: 'fa-floppy-disk', permission: 'gerer_sauvegardes' },
     ],
   },
+
 ];
+
+
+
 
 
 

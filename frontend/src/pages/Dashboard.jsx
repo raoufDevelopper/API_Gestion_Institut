@@ -1,6 +1,7 @@
 function Dashboard() {
   return (
     <div className="container-principal">
+      Accueil
     </div>
   );
 }

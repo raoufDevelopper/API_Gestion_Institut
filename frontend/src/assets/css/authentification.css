@@ -179,6 +179,10 @@
   color: rgb(252, 72, 72);
 }
 
+.form-error {
+  margin-top: 10px;
+}
+
 .btn-auth{
   width:100%;
   padding:13px;

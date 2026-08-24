@@ -265,7 +265,7 @@ class AnneeAcademique(models.Model):
 
     
 # ---------- CLASSE ----------
-class Classe(models.Model):
+class Classe(models.Model): 
 
     specialite = models.ForeignKey(Specialite, on_delete=models.CASCADE, related_name="classe", null = True, blank = True)
 
