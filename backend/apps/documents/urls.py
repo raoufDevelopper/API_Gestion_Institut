@@ -18,4 +18,7 @@ urlpatterns = [
     # Document
     path('documents/', views.liste_creer_documents, name='liste_creer_documents'),
     path('documents/<int:pk>/', views.detail_document, name='detail_document'),
+
+    path('overview/', views.documents_overview, name='documents_overview'),
+    path('diplomes/deliberations-eligibles/', views.deliberations_eligibles_diplome, name='deliberations_eligibles_diplome'),
 ]

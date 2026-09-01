@@ -281,7 +281,7 @@ class Classe(models.Model):
         verbose_name_plural = "Classes"
 
     def __str__(self):
-        return f"{self.specialite.code} - {self.niveau}"
+        return f"{self.specialite} - {self.niveau}"
 
 
 

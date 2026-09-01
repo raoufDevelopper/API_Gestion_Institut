@@ -239,7 +239,12 @@ function LoginRegister() {
     
                 <input type="file" accept="image/*" {...register('photo_profil')}/>
     
-                <label className="label"><span className="label-text">Ajoutez une photo de profil (cette action est optionnelle)</span></label>
+                <label className="label" style={{ color: "#bdb9b9" }}>
+                  <span className="label-text">
+                    Ajoutez une photo de profil 
+                    (cette action est optionnelle)
+                    </span>
+                </label>
     
               </div>
 

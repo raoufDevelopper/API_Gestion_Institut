@@ -81,6 +81,8 @@ function Specialites() {
     }
   };
   const { total = 0, actif = 0, inactif = 0, suspendu = 0 } = donnees.kpis;
+  
+  
   return (
     <div className="container-principal">
       <div className="department-page">
@@ -95,6 +97,8 @@ function Specialites() {
             Nouvelle spécialité
           </button>
         </div>
+
+
         {/* KPI */}
         <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
           <div className="department-card">
@@ -106,14 +110,15 @@ function Specialites() {
             <div className="count-top"><h2>{actif}</h2><span>Actives</span></div>
           </div>
           <div className="department-card">
-            <div className="kpi-icon aqua"><i className="fas fa-pause-circle"></i></div>
+            <div className="kpi-icon red"><i className="fas fa-ban"></i></div>
             <div className="count-top"><h2>{inactif}</h2><span>Inactives</span></div>
           </div>
           <div className="department-card">
-            <div className="kpi-icon red"><i className="fas fa-ban"></i></div>
+            <div className="kpi-icon orange"><i className="fas fa-pause-circle"></i></div>
             <div className="count-top"><h2>{suspendu}</h2><span>Suspendues</span></div>
           </div>
         </div>
+
         {/* TOOLBAR */}
         <div className="department-toolbar">
           <div className="toolbar-left">
@@ -128,6 +133,7 @@ function Specialites() {
             </div>
           </div>
         </div>
+
         {/* TABLE */}
         <div className="department-card table-card">
           <div className="table-title">
@@ -152,8 +158,7 @@ function Specialites() {
                     <td>{s.nom}</td>
                     <td>{s.filiere_nom || '—'}</td>
                     <td>
-                      <span className={`badge ${s.statut === 'actif' ? 'emerald' : s.statut === 'inactif' ? 'amber' : 'brick'}`}>
-                        <span className="dot"></span>
+                      <span className={`badge-${s.statut === 'actif' ? 'success' : s.statut === 'inactif' ? 'danger' : 'orange'}`}>
                         {STATUTS.find((st) => st.value === s.statut)?.label}
                       </span>
                     </td>

@@ -76,7 +76,12 @@ def creer_formateur_complet(request):
 
 
 
-
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def utilisateurs_disponibles_formateur(request):
+    deja_lies = Personnel.objects.values_list('user_id', flat=True)
+    users = User.objects.filter(role__nom='Formateur').exclude(id__in=deja_lies)
+    return Response(UserSerializer(users, many=True, context={'request': request}).data)
 
 
 
@@ -137,7 +142,7 @@ def personnel_disponible_formateur(request):
 def liste_creer_etudiants(request):
     if request.method == 'GET':
         etudiants = Etudiant.objects.all()
-        return Response(EtudiantSerializer(etudiants, many=True).data)
+        return Response(EtudiantSerializer(etudiants, many=True, context={'request': request}).data)
     serializer = EtudiantSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
@@ -150,19 +155,26 @@ def liste_creer_etudiants(request):
 @parser_classes([MultiPartParser, FormParser])
 @permission_requise('gerer_etudiants')
 def detail_etudiant(request, pk):
+
     try:
         etudiant = Etudiant.objects.get(pk=pk)
+
     except Etudiant.DoesNotExist:
         return Response({'detail': 'Étudiant introuvable.'}, status=status.HTTP_404_NOT_FOUND)
+
     if request.method == 'GET':
-        return Response(EtudiantSerializer(etudiant).data)
+        return Response(EtudiantSerializer(etudiant, context={'request': request}).data)
+
     if request.method == 'PATCH':
-        serializer = EtudiantSerializer(etudiant, data=request.data, partial=True)
+        serializer = EtudiantSerializer(etudiant, data=request.data, partial=True, context={'request': request})
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     etudiant.delete()
+
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -183,13 +195,22 @@ def detail_etudiant(request, pk):
 @parser_classes([MultiPartParser, FormParser])
 @permission_requise('gerer_personnel')
 def liste_creer_personnel(request):
+
     if request.method == 'GET':
+
         personnel = Personnel.objects.all()
-        return Response(PersonnelSerializer(personnel, many=True).data)
+
+        return Response(PersonnelSerializer(personnel, many=True, context={'request': request}).data)
+    
     serializer = PersonnelSerializer(data=request.data)
+
+
     if serializer.is_valid():
+
         serializer.save()
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -198,19 +219,31 @@ def liste_creer_personnel(request):
 @parser_classes([MultiPartParser, FormParser])
 @permission_requise('gerer_personnel')
 def detail_personnel(request, pk):
+
     try:
         personnel = Personnel.objects.get(pk=pk)
+
     except Personnel.DoesNotExist:
         return Response({'detail': 'Personnel introuvable.'}, status=status.HTTP_404_NOT_FOUND)
+
     if request.method == 'GET':
-        return Response(PersonnelSerializer(personnel).data)
+        return Response(PersonnelSerializer(personnel, context={'request': request}).data)
+
+
     if request.method == 'PATCH':
-        serializer = PersonnelSerializer(personnel, data=request.data, partial=True)
+
+        serializer = PersonnelSerializer(personnel, data=request.data, partial=True, context={'request': request})
+
         if serializer.is_valid():
+
             serializer.save()
+
             return Response(serializer.data)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     personnel.delete()
+
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 

@@ -6,7 +6,6 @@ from . import views
 
 
 urlpatterns = [
-
     # creation complete
     path('etudiants/creer-complet/', views.creer_etudiant_complet, name='creer_etudiant_complet'),
     path('personnel/creer-complet/', views.creer_personnel_complet, name='creer_personnel_complet'),
@@ -16,6 +15,7 @@ urlpatterns = [
     path('utilisateurs-disponibles/etudiant/', views.utilisateurs_disponibles_etudiant),
     path('utilisateurs-disponibles/personnel/', views.utilisateurs_disponibles_personnel),
     path('personnel-disponible/formateur/', views.personnel_disponible_formateur),
+    path('utilisateurs-disponibles/formateur/', views.utilisateurs_disponibles_formateur, name='utilisateurs_disponibles_formateur'),
 
     # Étudiants
     path('etudiants/', views.liste_creer_etudiants, name = 'etudiant'),

@@ -76,6 +76,10 @@ body.dark{
 }
 
 #parametresForm .btn-primary {
+    width: 350px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background: var(--indigo);
     color: #fff;
     box-shadow: var(--shadow);
@@ -251,12 +255,16 @@ body.dark{
     font-family: inherit;
     font-size: 14px;
     color: var(--text);
-    background: var(--bg);
+    background: var(--bg) !important;
     border: 1px solid var(--input);
     border-radius: 4px;
     padding: 11px 14px;
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
     resize: vertical;
+}
+
+#parametresForm select {
+    background: var(--bg) !important;
 }
 
 .input-wrap input,

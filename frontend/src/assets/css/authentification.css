@@ -159,7 +159,7 @@
   border:none;
   border-radius: 5px;
   outline:none;
-  background: rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.15) !important;
   color:#fff;
   margin-bottom: 10px;
 }
@@ -179,7 +179,12 @@
   color: rgb(252, 72, 72);
 }
 
-.form-error {
+.text-error, .form-errors {
+  font-size: 13px;
+  color: rgb(252, 72, 72);
+}
+
+.form-errors {
   margin-top: 10px;
 }
 

@@ -5,11 +5,13 @@ import { getPersonnels } from '../../api/utilisateurs';
 import { useAlert } from '../../context/AlertContext';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import '../../assets/css/crud.css';
+
 const STATUTS = [
   { value: 'actif', label: 'Actif' },
   { value: 'inactif', label: 'Inactif' },
   { value: 'suspendu', label: 'Suspendu' },
-];
+]; 
+
 function Filieres() {
   const [donnees, setDonnees] = useState({ resultats: [], kpis: {} });
   const [personnels, setPersonnels] = useState([]);
@@ -21,23 +23,28 @@ function Filieres() {
   const [filiereEnDetail, setFiliereEnDetail] = useState(null);
   const { afficherSucces, afficherErreur } = useAlert();
   const { register, handleSubmit, reset, formState: { isSubmitting, errors } } = useForm();
+
   const charger = async () => {
     const res = await getFilieres();
     setDonnees(res.data);
   };
+
   useEffect(() => {
     charger();
     getPersonnels().then((res) => setPersonnels(res.data));
   }, []);
+
   const filieresFiltrees = donnees.resultats.filter((f) => {
     const texte = (f.code + ' ' + f.nom).toLowerCase();
     return texte.includes(recherche.toLowerCase());
   });
+
   const ouvrirCreation = () => {
     setFiliereEnEdition(null);
     reset({ code: '', nom: '', responsable: '', description: '', statut: 'actif' });
     setModalOuvert(true);
   };
+
   const ouvrirEdition = (filiere) => {
     setFiliereEnEdition(filiere.id);
     reset({
@@ -49,6 +56,7 @@ function Filieres() {
     });
     setModalOuvert(true);
   };
+
   const onSubmit = async (data) => {
     const payload = { ...data, responsable: data.responsable || null };
     try {
@@ -69,6 +77,7 @@ function Filieres() {
       );
     }
   };
+
   const confirmerSuppression = async () => {
     setSuppressionEnCours(true);
     try {
@@ -82,10 +91,15 @@ function Filieres() {
       setSuppressionEnCours(false);
     }
   };
+
   const { total = 0, actif = 0, inactif = 0, suspendu = 0 } = donnees.kpis;
+
+
+
   return (
     <div className="container-principal">
       <div className="department-page">
+
         {/* HEADER */}
         <div className="panel-head">
           <div>
@@ -97,6 +111,7 @@ function Filieres() {
             Nouvelle filière
           </button>
         </div>
+
         {/* KPI */}
         <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
           <div className="department-card">
@@ -108,14 +123,15 @@ function Filieres() {
             <div className="count-top"><h2>{actif}</h2><span>Actives</span></div>
           </div>
           <div className="department-card">
-            <div className="kpi-icon aqua"><i className="fas fa-pause-circle"></i></div>
+            <div className="kpi-icon red"><i className="fas fa-ban"></i></div>
             <div className="count-top"><h2>{inactif}</h2><span>Inactives</span></div>
           </div>
           <div className="department-card">
-            <div className="kpi-icon red"><i className="fas fa-ban"></i></div>
+            <div className="kpi-icon orange"><i className="fas fa-pause-circle"></i></div>
             <div className="count-top"><h2>{suspendu}</h2><span>Suspendues</span></div>
           </div>
         </div>
+        
         {/* TOOLBAR */}
         <div className="department-toolbar">
           <div className="toolbar-left">
@@ -130,6 +146,8 @@ function Filieres() {
             </div>
           </div>
         </div>
+        
+        
         {/* TABLE */}
         <div className="department-card table-card">
           <div className="table-title">
@@ -147,6 +165,7 @@ function Filieres() {
                   <th>Action</th>
                 </tr>
               </thead>
+              
               <tbody>
                 {filieresFiltrees.map((f) => (
                   <tr className="row-link" key={f.id}>
@@ -154,7 +173,7 @@ function Filieres() {
                     <td>{f.nom}</td>
                     <td>{f.responsable_nom || '—'}</td>
                     <td>
-                      <span className={`badge ${f.statut === 'actif' ? 'emerald' : f.statut === 'inactif' ? 'amber' : 'brick'}`}>
+                      <span className={`badge-${f.statut === 'actif' ? 'success' : f.statut === 'inactif' ? 'danger' : 'orange'}`}>
                         <span className="dot"></span>
                         {STATUTS.find((s) => s.value === f.statut)?.label}
                       </span>

@@ -4,6 +4,7 @@ import { getAnneesAcademiques, creerAnneeAcademique, modifierAnneeAcademique, su
 import { useAlert } from '../../context/AlertContext';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import '../../assets/css/crud.css';
+
 function AnneesAcademiques() {
   const [donnees, setDonnees] = useState({ resultats: [], kpis: {} });
   const [recherche, setRecherche] = useState('');
@@ -71,10 +72,17 @@ function AnneesAcademiques() {
       setSuppressionEnCours(false);
     }
   };
-  const { total = 0, active = 0, archivee = 0 } = donnees.kpis;
+  
+  const { total = 0, active = 0, inactif = 0 } = donnees.kpis;
+  
+  
+  
+  
+  
   return (
     <div className="container-principal">
       <div className="department-page">
+  
         {/* HEADER */}
         <div className="panel-head">
           <div>
@@ -86,6 +94,8 @@ function AnneesAcademiques() {
             Nouvelle année académique
           </button>
         </div>
+  
+  
         {/* KPI */}
         <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
           <div className="department-card">
@@ -97,10 +107,12 @@ function AnneesAcademiques() {
             <div className="count-top"><h2>{active}</h2><span>Active(s)</span></div>
           </div>
           <div className="department-card">
-            <div className="kpi-icon aqua"><i className="fas fa-box-archive"></i></div>
-            <div className="count-top"><h2>{archivee}</h2><span>Archivée(s)</span></div>
+            <div className="kpi-icon red"><i className="fas fa-ban"></i></div>
+            <div className="count-top"><h2>{inactif}</h2><span>Inactif(s)</span></div>
           </div>
         </div>
+  
+  
         {/* TOOLBAR */}
         <div className="department-toolbar">
           <div className="toolbar-left">
@@ -115,6 +127,7 @@ function AnneesAcademiques() {
             </div>
           </div>
         </div>
+
         {/* TABLE */}
         <div className="department-card table-card">
           <div className="table-title">
@@ -139,9 +152,9 @@ function AnneesAcademiques() {
                     <td>{new Date(a.date_debut).toLocaleDateString('fr-FR')}</td>
                     <td>{new Date(a.date_fin).toLocaleDateString('fr-FR')}</td>
                     <td>
-                      <span className={`badge ${a.statut ? 'emerald' : 'slate'}`}>
+                      <span className={`badge-${a.statut ? 'success' : 'danger'}`}>
                         <span className="dot"></span>
-                        {a.statut ? 'Active' : 'Archivée'}
+                        {a.statut ? 'Active' : 'Inactif'}
                       </span>
                     </td>
                     <td>
@@ -169,6 +182,8 @@ function AnneesAcademiques() {
           </div>
         </div>
       </div>
+
+
       {/* MODAL DE CREATION / MODIFICATION */}
       <div className="department-modal" style={{ display: modalOuvert ? 'flex' : 'none' }}>
         <div className="modal-content">
@@ -178,8 +193,12 @@ function AnneesAcademiques() {
               <i className="fas fa-times"></i>
             </button>
           </div>
+
+
           <form onSubmit={handleSubmit(onSubmit)} id="departmentForm">
+          
             <div className="form-grid">
+          
               <div className="form-group">
                 <div>
                   <label>Libellé</label>
@@ -188,6 +207,7 @@ function AnneesAcademiques() {
                 <input type="text" placeholder="Ex: 2025-2026" {...register('libelle', { required: 'Le libellé est requis' })} />
                 {errors.libelle && <div className="form-errors">{errors.libelle.message}</div>}
               </div>
+          
               <div className="form-group">
                 <div>
                   <label>Date de début</label>
@@ -205,8 +225,8 @@ function AnneesAcademiques() {
                 {errors.date_fin && <div className="form-errors">{errors.date_fin.message}</div>}
               </div>
               <div className="form-group">
-                <label className="switch-row">
-                  <span>Année active</span>
+                <label className="switch-row" style={{ display: "flex", justifyContent: "space-between", padding: "5px 0", borderTop: "solid 1px var(--input)" }}>
+                  <span style={{ marginRight: "10px" }}>Année active</span>
                   <label className="switch">
                     <input type="checkbox" {...register('statut')} />
                     <span className="slider"></span>

@@ -66,11 +66,11 @@ function Utilisateurs() {
         setUtilisateurEnEdition(utilisateur.id);
         setApercuPhoto(utilisateur.photo_profil);
         reset({
-        username: utilisateur.username,
-        email: utilisateur.email,
-        role: utilisateur.role || '',
-        is_active: utilisateur.is_active,
-        password: '',
+            username: utilisateur.username,
+            email: utilisateur.email,
+            role: utilisateur.role || '',
+            is_active: utilisateur.is_active,
+            password: '',
         });
         setModalOuvert(true);
     };
@@ -198,12 +198,16 @@ function Utilisateurs() {
                 
                 {/* TABLE */}
                 <div className="department-card table-card">
+                    
                     <div className="table-title">
                         <h2>Liste des utilisateurs</h2>
                         <span>{utilisateursFiltres.length} utilisateurs</span>
                     </div>
+                    
                     <div className="table-scroll">
+
                         <table>
+
                             <thead>
                                 <tr>
                                     <th>Utilisateur</th>
@@ -213,6 +217,7 @@ function Utilisateurs() {
                                     <th>Action</th>
                                 </tr>
                             </thead>
+
                             <tbody>
                                 {utilisateursFiltres.map((u) => (
                                 <tr className="row-link" key={u.id}>
@@ -255,8 +260,11 @@ function Utilisateurs() {
                                 </tr>
                                 )}
                             </tbody>
+                        
                         </table>
+                    
                     </div>
+                
                 </div>
 
             </div>
@@ -292,8 +300,8 @@ function Utilisateurs() {
                        
                         <div className="form-group">
                             <div>
-                            <label>Nom d'utilisateur</label>
-                            <span className="required" style={{ color: 'red' }}>*</span>
+                                <label>Nom d'utilisateur</label>
+                                <span className="required" style={{ color: 'red' }}>*</span>
                             </div>
                             <input type="text" {...register('username', { required: "Le nom d'utilisateur est requis" })} placeholder='Entrez le nom d utilisateur'/>
                             {errors.username && <div className="text-error form-error">{errors.username.message}</div>}
@@ -333,19 +341,23 @@ function Utilisateurs() {
                         
                         <div className="form-group">
                             <div>
-                            <label>{utilisateurEnEdition ? 'Nouveau mot de passe' : 'Mot de passe'}</label>
-                            {!utilisateurEnEdition && <span className="required" style={{ color: 'red' }}>*</span>}
+                                <label>{utilisateurEnEdition ? 'Nouveau mot de passe' : 'Mot de passe'}</label>
+                                {!utilisateurEnEdition && <span className="required" style={{ color: 'red' }}>*</span>}
                             </div>
+
                             <input type="password" {...register('password', { required: !utilisateurEnEdition && 'Le mot de passe est requis' })} placeholder='Entrez le mot de passe'/>
+                            
                             {utilisateurEnEdition && (
-                            <div className="text-help">Laisser vide pour ne pas changer le mot de passe.</div>
+                                <div className="text-help">Laisser vide pour ne pas changer le mot de passe.</div>
                             )}       
-                            {errors.password && <div className="text-error form-error">{errors.password.message}</div>}
+                                {errors.password && <div className="text-error form-error">{errors.password.message}</div>}
+                            
                             <div className="text-help">
                                 Le mot de passe doit vontenir 8 caractères au minimim 
                                 et il ne doit pas être fragile ! Mélangez des lettres, 
                                 chiffres et caractères spéciaux pour plus de sécurité.
                             </div>
+
                         </div>
                         
                         <div className="form-group">
@@ -357,12 +369,16 @@ function Utilisateurs() {
                                 </label>
                             </label>
                         </div>
+
                         </div>
+                        
+                        
                         <div className="modal-footer">
-                        <button type="submit" className="btn-primary addInscr" disabled={isSubmitting}>
-                            {isSubmitting ? 'Enregistrement...' : 'Enregistrer'}
-                        </button>
+                            <button type="submit" className="btn-primary addInscr" disabled={isSubmitting}>
+                                {isSubmitting ? 'Enregistrement...' : 'Enregistrer'}
+                            </button>
                         </div>
+
                     </form>
                     
                     <hr />
@@ -419,7 +435,9 @@ function Utilisateurs() {
                     </div>
                     </div>
                 )}
+
                 </div>
+            
             </div>
             
             

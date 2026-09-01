@@ -1,10 +1,15 @@
 from rest_framework import serializers
-from .models import Diplome, TypeCertificat, Certificat, Document
+from .models import Diplome, TypeCertificat, Certificat, Document 
+
+
+
+
 class DiplomeSerializer(serializers.ModelSerializer):
     etudiant_str = serializers.CharField(source='etudiant.__str__', read_only=True)
     numero_diplome = serializers.CharField(read_only=True)
     mention = serializers.CharField(read_only=True)
     signe_par_str = serializers.CharField(source='signe_par.__str__', read_only=True)
+    genere_par_nom = serializers.CharField(source='genere_par.username', read_only=True)
     class Meta:
         model = Diplome
         fields = '__all__'
@@ -20,22 +25,50 @@ class DiplomeSerializer(serializers.ModelSerializer):
         if qs.exists():
             raise serializers.ValidationError("Un diplôme existe déjà pour cette délibération.")
         return value
+
+
+
+
 class TypeCertificatSerializer(serializers.ModelSerializer):
     class Meta:
         model = TypeCertificat
         fields = '__all__'
+
+
+
+
+
 class CertificatSerializer(serializers.ModelSerializer):
     etudiant_str = serializers.CharField(source='etudiant.__str__', read_only=True)
     type_certificat_nom = serializers.CharField(source='type_certificat.nom', read_only=True)
     numero = serializers.CharField(read_only=True)
+    genere_par_nom = serializers.CharField(source='genere_par.username', read_only=True)
     class Meta:
         model = Certificat
         fields = '__all__'
         read_only_fields = ['genere_par', 'fichier']
+
+
+
+
+
 class DocumentSerializer(serializers.ModelSerializer):
-    concerne_etudiant_str = serializers.CharField(source='concerne_etudiant.__str__', read_only=True)
-    concerne_personnel_str = serializers.CharField(source='concerne_personnel.__str__', read_only=True)
+
+    concerne_str = serializers.SerializerMethodField()
+    
+    ajoute_par_nom = serializers.CharField(source='ajoute_par.username', read_only=True)
+
     class Meta:
         model = Document
         fields = '__all__'
         read_only_fields = ['ajoute_par']
+
+    def get_concerne_str(self, obj) :
+
+        if obj.concerne_etudiant is not None :
+            return str(obj.concerne_etudiant)
+
+        if obj.concerne_personnel is not None :
+            return str(obj.concerne_personnel)
+
+        return None

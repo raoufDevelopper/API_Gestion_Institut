@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
+from decimal import Decimal, InvalidOperation
 
 
 
@@ -12,6 +13,14 @@ class TimeStampedModel(models.Model):
     modifie_le = models.DateTimeField(auto_now=True)
     class Meta:
         abstract = True
+
+
+def heure_actuelle():
+    return timezone.localtime().time()
+
+
+
+
 
 
 
@@ -34,6 +43,11 @@ class CategorieDepense(models.Model):
         ordering = ["nom"]
     def __str__(self):
         return self.nom
+
+
+
+
+
 
 
 
@@ -136,6 +150,10 @@ class Tarif(models.Model):
 
 
 
+    
+
+
+
 
 
 
@@ -146,31 +164,39 @@ class Tarif(models.Model):
 # Inscription
 # ---------------------------------------------------------------------------
 class Inscription(TimeStampedModel):
+
     class Statut(models.TextChoices):
         EN_ATTENTE = "EN_ATTENTE", "En attente"
         VALIDEE = "VALIDEE", "Validée"
         ANNULEE = "ANNULEE", "Annulée"
+
+
     etudiant = models.ForeignKey("utilisateurs.Etudiant", on_delete=models.CASCADE, related_name="inscriptions")
+
     classe = models.ForeignKey("academique.Classe", on_delete=models.PROTECT, related_name="inscriptions")
-    annee_academique = models.ForeignKey(
-        "academique.AnneeAcademique", on_delete=models.CASCADE, related_name="inscriptions", null=True, blank=True
-    )
+
+    annee_academique = models.ForeignKey("academique.AnneeAcademique", on_delete=models.CASCADE, related_name="inscriptions", null=True, blank=True)
+
     date_inscription = models.DateField(default=timezone.localdate)
+
     statut = models.CharField(max_length=12, choices=Statut.choices, default=Statut.EN_ATTENTE)
-    cree_par = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name="inscriptions_creees",
-    )
+
+    cree_par = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name="inscriptions_creees",)
+
     class Meta:
         verbose_name = "Inscription"
         unique_together = ("etudiant", "annee_academique")
         ordering = ["-date_inscription"]
+
     def __str__(self):
         return f"{self.etudiant.nom} {self.etudiant.prenom} — {self.annee_academique}"
+
     def save(self, *args, **kwargs):
         est_nouvelle = self.pk is None
         super().save(*args, **kwargs)
         if est_nouvelle:
             self._appliquer_frais_obligatoires()
+
 
     def _appliquer_frais_obligatoires(self):
         for type_paiement in TypePaiement.objects.filter(obligatoire_a_inscription=True):
@@ -212,30 +238,39 @@ class Inscription(TimeStampedModel):
         return "PAYE"
 
 
+
 class FraisInscription(models.Model):
+
     inscription = models.ForeignKey(Inscription, on_delete=models.CASCADE, related_name="frais")
+
     type_paiement = models.ForeignKey(TypePaiement, on_delete=models.PROTECT, related_name="frais_appliques")
+
     montant_du = models.DecimalField(max_digits=10, decimal_places=2)
+
     date_application = models.DateField(default=timezone.localdate)
-    ajoute_par = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="frais_ajoutes",
-    )
+
+    ajoute_par = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="frais_ajoutes",)
+
     class Meta:
         verbose_name = "Frais d'inscription"
         verbose_name_plural = "Frais d'inscription"
         unique_together = ("inscription", "type_paiement")
         ordering = ["type_paiement__ordre"]
+
     def __str__(self):
         return f"{self.type_paiement} — {self.inscription}"
+
     @property
     def montant_paye(self):
         total = self.inscription.paiements.filter(
             type_paiement=self.type_paiement, statut=Paiement.Statut.VALIDE,
         ).aggregate(s=Sum("montant"))["s"]
         return total or 0
+
     @property
     def reste_a_payer(self):
         return max(self.montant_du - self.montant_paye, 0)
+
     @property
     def statut_paiement(self):
         paye = self.montant_paye
@@ -244,6 +279,20 @@ class FraisInscription(models.Model):
         if paye < self.montant_du:
             return "PARTIEL"
         return "PAYE"
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
 # ---------------------------------------------------------------------------
 # Paiement
 # ---------------------------------------------------------------------------
@@ -299,6 +348,17 @@ class Paiement(TimeStampedModel):
             self.numero_recu = self._generer_numero_recu()
         self.clean()
         super().save(*args, **kwargs)
+
+
+
+
+
+
+
+
+
+
+
 # ---------------------------------------------------------------------------
 # Dépense
 # ---------------------------------------------------------------------------
@@ -341,58 +401,96 @@ class Depense(TimeStampedModel):
     def save(self, *args, **kwargs):
         self.clean()
         super().save(*args, **kwargs)
+
+
+
+
+
+
+
+
+
+
+
+
+
 # ---------------------------------------------------------------------------
 # Caisse — session journalière
 # ---------------------------------------------------------------------------
 class CaisseSession(models.Model):
+
     class Statut(models.TextChoices):
         OUVERTE = "OUVERTE", "Ouverte"
         FERMEE = "FERMEE", "Fermée"
-    date_session = models.DateField(unique=True, default=timezone.localdate)
-    heure_ouverture = models.TimeField(default=timezone.localtime)
+
+
+    date_session = models.DateField(default=timezone.localdate)
+
+    heure_ouverture = models.TimeField(default = heure_actuelle)
+
     heure_fermeture = models.TimeField(null=True, blank=True)
+
     solde_ouverture = models.DecimalField(max_digits=10, decimal_places=2)
+
     solde_reel_fermeture = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    ouverte_par = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name="sessions_ouvertes",
-    )
-    fermee_par = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="sessions_fermees",
-    )
+
+    ouverte_par = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name="sessions_ouvertes",)
+
+    fermee_par = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="sessions_fermees",)
+
     statut = models.CharField(max_length=8, choices=Statut.choices, default=Statut.OUVERTE)
+
     observation = models.TextField(blank=True, help_text="Justification en cas d'écart de caisse.")
+
     class Meta:
         verbose_name = "Session de caisse"
         ordering = ["-date_session"]
+
     def __str__(self):
         return f"Caisse du {self.date_session:%d/%m/%Y}"
+
     @property
     def total_encaisse_especes(self):
         total = self.paiements.filter(
             mode_paiement=Paiement.ModePaiement.ESPECES, statut=Paiement.Statut.VALIDE,
         ).aggregate(s=Sum("montant"))["s"]
         return total or 0
+
     @property
     def total_depense_especes(self):
         total = self.depenses.filter(mode_paiement=Depense.ModePaiement.ESPECES).aggregate(s=Sum("montant"))["s"]
         return total or 0
+
     @property
     def solde_theorique(self):
         return self.solde_ouverture + self.total_encaisse_especes - self.total_depense_especes
+
     @property
     def ecart(self):
         if self.solde_reel_fermeture is None:
             return None
         return self.solde_reel_fermeture - self.solde_theorique
+    
+
     def fermer(self, solde_reel, user, observation=""):
         if self.statut != self.Statut.OUVERTE:
             raise ValidationError("Cette session est déjà fermée.")
+        try:
+            solde_reel = Decimal(str(solde_reel))
+        except (InvalidOperation, TypeError, ValueError):
+            raise ValidationError("Le solde réel doit être un nombre valide.")
         self.solde_reel_fermeture = solde_reel
         self.fermee_par = user
         self.observation = observation
         self.heure_fermeture = timezone.localtime().time()
         self.statut = self.Statut.FERMEE
         self.save()
+
+
+
+
+
+
 ###### Bourse
 class Bourse(models.Model):
     TYPE_REDUCTION_CHOICES = (
@@ -435,3 +533,5 @@ class Bourse(models.Model):
         else:
             reduction = valeur
         return min(reduction, montant_scolarite)  # jamais plus que le montant dû
+
+    

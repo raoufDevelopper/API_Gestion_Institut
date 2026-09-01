@@ -106,6 +106,12 @@ class ConfigurationMatricule(models.Model):
         ('PERSONNEL', 'Personnel'),
         ('DIPLOME', 'Diplôme'),
         ('CERTIFICAT', 'Certificat'),
+        ('RESSOURCE', 'Ressource bibliothèque'),
+        ('EXEMPLAIRE', 'Exemplaire bibliothèque'),
+        ('ADHERENT', 'Adhérent bibliothèque'),
+        ('EMPRUNT', 'Emprunt bibliothèque'),
+        ('RESERVATION', 'Réservation bibliothèque'),
+        ('ACQUISITION', 'Acquisition bibliothèque'),
     ]
     type_profil = models.CharField(max_length=20, choices=TYPE_CHOICES, unique=True)
     prefixe = models.CharField(max_length=10, default='MAT')
@@ -127,8 +133,9 @@ class ConfigurationMatricule(models.Model):
     
 def generer_matricule(type_profil):
     prefixes_defaut = {
-        'ETUDIANT': 'ETU', 'PERSONNEL': 'PER',
-        'DIPLOME': 'DIP', 'CERTIFICAT': 'CERT',
+        'ETUDIANT': 'ETU', 'PERSONNEL': 'PER', 'DIPLOME': 'DIP', 'CERTIFICAT': 'CERT',
+        'RESSOURCE': 'RES', 'EXEMPLAIRE': 'EX', 'ADHERENT': 'ADH',
+        'EMPRUNT': 'EMP', 'RESERVATION': 'RSV', 'ACQUISITION': 'ACQ',
     }
     config, _ = ConfigurationMatricule.objects.get_or_create(
         type_profil=type_profil,

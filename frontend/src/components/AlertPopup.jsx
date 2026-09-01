@@ -1,5 +1,4 @@
 import { useAlert } from '../context/AlertContext';
-import '../assets/css/AlertPopup.css'
 
 
 function AlertPopup() {

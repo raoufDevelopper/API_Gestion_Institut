@@ -17,6 +17,7 @@ urlpatterns = [
 
     # Consultation
     path('consultation/', views.consultation_notes, name='consultation_notes'),
+    path('consultation/pdf/', views.consultation_notes_pdf, name='consultation_notes_pdf'),
 
     # Relevé
     path('releve/', views.releve_notes, name='releve_notes'),

@@ -56,7 +56,18 @@ class Command(BaseCommand):
             {'code': 'gerer_documents', 'nom': 'Gérer les documents', 'description': 'Générer diplômes, certificats et autres documents officiels'},
 
             # Bibliothèque
-            {'code': 'gerer_bibliotheque', 'nom': 'Gérer la bibliothèque', 'description': "Gérer le catalogue, les emprunts, réservations et pénalités"},
+            {'code': 'gerer_bibliotheque_ressources', 'nom': 'Gérer les ressources', 'description': 'Catalogue de la bibliothèque'},
+            {'code': 'gerer_bibliotheque_exemplaires', 'nom': 'Gérer les exemplaires', 'description': 'Exemplaires physiques'},
+            {'code': 'gerer_bibliotheque_auteurs', 'nom': 'Gérer les auteurs', 'description': 'Auteurs de la bibliothèque'},
+            {'code': 'gerer_bibliotheque_editeurs', 'nom': 'Gérer les éditeurs', 'description': 'Éditeurs de la bibliothèque'},
+            {'code': 'gerer_bibliotheque_categories', 'nom': 'Gérer les catégories', 'description': 'Catégories de ressources'},
+            {'code': 'gerer_bibliotheque_adherents', 'nom': 'Gérer les adhérents', 'description': 'Adhérents de la bibliothèque'},
+            {'code': 'gerer_bibliotheque_emprunts', 'nom': 'Gérer les emprunts', 'description': 'Enregistrer emprunts et retours'},
+            {'code': 'gerer_bibliotheque_reservations', 'nom': 'Gérer les réservations', 'description': 'Réservations de ressources'},
+            {'code': 'gerer_bibliotheque_inventaire', 'nom': 'Gérer l\'inventaire', 'description': 'Inventaires de la bibliothèque'},
+            {'code': 'gerer_bibliotheque_acquisitions', 'nom': 'Gérer les acquisitions', 'description': 'Acquisitions de ressources'},
+            {'code': 'gerer_bibliotheque_fournisseurs', 'nom': 'Gérer les fournisseurs', 'description': 'Fournisseurs de la bibliothèque'},
+            {'code': 'gerer_bibliotheque_parametres', 'nom': 'Gérer les paramètres bibliothèque', 'description': 'Règles d\'emprunt et pénalités'},
         ]
 
 

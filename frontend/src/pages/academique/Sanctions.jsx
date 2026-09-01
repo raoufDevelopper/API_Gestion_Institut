@@ -4,29 +4,42 @@ import { getSanctions, creerSanction, modifierSanction, supprimerSanction } from
 import { useAlert } from '../../context/AlertContext';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import '../../assets/css/crud.css';
+
 const TYPES = [
   { value: 'avertissement', label: 'Avertissement' },
   { value: 'blame', label: 'Blâme' },
   { value: 'exclusion_tem', label: 'Exclusion temporaire' },
   { value: 'exclusion_def', label: 'Exclusion définitive' },
 ];
+
 const GRAVITES = [
   { value: 'faible', label: 'Faible' },
   { value: 'moyen', label: 'Moyen' },
   { value: 'grave', label: 'Grave' },
   { value: 'tres_grave', label: 'Très grave' },
 ];
+
 const STATUTS = [
   { value: 'actif', label: 'Actif' },
   { value: 'inactif', label: 'Inactif' },
   { value: 'suspendu', label: 'Suspendu' },
 ];
+
+
 const TONE_GRAVITE = {
-  faible: 'emerald',
-  moyen: 'amber',
-  grave: 'brick',
-  tres_grave: 'brick',
+  faible: 'aqua',
+  moyen: 'violet',
+  grave: 'orange',
+  tres_grave: 'danger',
 };
+
+const TONE_TYPES = {
+  avertissement: 'aqua',
+  blame: 'violet',
+  exclusion_tem: 'orange',
+  exclusion_def: 'danger',
+};
+
 function Sanctions() {
   const [donnees, setDonnees] = useState({ resultats: [], kpis: {} });
   const [recherche, setRecherche] = useState('');
@@ -56,6 +69,7 @@ function Sanctions() {
     });
     setModalOuvert(true);
   };
+
   const ouvrirEdition = (sanction) => {
     setSanctionEnEdition(sanction.id);
     reset({
@@ -69,6 +83,7 @@ function Sanctions() {
     });
     setModalOuvert(true);
   };
+  
   const onSubmit = async (data) => {
     try {
       if (sanctionEnEdition) {
@@ -88,6 +103,7 @@ function Sanctions() {
       );
     }
   };
+  
   const confirmerSuppression = async () => {
     setSuppressionEnCours(true);
     try {
@@ -101,6 +117,8 @@ function Sanctions() {
       setSuppressionEnCours(false);
     }
   };
+
+
   const { total = 0, actif = 0, inactif = 0, suspendu = 0 } = donnees.kpis;
   return (
     <div className="container-principal">
@@ -127,14 +145,15 @@ function Sanctions() {
             <div className="count-top"><h2>{actif}</h2><span>Actives</span></div>
           </div>
           <div className="department-card">
-            <div className="kpi-icon aqua"><i className="fas fa-pause-circle"></i></div>
+            <div className="kpi-icon red"><i className="fas fa-ban"></i></div>
             <div className="count-top"><h2>{inactif}</h2><span>Inactives</span></div>
           </div>
           <div className="department-card">
-            <div className="kpi-icon red"><i className="fas fa-ban"></i></div>
+            <div className="kpi-icon orange"><i className="fas fa-pause-circle"></i></div>
             <div className="count-top"><h2>{suspendu}</h2><span>Suspendues</span></div>
           </div>
         </div>
+
         {/* TOOLBAR */}
         <div className="department-toolbar">
           <div className="toolbar-left">
@@ -149,6 +168,7 @@ function Sanctions() {
             </div>
           </div>
         </div>
+
         {/* TABLE */}
         <div className="department-card table-card">
           <div className="table-title">
@@ -172,15 +192,20 @@ function Sanctions() {
                   <tr className="row-link" key={s.id}>
                     <td><div className="cell-strong mono">{s.code}</div></td>
                     <td>{s.nom}</td>
-                    <td>{TYPES.find((t) => t.value === s.type)?.label}</td>
                     <td>
-                      <span className={`badge ${TONE_GRAVITE[s.gravite]}`}>
+                      <span className={`badge-${TONE_TYPES[s.type]}`}>
+                        <span className="dot"></span>
+                        {TYPES.find((t) => t.value === s.type)?.label}
+                      </span>
+                    </td>
+                    <td>
+                      <span className={`badge-${TONE_GRAVITE[s.gravite]}`}>
                         <span className="dot"></span>
                         {GRAVITES.find((g) => g.value === s.gravite)?.label}
                       </span>
                     </td>
                     <td>
-                      <span className={`badge ${s.statut === 'actif' ? 'emerald' : s.statut === 'inactif' ? 'amber' : 'brick'}`}>
+                      <span className={`badge-${s.statut === 'actif' ? 'success' : s.statut === 'inactif' ? 'danger' : 'orange'}`}>
                         <span className="dot"></span>
                         {STATUTS.find((st) => st.value === s.statut)?.label}
                       </span>

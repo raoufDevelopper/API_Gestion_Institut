@@ -36,16 +36,31 @@ function ConfigMatriculeForm() {
       afficherErreur("Erreur lors de l'enregistrement du format de matricule.");
     }
   };
+
+
+
   return (
     <div className="field full">
-      <label>Configuration des matricules</label>
-      <div className="matricule-configs">
+      
+
+      <div className="edt-alerte-conflits" style={{ marginTop: '0', marginBottom: '20px' }}>
+        <i className="fas fa-triangle-exclamation"></i>
+        <div>Configuration des matricules pour les étudiants et les membres du personnel</div>
+      </div>
+      
+      <div className="matricule-configs" >
+
         {TYPES.map(({ code, label }) => {
           const config = configs[code] || {};
+          
+          
           return (
             <div className="matricule-config-bloc" key={code}>
-              <h4>{label}</h4>
-              <div className="form-grid">
+          
+              <h4 className='badge badge-violet' style={{ marginBottom: '15px', margintop: '25px' }}>{label}</h4>
+          
+              <div className="form-grid" style={{ marginBottom: '25px' }}>
+          
                 <div className="field">
                   <label>Préfixe</label>
                   <input
@@ -54,6 +69,8 @@ function ConfigMatriculeForm() {
                     onChange={(e) => handleChange(code, 'prefixe', e.target.value)}
                   />
                 </div>
+          
+          
                 <div className="field">
                   <label>Nombre de chiffres</label>
                   <input
@@ -63,6 +80,8 @@ function ConfigMatriculeForm() {
                     onChange={(e) => handleChange(code, 'nombre_chiffres', parseInt(e.target.value, 10))}
                   />
                 </div>
+
+
                 <div className="field">
                   <label>Séparateur</label>
                   <input
@@ -72,40 +91,59 @@ function ConfigMatriculeForm() {
                     onChange={(e) => handleChange(code, 'separateur', e.target.value)}
                   />
                 </div>
-                <div className="field">
-                  <label>Inclure l'année</label>
-                  <label className="switch">
-                    <input
-                      type="checkbox"
-                      checked={config.inclure_annee ?? true}
-                      onChange={(e) => handleChange(code, 'inclure_annee', e.target.checked)}
-                    />
-                    <span className="slider"></span>
-                  </label>
-                </div>
+          
+          
                 {config.compteur !== undefined && (
                   <div className="field">
                     <label>Compteur actuel</label>
                     <input type="text" value={config.compteur} disabled />
                   </div>
                 )}
+
+
+                <div className="field" style={{ marginTop: '25px' }}>
+                  <label className="switch-row" style={{ display: "flex", justifyContent: "space-between", padding: "10px 0", borderTop: "solid 1px var(--input)" }}>
+                    <label style={{ marginRight: "10px" }}>Inclure l'année</label>
+                    <label className="switch">
+                      <input type="checkbox" checked={config.inclure_annee ?? true} onChange={(e) => handleChange(code, 'inclure_annee', e.target.checked)}/>
+                      <span className="slider"></span>
+                    </label>
+                  </label>
+                </div>
+
+
+                <div className="field" style={{ marginTop: '25px' }}>
+                  <label className="switch-row" style={{ display: "flex", justifyContent: "space-between", padding: "10px 0", borderTop: "solid 1px var(--input)" }}>
+                    <label style={{ marginRight: "10px" }}>Aperçu</label>
+                    <strong className="rn-moyenne-annuelle" style={{ margin: "0 0 0 10px" }}>
+                      {config.prefixe || 'PREF'}
+                      {config.inclure_annee ? `${config.separateur || '-'}${new Date().getFullYear()}` : ''}
+                      {config.separateur || '-'}
+                      {String(1).padStart(config.nombre_chiffres || 4, '0')}
+                    </strong>
+                  </label>
+                </div>
+
               </div>
-              <div className="matricule-apercu">
-                Aperçu : <strong>
-                  {config.prefixe || 'PREF'}
-                  {config.inclure_annee ? `${config.separateur || '-'}${new Date().getFullYear()}` : ''}
-                  {config.separateur || '-'}
-                  {String(1).padStart(config.nombre_chiffres || 4, '0')}
-                </strong>
-              </div>
-              <button type="button" className="btn btn-outline" onClick={() => handleEnregistrer(code)}>
+
+              <button style={{ marginBottom: '50px' }} type="button" className="btn btn-primary" onClick={() => handleEnregistrer(code)}>
                 <i className="fas fa-save"></i> Enregistrer ce format
               </button>
+          
             </div>
+          
           );
+
         })}
+
       </div>
+
     </div>
+
   );
+
 }
+
+
+
 export default ConfigMatriculeForm;

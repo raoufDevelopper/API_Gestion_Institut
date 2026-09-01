@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getEmploisDuTemps, supprimerEmploiDuTemps, telechargerEmploiDuTempsPdf, dupliquerEmploiDuTemps } from '../../api/emploisDuTemps';
 import { useAlert } from '../../context/AlertContext';
 import ConfirmationModal from '../../components/ConfirmationModal';
-import { STATUTS_EMPLOI, CLASSE_BADGE_STATUT } from './emploiDuTempsConstantes';
+import { STATUTS_EMPLOI, CLASSE_BADGE_STATUT, SEMESTRES } from './emploiDuTempsConstantes';
 import '../../assets/css/crud.css';
 import '../../assets/css/emploiDuTemps.css';
 
@@ -101,21 +101,23 @@ function EmploisDuTempsListe() {
             </button>
           </div>
         </div>
-        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
+
+
+        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(350px,1fr))' }}>
           <div className="department-card">
             <div className="kpi-icon blue"><i className="fas fa-calendar-days"></i></div>
             <div className="count-top"><h2>{total}</h2><span>Total</span></div>
-          </div>
-          <div className="department-card">
-            <div className="kpi-icon aqua"><i className="fas fa-pen"></i></div>
-            <div className="count-top"><h2>{brouillon}</h2><span>Brouillons</span></div>
           </div>
           <div className="department-card">
             <div className="kpi-icon green"><i className="fas fa-check-circle"></i></div>
             <div className="count-top"><h2>{publie}</h2><span>Publiés</span></div>
           </div>
           <div className="department-card">
-            <div className="kpi-icon red"><i className="fas fa-box-archive"></i></div>
+            <div className="kpi-icon red"><i className="fas fa-pen"></i></div>
+            <div className="count-top"><h2>{brouillon}</h2><span>Brouillons</span></div>
+          </div>
+          <div className="department-card">
+            <div className="kpi-icon aqua"><i className="fas fa-box-archive"></i></div>
             <div className="count-top"><h2>{archive}</h2><span>Archivés</span></div>
           </div>
         </div>
@@ -141,8 +143,8 @@ function EmploisDuTempsListe() {
             <table>
               <thead>
                 <tr>
-                  <th>Titre</th>
                   <th>Classe</th>
+                  <th>Année</th>
                   <th>Semestre</th>
                   <th>Séances</th>
                   <th>Statut</th>
@@ -152,10 +154,10 @@ function EmploisDuTempsListe() {
               <tbody>
                 {emploisFiltres.map((e) => (
                   <tr className="row-link" key={e.id}>
-                    <td><div className="cell-strong">{e.nom_affiche}</div></td>
                     <td>{e.classe_str}</td>
-                    <td>{e.semestre}</td>
-                    <td>{e.nb_seances}</td>
+                    <td>{e.annee_academique_libelle}</td>
+                    <td>{SEMESTRES.find(s => s.value === e.semestre)?.label}</td>
+                    <td>{e.nb_seances} séances</td>
                     <td>
                       <span className={`badge ${CLASSE_BADGE_STATUT[e.statut]}`}>
                         <span className="dot"></span>

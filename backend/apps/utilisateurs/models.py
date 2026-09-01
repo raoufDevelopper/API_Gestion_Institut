@@ -2,6 +2,7 @@ from django.db import models
 
 from django.utils import timezone
 
+from apps.academique.models import Filiere, Specialite
 from apps.authentification.models import User
 
 from apps.parametres.models import generer_matricule
@@ -88,7 +89,7 @@ class Etudiant(models.Model):
         ordering = ['nom', 'prenom']
 
     def __str__(self):
-        return f"{self.matricule} - {self.nom} {self.prenom}"
+        return f"{self.nom} {self.prenom}"
 
     def save(self, *args, **kwargs):
         if not self.matricule:
@@ -197,10 +198,11 @@ class Formateur(models.Model):
 
     type_contrat = models.CharField(max_length=20, choices=TYPE_CONTRAT_CHOICES)
 
-    filiere = models.CharField(max_length=150, blank=True, null=True)
+    filiere = models.ManyToManyField("academique.Filiere", related_name='formateur', blank=True)
 
-    specialite = models.CharField(max_length=150, blank=True, null=True)
+    specialite = models.ManyToManyField("academique.Specialite", related_name='formateur', blank=True)
+
 
     def __str__(self):
-        return self.personnel.nom
+        return f"{self.personnel.nom} {self.personnel.prenom}"
     

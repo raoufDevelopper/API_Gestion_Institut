@@ -15,11 +15,11 @@ const STATUTS = [
 ];
 
 const TONE_STATUT = {
-  disponible: 'emerald',
-  indisponible: 'brick',
-  construction: 'amber',
-  maintenance: 'amber',
-  fermee: 'brick',
+  disponible: 'success',
+  indisponible: 'danger',
+  construction: 'orange',
+  maintenance: 'aqua',
+  fermee: 'danger',
 };
 
 
@@ -199,7 +199,7 @@ function Salles() {
                     <td>{s.type_salle_libelle || '—'}</td>
                     <td>{s.capacite}</td>
                     <td>
-                      <span className={`badge ${TONE_STATUT[s.statut]}`}>
+                      <span className={`badge-${TONE_STATUT[s.statut]}`}>
                         <span className="dot"></span>
                         {STATUTS.find((st) => st.value === s.statut)?.label}
                       </span>
@@ -234,12 +234,14 @@ function Salles() {
       {/* MODAL DE CREATION / MODIFICATION */}
       <div className="department-modal" style={{ display: modalOuvert ? 'flex' : 'none' }}>
         <div className="modal-content">
+
           <div className="modal-header" style={{ background: 'linear-gradient(135deg, #400c7c, #a14fff)' }}>
             <h2>{salleEnEdition ? 'Modifier la salle' : 'Nouvelle salle'}</h2>
-            <button className="btn-primary addInscr" onClick={() => setModalOuvert(false)}>
+            <button className="btn-primary" onClick={() => setModalOuvert(false)}>
               <i className="fas fa-times"></i>
             </button>
           </div>
+          
           <form onSubmit={handleSubmit(onSubmit)} id="departmentForm">
             <div className="form-grid">
               <div className="form-group">

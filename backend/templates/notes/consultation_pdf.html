@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<style>
+    @page { size: A4 landscape; margin: 1.5cm; }
+    body { font-family: 'Helvetica', 'Arial', sans-serif; font-size: 9pt; color: #1a1a1a; }
+    .entete { background-color: #400c7c; color: white; padding: 12px 18px; border-radius: 6px; margin-bottom: 16px; }
+    .entete .titre { font-size: 14pt; font-weight: bold; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #e2e8f0; padding: 6px 8px; font-size: 8.5pt; text-align: left; }
+    th { background-color: #ede4fb; color: #400c7c; }
+    .moyenne-cell { font-weight: bold; }
+</style>
+</head>
+<body>
+    <div class="entete">
+        <div class="titre">Consultation des notes — {{ classe }}</div>
+        <div>{{ matiere.nom }} — {{ annee_academique }} — {{ semestre }}</div>
+    </div>
+    <table>
+        <tr>
+            <th>Matricule</th><th>Nom & Prénom</th>
+            {% for t in types_actifs %}<th>{{ t.code }}</th>{% endfor %}
+            <th>Moyenne</th>
+        </tr>
+        {% for ligne in lignes %}
+        <tr>
+            <td>{{ ligne.etudiant.matricule }}</td>
+            <td>{{ ligne.etudiant.nom }} {{ ligne.etudiant.prenom }}</td>
+            {% for valeur in ligne.notes_par_type %}<td>{{ valeur|default:"—" }}</td>{% endfor %}
+            <td class="moyenne-cell">{{ ligne.moyenne|default:"—" }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div style="text-align:center; font-size:8pt; color:#9ca3af; margin-top:20px;">
+        Document généré automatiquement — IFP Perle d'Or — {{ date_generation }}
+    </div>
+</body>
+</html>

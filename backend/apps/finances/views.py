@@ -76,7 +76,15 @@ def dashboard(request):
 def liste_creer_categories_depense(request):
     if request.method == 'GET':
         categories = CategorieDepense.objects.all()
-        return Response(CategorieDepenseSerializer(categories, many=True).data)
+        kpis = {
+            'total': CategorieDepense.objects.count(),
+            'tresorerie': CategorieDepense.objects.filter(est_tresorerie=True).count(),
+            'operationnelle': CategorieDepense.objects.filter(est_tresorerie=False).count(),
+        }
+        return Response({
+            'resultats': CategorieDepenseSerializer(categories, many=True).data,
+            'kpis': kpis,
+        })
     serializer = CategorieDepenseSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
@@ -123,13 +131,20 @@ def detail_categorie_depense(request, pk):
 def liste_creer_types_paiement(request):
     if request.method == 'GET':
         types_paiement = TypePaiement.objects.all()
-        return Response(TypePaiementSerializer(types_paiement, many=True).data)
+        kpis = {
+            'total': TypePaiement.objects.count(),
+            'obligatoire': TypePaiement.objects.filter(obligatoire_a_inscription=True).count(),
+            'optionnel': TypePaiement.objects.filter(obligatoire_a_inscription=False).count(),
+        }
+        return Response({
+            'resultats': TypePaiementSerializer(types_paiement, many=True).data,
+            'kpis': kpis,
+        })
     serializer = TypePaiementSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 @api_view(['GET', 'PATCH', 'DELETE'])
@@ -172,7 +187,16 @@ def detail_type_paiement(request, pk):
 def liste_creer_tarifs(request):
     if request.method == 'GET':
         tarifs = Tarif.objects.all()
-        return Response(TarifSerializer(tarifs, many=True).data)
+        kpis = {
+            'total': Tarif.objects.count(),
+            'actif': Tarif.objects.filter(actif=True).count(),
+            'inactif': Tarif.objects.filter(actif=False).count(),
+        }
+        reponse = {
+            'resultats': TarifSerializer(tarifs, many=True).data,
+            'kpis': kpis,
+        }
+        return Response(reponse)
     serializer = TarifSerializer(data=request.data)
     if serializer.is_valid():
         tarif = serializer.save()
@@ -185,7 +209,6 @@ def liste_creer_tarifs(request):
             )
         return Response(reponse, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 
@@ -268,11 +291,17 @@ def liste_creer_inscriptions(request):
             inscriptions = inscriptions.filter(
                 Q(etudiant__nom__icontains=q) | Q(etudiant__prenom__icontains=q)
             )
-        statut_paiement_filtre = request.GET.get('statut_paiement', '')
-        if statut_paiement_filtre in ('PAYE', 'PARTIEL', 'NON_PAYE'):
-            inscriptions = [i for i in inscriptions if i.statut_paiement == statut_paiement_filtre]
-        return Response(InscriptionSerializer(inscriptions, many=True).data)
-    serializer = InscriptionSerializer(data=request.data)
+        kpis = {
+            'total': Inscription.objects.count(),
+            'validee': Inscription.objects.filter(statut='VALIDEE').count(),
+            'en_attente': Inscription.objects.filter(statut='EN_ATTENTE').count(),
+            'annulee': Inscription.objects.filter(statut='ANNULEE').count(),
+        }
+        return Response({
+            'resultats': InscriptionSerializer(inscriptions, many=True, context={'request': request}).data,
+            'kpis': kpis,
+        })
+    serializer = InscriptionSerializer(data=request.data, context={'request': request})
     if serializer.is_valid():
         serializer.save(cree_par=request.user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -306,20 +335,31 @@ def detail_inscription(request, pk):
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_inscriptions')
 def frais_ajouter(request, inscription_pk):
+
     try:
         inscription = Inscription.objects.get(pk=inscription_pk)
+
     except Inscription.DoesNotExist:
         return Response({'detail': 'Inscription introuvable.'}, status=status.HTTP_404_NOT_FOUND)
+
     type_paiement_id = request.data.get('type_paiement')
+
+
     if inscription.frais.filter(type_paiement_id=type_paiement_id).exists():
         return Response(
             {'detail': 'Ce type de frais est déjà appliqué à cette inscription.'},
             status=status.HTTP_400_BAD_REQUEST
         )
+
     serializer = FraisInscriptionSerializer(data=request.data)
+
+
     if serializer.is_valid():
+
         serializer.save(inscription=inscription, ajoute_par=request.user)
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -371,8 +411,17 @@ def liste_creer_paiements(request):
         mode_filtre = request.GET.get('mode', '')
         if mode_filtre in Paiement.ModePaiement.values:
             paiements = paiements.filter(mode_paiement=mode_filtre)
-        return Response(PaiementSerializer(paiements, many=True).data)
-    serializer = PaiementSerializer(data=request.data)
+        kpis = {
+            'total': Paiement.objects.count(),
+            'valide': Paiement.objects.filter(statut='VALIDE').count(),
+            'rembourse': Paiement.objects.filter(statut='REMBOURSE').count(),
+            'annule': Paiement.objects.filter(statut='ANNULE').count(),
+        }
+        return Response({
+            'resultats': PaiementSerializer(paiements, many=True, context={'request': request}).data,
+            'kpis': kpis,
+        })
+    serializer = PaiementSerializer(data=request.data, context={'request': request})
     if serializer.is_valid():
         serializer.save(enregistre_par=request.user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -416,6 +465,7 @@ def detail_paiement(request, pk):
 
 
 # ================= DEPENSE =================
+
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_depenses')
@@ -428,13 +478,22 @@ def liste_creer_depenses(request):
         categorie_filtre = request.GET.get('categorie', '')
         if categorie_filtre:
             depenses = depenses.filter(categorie_id=categorie_filtre)
-        return Response(DepenseSerializer(depenses, many=True).data)
-    serializer = DepenseSerializer(data=request.data)
+        kpis = {
+            'total': Depense.objects.count(),
+            'payee': Depense.objects.filter(statut='PAYEE').count(),
+            'approuvee': Depense.objects.filter(statut='APPROUVEE').count(),
+            'en_attente': Depense.objects.filter(statut='EN_ATTENTE').count(),
+            'rejetee': Depense.objects.filter(statut='REJETEE').count(),
+        }
+        return Response({
+            'resultats': DepenseSerializer(depenses, many=True, context={'request': request}).data,
+            'kpis': kpis,
+        })
+    serializer = DepenseSerializer(data=request.data, context={'request': request})
     if serializer.is_valid():
         serializer.save(demande_par=request.user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 @api_view(['GET', 'PATCH', 'DELETE'])
@@ -480,15 +539,20 @@ def detail_depense(request, pk):
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_caisse')
 def liste_ouvrir_caisse(request):
+
     if request.method == 'GET':
         sessions = CaisseSession.objects.all()
         return Response(CaisseSessionSerializer(sessions, many=True).data)
+
     if CaisseSession.objects.filter(statut=CaisseSession.Statut.OUVERTE).exists():
         return Response({'detail': 'Une session de caisse est déjà ouverte.'}, status=status.HTTP_400_BAD_REQUEST)
+
     serializer = CaisseSessionSerializer(data=request.data)
+
     if serializer.is_valid():
         serializer.save(ouverte_par=request.user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -524,7 +588,7 @@ def fermer_caisse(request, pk):
         return Response({'detail': 'Session ouverte introuvable.'}, status=status.HTTP_404_NOT_FOUND)
     solde_reel = request.data.get('solde_reel_fermeture')
     observation = request.data.get('observation', '')
-    if solde_reel is None:
+    if solde_reel in (None, ''):
         return Response({'detail': 'Le solde réel est requis.'}, status=status.HTTP_400_BAD_REQUEST)
     try:
         session.fermer(solde_reel=solde_reel, user=request.user, observation=observation)

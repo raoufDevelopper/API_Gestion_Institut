@@ -19,5 +19,5 @@ class PersonnelAdmin(admin.ModelAdmin):
 
 @admin.register(Formateur)
 class FormateurAdmin(admin.ModelAdmin):
-    list_display = ['personnel', 'type_contrat', 'filiere', 'specialite']
-    search_fields = ['personnel', 'type_contrat', 'filiere', 'specialite']
+    list_display = ['personnel', 'type_contrat']
+    search_fields = ['personnel', 'type_contrat']

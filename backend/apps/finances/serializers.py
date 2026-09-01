@@ -1,23 +1,44 @@
 from rest_framework import serializers
-from .models import (
-    Bourse, CategorieDepense, TypePaiement, Tarif, Inscription, FraisInscription,
-    Paiement, Depense, CaisseSession,
-)
+
+from .models import Bourse, CategorieDepense, TypePaiement, Tarif, Inscription, FraisInscription, Paiement, Depense, CaisseSession
+
+
+
 class CategorieDepenseSerializer(serializers.ModelSerializer):
     class Meta:
         model = CategorieDepense
         fields = '__all__'
+
+
+
+
+
+
 class TypePaiementSerializer(serializers.ModelSerializer):
     class Meta:
         model = TypePaiement
         fields = '__all__'
+
+
+
+
+
+
 class TarifSerializer(serializers.ModelSerializer):
     portee = serializers.CharField(source='decrire_portee', read_only=True)
     specificite = serializers.IntegerField(source='niveau_specificite', read_only=True)
     type_paiement_nom = serializers.CharField(source='type_paiement.nom', read_only=True)
+    specialites_codes = serializers.StringRelatedField(source='specialites', many=True, read_only=True)
+    niveaux_noms = serializers.StringRelatedField(source='niveaux', many=True, read_only=True)
+    annee_academique_libelle = serializers.CharField(source='annee_academique.libelle', read_only=True)
     class Meta:
         model = Tarif
         fields = '__all__'
+
+
+
+
+
 class FraisInscriptionSerializer(serializers.ModelSerializer):
     type_paiement_nom = serializers.CharField(source='type_paiement.nom', read_only=True)
     montant_paye = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
@@ -26,30 +47,22 @@ class FraisInscriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = FraisInscription
         fields = '__all__'
-class InscriptionSerializer(serializers.ModelSerializer):
-    etudiant_str = serializers.CharField(source='etudiant.__str__', read_only=True)
-    classe_str = serializers.CharField(source='classe.__str__', read_only=True)
-    total_du = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
-    montant_paye = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
-    reste_a_payer = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
-    statut_paiement = serializers.CharField(read_only=True)
-    frais = FraisInscriptionSerializer(many=True, read_only=True)
-    class Meta:
-        model = Inscription
-        fields = '__all__'
-        read_only_fields = ['cree_par']
-    def validate(self, data):
-        etudiant = data.get('etudiant', getattr(self.instance, 'etudiant', None))
-        annee = data.get('annee_academique', getattr(self.instance, 'annee_academique', None))
-        qs = Inscription.objects.filter(etudiant=etudiant, annee_academique=annee)
-        if self.instance:
-            qs = qs.exclude(pk=self.instance.pk)
-        if qs.exists():
-            raise serializers.ValidationError("Cet étudiant est déjà inscrit pour cette année académique.")
-        return data
+        read_only_fields = ['inscription', 'ajoute_par']
+
+
+
+
+
+
+
+
+
+
 class PaiementSerializer(serializers.ModelSerializer):
     inscription_str = serializers.CharField(source='inscription.__str__', read_only=True)
     type_paiement_nom = serializers.CharField(source='type_paiement.nom', read_only=True)
+    caisse_session_date = serializers.DateField(source='caisse_session.date_session', read_only=True)
+    enregistre_par_nom = serializers.CharField(source='enregistre_par.username', read_only=True)
     numero_recu = serializers.CharField(read_only=True)
     class Meta:
         model = Paiement
@@ -64,8 +77,49 @@ class PaiementSerializer(serializers.ModelSerializer):
         except Exception as e:
             raise serializers.ValidationError(str(e))
         return data
+
+
+
+
+
+
+class InscriptionSerializer(serializers.ModelSerializer):
+    etudiant_str = serializers.CharField(source='etudiant.__str__', read_only=True)
+    etudiant_matricule = serializers.CharField(source='etudiant.matricule', read_only=True)
+    classe_str = serializers.CharField(source='classe.__str__', read_only=True)
+    total_du = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    montant_paye = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    reste_a_payer = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    statut_paiement = serializers.CharField(read_only=True)
+    frais = FraisInscriptionSerializer(many=True, read_only=True)
+    paiements = PaiementSerializer(many=True, read_only=True)
+    class Meta:
+        model = Inscription
+        fields = '__all__'
+        read_only_fields = ['cree_par']
+    def validate(self, data):
+        etudiant = data.get('etudiant', getattr(self.instance, 'etudiant', None))
+        annee = data.get('annee_academique', getattr(self.instance, 'annee_academique', None))
+        qs = Inscription.objects.filter(etudiant=etudiant, annee_academique=annee)
+        if self.instance:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.exists():
+            raise serializers.ValidationError("Cet étudiant est déjà inscrit pour cette année académique.")
+        return data
+
+
+
+
+
+
+
+
 class DepenseSerializer(serializers.ModelSerializer):
     categorie_nom = serializers.CharField(source='categorie.nom', read_only=True)
+    categorie_est_tresorerie = serializers.BooleanField(source='categorie.est_tresorerie', read_only=True)
+    caisse_session_date = serializers.DateField(source='caisse_session.date_session', read_only=True)
+    demande_par_nom = serializers.CharField(source='demande_par.username', read_only=True)
+    approuve_par_nom = serializers.CharField(source='approuve_par.username', read_only=True)
     class Meta:
         model = Depense
         fields = '__all__'
@@ -77,15 +131,33 @@ class DepenseSerializer(serializers.ModelSerializer):
         except Exception as e:
             raise serializers.ValidationError(str(e))
         return data
+
+
+
+
+
+
+
+
 class CaisseSessionSerializer(serializers.ModelSerializer):
     solde_theorique = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
     ecart = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True, allow_null=True)
+    total_paiements_especes = serializers.DecimalField(source='total_encaisse_especes', max_digits=10, decimal_places=2, read_only=True)
+    total_depenses_especes = serializers.DecimalField(source='total_depense_especes', max_digits=10, decimal_places=2, read_only=True)
     ouverte_par_nom = serializers.CharField(source='ouverte_par.username', read_only=True)
     fermee_par_nom = serializers.CharField(source='fermee_par.username', read_only=True)
     class Meta:
         model = CaisseSession
         fields = '__all__'
         read_only_fields = ['solde_reel_fermeture', 'heure_fermeture', 'fermee_par', 'statut', 'ouverte_par']
+
+
+
+
+
+
+
+
 class BourseSerializer(serializers.ModelSerializer):
     etudiant_str = serializers.CharField(source='etudiant.__str__', read_only=True)
     class Meta:

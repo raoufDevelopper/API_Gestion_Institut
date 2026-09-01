@@ -48,42 +48,73 @@ from .serializers import DiplomeSerializer, TypeCertificatSerializer, Certificat
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_documents')
 def liste_creer_diplomes(request):
+
     if request.method == 'GET':
+
         diplomes = Diplome.objects.select_related('etudiant', 'deliberation').all()
-        return Response(DiplomeSerializer(diplomes, many=True).data)
+
+        return Response(DiplomeSerializer(diplomes, many=True, context={'request': request}).data)
+
     serializer = DiplomeSerializer(data=request.data)
+
+
     if serializer.is_valid():
+
         deliberation = serializer.validated_data['deliberation']
+
         diplome = serializer.save(
             genere_par=request.user,
             mention=calculer_mention(deliberation.moyenne_generale),
         )
+
         html_string = render_to_string('documents/diplome_pdf.html', {
             'diplome': diplome,
             'date_generation': timezone.now().strftime('%d/%m/%Y à %H:%M'),
         })
+
         pdf_bytes = HTML(string=html_string, base_url=request.build_absolute_uri('/')).write_pdf()
+
         diplome.fichier.save(f'diplome_{diplome.numero_diplome}.pdf', ContentFile(pdf_bytes), save=True)
+
         return Response(DiplomeSerializer(diplome).data, status=status.HTTP_201_CREATED)
+
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
 @api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_documents')
 def detail_diplome(request, pk):
+
     try:
         diplome = Diplome.objects.select_related('etudiant', 'deliberation').get(pk=pk)
+
     except Diplome.DoesNotExist:
         return Response({'detail': 'Diplôme introuvable.'}, status=status.HTTP_404_NOT_FOUND)
+
     if request.method == 'GET':
-        return Response(DiplomeSerializer(diplome).data)
+        return Response(DiplomeSerializer(diplome, context={'request': request}).data)
+
+
     if request.method == 'PATCH':
+
         serializer = DiplomeSerializer(diplome, data=request.data, partial=True)
+
         if serializer.is_valid():
+
             serializer.save()
+
             return Response(serializer.data)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     diplome.delete()
+
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_documents')
@@ -125,14 +156,25 @@ def telecharger_diplome(request, pk):
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_documents')
 def liste_creer_types_certificat(request):
+
     if request.method == 'GET':
+
         types_certificat = TypeCertificat.objects.all()
+
         return Response(TypeCertificatSerializer(types_certificat, many=True).data)
+
     serializer = TypeCertificatSerializer(data=request.data)
+
+
     if serializer.is_valid():
+
         serializer.save()
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 @api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_documents')
@@ -173,31 +215,53 @@ def _generer_certificat_pdf(certificat, request):
     })
     pdf_bytes = HTML(string=html_string, base_url=request.build_absolute_uri('/')).write_pdf()
     certificat.fichier.save(f'certificat_{certificat.numero}.pdf', ContentFile(pdf_bytes), save=True)
+
+
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_documents')
 def liste_creer_certificats(request):
+
     if request.method == 'GET':
+
         certificats = Certificat.objects.select_related('etudiant', 'type_certificat').all()
-        return Response(CertificatSerializer(certificats, many=True).data)
+
+        return Response(CertificatSerializer(certificats, many=True, context={'request': request}).data)
+
     serializer = CertificatSerializer(data=request.data)
+
+
     if serializer.is_valid():
+
         certificat = serializer.save(genere_par=request.user)
+
         _generer_certificat_pdf(certificat, request)
+
         return Response(CertificatSerializer(certificat).data, status=status.HTTP_201_CREATED)
+
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 @api_view(['GET', 'DELETE'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_documents')
 def detail_certificat(request, pk):
+
     try:
         certificat = Certificat.objects.select_related('etudiant', 'type_certificat').get(pk=pk)
+
     except Certificat.DoesNotExist:
         return Response({'detail': 'Certificat introuvable.'}, status=status.HTTP_404_NOT_FOUND)
+
     if request.method == 'GET':
-        return Response(CertificatSerializer(certificat).data)
+        return Response(CertificatSerializer(certificat, context={'request': request}).data)
+
     certificat.delete()
+
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def auto_generer_certificat(request):
@@ -264,36 +328,134 @@ def telecharger_certificat(request, pk):
 @parser_classes([MultiPartParser, FormParser])
 @permission_requise('gerer_documents')
 def liste_creer_documents(request):
+
     if request.method == 'GET':
+
         documents = Document.objects.all()
+
         etudiant_id = request.GET.get('etudiant')
+
         if etudiant_id:
             documents = documents.filter(concerne_etudiant_id=etudiant_id)
+
         personnel_id = request.GET.get('personnel')
+
         if personnel_id:
             documents = documents.filter(concerne_personnel_id=personnel_id)
-        return Response(DocumentSerializer(documents, many=True).data)
+
+        return Response(DocumentSerializer(documents, many=True, context={'request': request}).data)
+    
     serializer = DocumentSerializer(data=request.data)
+
+
     if serializer.is_valid():
+
         serializer.save(ajoute_par=request.user)
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 @api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
 @permission_requise('gerer_documents')
 def detail_document(request, pk):
+
     try:
         document = Document.objects.get(pk=pk)
+
     except Document.DoesNotExist:
         return Response({'detail': 'Document introuvable.'}, status=status.HTTP_404_NOT_FOUND)
+
     if request.method == 'GET':
-        return Response(DocumentSerializer(document).data)
+        return Response(DocumentSerializer(document, context={'request': request}).data)
+
     if request.method == 'PATCH':
+
         serializer = DocumentSerializer(document, data=request.data, partial=True)
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     document.delete()
+
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+from django.db.models import Q
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@permission_requise('gerer_documents')
+def documents_overview(request):
+    diplomes_total = Diplome.objects.count()
+    diplomes_valides = Diplome.objects.filter(statut='valide').count()
+    diplomes_revoques = Diplome.objects.filter(statut='revoque').count()
+    certificats_total = Certificat.objects.count()
+    documents_total = Document.objects.count()
+    recents = []
+    for d in Diplome.objects.order_by('-date_creation')[:3]:
+        recents.append({
+            'type': 'diplome', 'id': d.id,
+            'titre': f"DIPLOME-{d.numero_diplome}.pdf",
+            'sujet': str(d.etudiant), 'date': d.date_creation,
+            'fichier': request.build_absolute_uri(d.fichier.url) if d.fichier else None,
+        })
+    for c in Certificat.objects.order_by('-date_creation')[:3]:
+        recents.append({
+            'type': 'certificat', 'id': c.id,
+            'titre': f"CERT-{c.numero}.pdf",
+            'sujet': str(c.etudiant), 'date': c.date_creation,
+            'fichier': request.build_absolute_uri(c.fichier.url) if c.fichier else None,
+        })
+    for doc in Document.objects.order_by('-date_ajout')[:3]:
+        recents.append({
+            'type': 'document', 'id': doc.id,
+            'titre': doc.titre,
+            'sujet': str(doc.concerne_etudiant or doc.concerne_personnel or ''), 'date': doc.date_ajout,
+            'fichier': request.build_absolute_uri(doc.fichier.url) if doc.fichier else None,
+        })
+    recents.sort(key=lambda x: x['date'], reverse=True)
+    recents = recents[:5]
+    for r in recents:
+        r['date'] = r['date'].isoformat()
+    return Response({
+        'diplomes_total': diplomes_total,
+        'diplomes_valides': diplomes_valides,
+        'diplomes_revoques': diplomes_revoques,
+        'certificats_total': certificats_total,
+        'documents_total': documents_total,
+        'recents': recents,
+    })
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@permission_requise('gerer_documents')
+def deliberations_eligibles_diplome(request):
+    from apps.notes.models import Deliberation
+    from apps.notes.serializers import DeliberationSerializer
+    q = request.GET.get('q', '').strip()
+    deliberations = Deliberation.objects.filter(
+        decision='ADMIS', periode='ANNEE', diplome__isnull=True
+    ).select_related('etudiant', 'annee_academique')
+    if q:
+        deliberations = deliberations.filter(
+            Q(etudiant__nom__icontains=q) | Q(etudiant__prenom__icontains=q)
+        )
+    return Response(DeliberationSerializer(deliberations, many=True).data)
+

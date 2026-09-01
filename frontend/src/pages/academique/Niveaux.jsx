@@ -4,6 +4,8 @@ import { getNiveaux, creerNiveau, modifierNiveau, supprimerNiveau } from '../../
 import { useAlert } from '../../context/AlertContext';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import '../../assets/css/crud.css';
+
+
 const CYCLES = [
   { value: 'bts', label: 'BTS' },
   { value: 'licence', label: 'Licence' },
@@ -11,6 +13,7 @@ const CYCLES = [
   { value: 'doctorat', label: 'Doctorat' },
   { value: 'plus', label: 'Plus' },
 ];
+
 function Niveaux() {
   const [niveaux, setNiveaux] = useState([]);
   const [recherche, setRecherche] = useState('');
@@ -21,27 +24,33 @@ function Niveaux() {
   const [niveauEnDetail, setNiveauEnDetail] = useState(null);
   const { afficherSucces, afficherErreur } = useAlert();
   const { register, handleSubmit, reset, formState: { isSubmitting, errors } } = useForm();
+
   const charger = async () => {
     const res = await getNiveaux();
     setNiveaux(res.data);
   };
+
   useEffect(() => {
     charger();
   }, []);
+
   const niveauxFiltres = niveaux.filter((n) => {
     const texte = (n.code + ' ' + n.nom + ' ' + n.cycle).toLowerCase();
     return texte.includes(recherche.toLowerCase());
   });
+
   const ouvrirCreation = () => {
     setNiveauEnEdition(null);
     reset({ code: '', nom: '', cycle: '' });
     setModalOuvert(true);
   };
+
   const ouvrirEdition = (niveau) => {
     setNiveauEnEdition(niveau.id);
     reset({ code: niveau.code, nom: niveau.nom, cycle: niveau.cycle });
     setModalOuvert(true);
   };
+
   const onSubmit = async (data) => {
     try {
       if (niveauEnEdition) {
@@ -61,6 +70,7 @@ function Niveaux() {
       );
     }
   };
+
   const confirmerSuppression = async () => {
     setSuppressionEnCours(true);
     try {
@@ -74,9 +84,15 @@ function Niveaux() {
       setSuppressionEnCours(false);
     }
   };
+
+
+
+
   return (
     <div className="container-principal">
       <div className="department-page">
+
+
         {/* HEADER */}
         <div className="panel-head">
           <div>
@@ -88,6 +104,8 @@ function Niveaux() {
             Nouveau niveau
           </button>
         </div>
+
+
         {/* TOOLBAR */}
         <div className="department-toolbar">
           <div className="toolbar-left">
@@ -102,6 +120,8 @@ function Niveaux() {
             </div>
           </div>
         </div>
+
+
         {/* TABLE */}
         <div className="department-card table-card">
           <div className="table-title">

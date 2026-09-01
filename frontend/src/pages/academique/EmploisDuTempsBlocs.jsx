@@ -4,7 +4,6 @@ import { getEmploisDuTemps, telechargerEmploiDuTempsPdf } from '../../api/emploi
 import { useAlert } from '../../context/AlertContext';
 import { STATUTS_EMPLOI, CLASSE_BADGE_STATUT } from './emploiDuTempsConstantes';
 import '../../assets/css/emploiDuTemps.css';
-//TONE_STATUT_EMPLOI
 
 
 
@@ -64,72 +63,113 @@ function EmploisDuTempsBlocs() {
       afficherErreur('Erreur lors du téléchargement du PDF.');
     }
   };
+
   
+
+
   return (
     <div className="container-principal">
-      <div className="edt-blocs-page">
-       
-        <div className="edt-blocs-header">
-          <h1>Aperçu des emplois du temps</h1>
-          <div className="search-box">
-            <i className="fas fa-search"></i>
-            <input
-              type="text"
-              placeholder="Rechercher (classe, semestre, année, statut...)"
-              value={recherche}
-              onChange={(e) => setRecherche(e.target.value)}
-            />
+      <div className="department-page">
+
+        <div className="retour-link" style={{ marginBottom: "-10px" }}>
+          <div>
+            <button onClick={() => navigate('/academique/emplois-du-temps')} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+              ← Retour aux sessions
+            </button>
+            <span> - Détail sur la caisse</span>
           </div>
         </div>
-       
-       
+
+        <div className="panel-head">
+          <div>
+            <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>Aperçu des emplois du temps</h3>
+            <div className="sub">
+              Recherchez et consuletez un ou une liste d'emplois du 
+              temps
+            </div>
+          </div>
+        </div>
+  
+
+        {/* TOOLBAR */}
+        <div className="department-toolbar">
+          <div className="toolbar-left">
+            <div className="search-box">
+              <i className="fas fa-search"></i>
+              <input type="text" placeholder="Rechercher (classe, semestre, année, statut...)" value={recherche} onChange={(e) => setRecherche(e.target.value)}/>
+            </div>
+          </div>
+        </div>
+      
        
         {Object.keys(groupes).length === 0 && (
-          <div className="empty" style={{ marginTop: '30px' }}>Aucun résultat.</div>
+          <div className="empty" style={{ marginTop: '30px' }}>
+            Aucun résultat.
+          </div>
         )}
        
+
         {Object.entries(groupes).map(([annee, semestres]) => (
           <div className="edt-groupe-annee" key={annee}>
-            <h2 className="edt-titre-annee">
+
+            <h2 className="badge badge-violet anneeAca">
               <i className="fas fa-calendar"></i> {annee}
             </h2>
+            
             {Object.entries(semestres).map(([semestre, semaines]) => (
               <div className="edt-groupe-semestre" key={semestre}>
-                <h3 className="edt-titre-semestre">{semestre === 'S1' ? 'Semestre 1' : semestre === 'S2' ? 'Semestre 2' : semestre}</h3>
+                
+                <h3 className="badge badge-orange anneeAca">
+                  {semestre === 'S1' ? 'Semestre 1' : semestre === 'S2' ? 'Semestre 2' : semestre}
+                </h3>
+                
+
                 {Object.entries(semaines).map(([semaine, listeEmplois]) => (
                   <div className="edt-groupe-semaine" key={semaine}>
-                    <h4 className="edt-titre-semaine">{semaine}</h4>
+                
+                    <h4 className="badge badge-aqua anneeAca">{semaine}</h4>
+                
                     <div className="edt-cartes-grid">
+                      
                       {listeEmplois.map((e) => (
                         <div className="edt-carte" key={e.id} onClick={() => navigate(`/academique/emplois-du-temps/${e.id}`)}>
+                          
                           <div className="edt-carte-header">
                             <span className={`${CLASSE_BADGE_STATUT[e.statut]}`}>
                               <span className="dot"></span>
                               {STATUTS_EMPLOI.find((s) => s.value === e.statut)?.label}
                             </span>
                           </div>
+
                           <div className="edt-carte-classe">{e.classe_str}</div>
+                          
                           <div className="edt-carte-titre">{e.nom_affiche}</div>
+                          
                           <div className="edt-carte-footer">
                             <span className="edt-carte-seances">
                               <i className="fas fa-list-check"></i> {e.nb_seances} séance{e.nb_seances > 1 ? 's' : ''}
                             </span>
-                            <button
-                              className="edt-btn-pdf"
-                              onClick={(evt) => { evt.stopPropagation(); telechargerPdf(e); }}
-                              title="Télécharger le PDF"
-                            >
+                            <button className="edt-btn-pdf" onClick={(evt) => { evt.stopPropagation(); telechargerPdf(e); }} title="Télécharger le PDF">
                               <i className="fas fa-file-pdf"></i>
                             </button>
                           </div>
+
                         </div>
+
                       ))}
+
                     </div>
+
                   </div>
+
                 ))}
+
               </div>
+
             ))}
+
           </div>
+
         ))}
 
 

@@ -13,7 +13,6 @@
     }
 }
 
-
 @keyframes slideDown{
 
     from{
@@ -52,7 +51,6 @@ main {
     transition: margin-left 0.3s ease;
 }
 
-
 .department-page{
     display:flex;
     flex-direction:column;
@@ -69,23 +67,25 @@ main {
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 15px;
-  padding-bottom: 16px;
+  padding-bottom: 20px;
   border-bottom: 1px solid var(--input);
 }
 
 .panel-head h3 { 
   margin: 0; 
   font-family: Arial, Helvetica, sans-serif; 
-  font-size: 15px; 
-  font-weight: 600; 
-  color: var(--ink-900);
+  font-size: 20px; 
+  font-weight: 500; 
+  color: var(--text);
+  margin-bottom: 8px;
   line-height: 25px; 
+  letter-spacing: 2px;
 }
 
 .panel-head .sub { 
   margin-top: 2px; 
   font-size: 12px; 
-  color: var(--text-400); 
+  color: #979595; 
   line-height: 23px;
   letter-spacing: 2px;
 }
@@ -276,7 +276,6 @@ main {
 
 .department-page
 .search-box input{
-    width:100%;
     background:transparent;
     border:none;
     outline:none;
@@ -296,10 +295,10 @@ main {
 .toolbar-right select{
     background: var(--card);
     color: var((--text));
-    border:none;
+    border: solid 1px var((--input));
     outline:none;
-    border-radius:10px;
-    padding:12px 14px;
+    border-radius: 5px;
+    padding: 13px 15px;
     cursor:pointer;
 }
 
@@ -375,7 +374,7 @@ table, th, td {
     font-size: 13px;
     font-family: Arial, Helvetica, sans-serif;
     text-align: left;
-    min-width: 150px;
+    min-width: 250px;
     white-space: nowrap;
 }
 
@@ -452,6 +451,10 @@ td:not(:first-of-type){
 
 .table-btn.delete{
     background:#ef4444;
+}
+
+.table-btn.download{
+    background:#aa3ad6;
 }
 
 
@@ -661,11 +664,10 @@ td:not(:first-of-type){
 }
 
 .modal-header button:hover{
-    background:linear-gradient(
-        135deg,
-        #6770f5,
-        #043591
-    );
+    background: rgba(255,255,255,.3) !important;
+    font-weight: 700;
+    border-radius: 50%;
+    padding: 7px 8px;
 }
 
 
@@ -716,16 +718,18 @@ td:not(:first-of-type){
 
 .text-help {
     font-size: 12px;
-    line-height: 20px;
-    letter-spacing: 1px;
+    line-height: 22px;
+    letter-spacing: 2px;
     color: #838fa0;
     padding-top: 10px;
 }
 
-.department-modal .form-group input, select, textarea
+.department-modal .form-group input, 
+.department-modal .form-group select, 
+.department-modal .form-group textarea
 {
     width: 100%;
-    background: var(--card);
+    background: var(--card) !important;
     border:1px solid var(--input);
     color: var(--text);
     border-radius: 5px;
@@ -840,7 +844,7 @@ td:not(:first-of-type){
   height: 15px;
   border: 1px solid var(--input);
   border-radius: 3px;
-  background: var(--bg);
+  background: var(--bg) !important;
   cursor: pointer;
   position: relative;
   transition: all 0.15s ease;
@@ -851,7 +855,7 @@ td:not(:first-of-type){
 }
 
 .permission-checkbox input[type="checkbox"]:checked {
-  background: linear-gradient(135deg, #400c7c, #a14fff);
+  background: linear-gradient(135deg, #400c7c, #a14fff) !important;
   border-color: #7c3aed;
 }
 
@@ -899,6 +903,12 @@ td:not(:first-of-type){
     font-weight: 600; 
 }
 
+.btn-light {
+    background: var(--card);
+    color: var(--text);
+    border: solid 1px var(--input);
+}
+
 .confirme-header {
     font-size: 15px;
     font-family: Arial, Helvetica, sans-serif;
@@ -908,6 +918,7 @@ td:not(:first-of-type){
     padding: 20px;
     text-align: center;
 }
+
 
 .confirmation-modal .confirmation-body {
     padding: 20px;
@@ -1106,7 +1117,9 @@ td:not(:first-of-type){
 
 
 hr {
-    color: var(--input);
+    border: none;
+    padding: 1px;
+    border-top: solid 1px var(--input);
 }
 
 #consigne {

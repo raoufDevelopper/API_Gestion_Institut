@@ -33,6 +33,9 @@ class NoteSerializer(serializers.ModelSerializer):
 
 class DeliberationSerializer(serializers.ModelSerializer):
     etudiant_str = serializers.CharField(source='etudiant.__str__', read_only=True)
+    annee_academique_libelle = serializers.CharField(source='annee_academique.libelle', read_only=True)
+    mention = serializers.SerializerMethodField()
+    etudiant_formation = serializers.SerializerMethodField()
     class Meta:
         model = Deliberation
         fields = '__all__'
@@ -41,3 +44,13 @@ class DeliberationSerializer(serializers.ModelSerializer):
             'seuil_admission', 'decision', 'matieres_non_validees',
             'date_calcul', 'date_premiere_deliberation',
         ]
+    def get_mention(self, obj):
+        from .services import mention as calculer_mention
+        return calculer_mention(obj.moyenne_generale)
+    def get_etudiant_formation(self, obj):
+        parts = []
+        if obj.etudiant.specialite:
+            parts.append(str(obj.etudiant.specialite))
+        if obj.etudiant.niveau:
+            parts.append(str(obj.etudiant.niveau))
+        return ' — '.join(parts) if parts else '—'

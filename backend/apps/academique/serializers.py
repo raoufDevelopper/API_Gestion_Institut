@@ -16,7 +16,7 @@ class NiveauSerializer(serializers.ModelSerializer):
 
 
 class FiliereSerializer(serializers.ModelSerializer):
-    responsable_nom = serializers.CharField(source='responsable.nom', read_only=True)
+    responsable_nom = serializers.CharField(source='responsable.__str__', read_only=True)
     class Meta:
         model = Filiere
         fields = '__all__'

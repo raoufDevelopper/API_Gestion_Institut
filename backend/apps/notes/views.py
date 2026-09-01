@@ -556,3 +556,83 @@ def detail_note(request, pk):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     note.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
+@permission_requise('gerer_notes')
+def liste_creer_types_evaluation(request):
+    if request.method == 'GET':
+        types_evaluation = TypeEvaluation.objects.all()
+        kpis = {
+            'total': TypeEvaluation.objects.count(),
+            'actif': TypeEvaluation.objects.filter(actif=True).count(),
+            'inactif': TypeEvaluation.objects.filter(actif=False).count(),
+        }
+        return Response({
+            'resultats': TypeEvaluationSerializer(types_evaluation, many=True).data,
+            'kpis': kpis,
+        })
+    serializer = TypeEvaluationSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@permission_requise('gerer_notes')
+def consultation_notes_pdf(request):
+    classe_id = request.GET.get('classe')
+    matiere_id = request.GET.get('matiere')
+    annee_academique_id = request.GET.get('annee_academique')
+    semestre = request.GET.get('semestre')
+    if not all([classe_id, matiere_id, annee_academique_id, semestre]):
+        return Response({'detail': 'Paramètres manquants.'}, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        classe = Classe.objects.get(pk=classe_id)
+        matiere = Matiere.objects.get(pk=matiere_id)
+        annee_academique = AnneeAcademique.objects.get(pk=annee_academique_id)
+    except (Classe.DoesNotExist, Matiere.DoesNotExist, AnneeAcademique.DoesNotExist):
+        return Response({'detail': 'Contexte invalide.'}, status=status.HTTP_404_NOT_FOUND)
+    etudiants = Etudiant.objects.filter(classe=classe, statut='ACTIF').order_by('nom', 'prenom')
+    types_actifs = list(TypeEvaluation.objects.filter(actif=True))
+    lignes = []
+    for etudiant in etudiants:
+        notes_par_type = {
+            note.type_evaluation_id: note.valeur
+            for note in Note.objects.filter(
+                etudiant=etudiant, matiere=matiere,
+                annee_academique=annee_academique, semestre=semestre,
+            )
+        }
+        moyenne = calculer_moyenne_matiere(etudiant, matiere, annee_academique, semestre)
+        lignes.append({
+            'etudiant': etudiant,
+            'notes_par_type': [notes_par_type.get(t.id) for t in types_actifs],
+            'moyenne': moyenne,
+        })
+    html_string = render_to_string('notes/consultation_pdf.html', {
+        'classe': classe, 'matiere': matiere, 'annee_academique': annee_academique, 'semestre': semestre,
+        'types_actifs': types_actifs, 'lignes': lignes,
+        'date_generation': timezone.now().strftime('%d/%m/%Y à %H:%M'),
+    })
+    pdf_file = HTML(string=html_string, base_url=request.build_absolute_uri('/')).write_pdf()
+    response = HttpResponse(pdf_file, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="consultation_notes_{classe}.pdf"'.replace(' ', '_')
+    return response
+

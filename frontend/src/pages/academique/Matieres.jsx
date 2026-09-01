@@ -161,11 +161,11 @@ function Matieres() {
             <div className="count-top"><h2>{actif}</h2><span>Actives</span></div>
           </div>
           <div className="department-card">
-            <div className="kpi-icon aqua"><i className="fas fa-pause-circle"></i></div>
+            <div className="kpi-icon red"><i className="fas fa-ban"></i></div>
             <div className="count-top"><h2>{inactif}</h2><span>Inactives</span></div>
           </div>
           <div className="department-card">
-            <div className="kpi-icon red"><i className="fas fa-ban"></i></div>
+            <div className="kpi-icon orange"><i className="fas fa-pause-circle"></i></div>
             <div className="count-top"><h2>{suspendu}</h2><span>Suspendues</span></div>
           </div>
         </div>
@@ -208,7 +208,7 @@ function Matieres() {
                     <td>{m.coefficient}</td>
                     <td>{SEMESTRES.find((s) => s.value === m.semestre)?.label}</td>
                     <td>
-                      <span className={`badge ${m.statut === 'actif' ? 'emerald' : m.statut === 'inactif' ? 'amber' : 'brick'}`}>
+                      <span className={`badge-${m.statut === 'actif' ? 'success' : m.statut === 'inactif' ? 'danger' : 'orange'}`}>
                         <span className="dot"></span>
                         {STATUTS.find((s) => s.value === m.statut)?.label}
                       </span>
@@ -304,8 +304,10 @@ function Matieres() {
                   {STATUTS.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
                 </select>
               </div>
+
               <div className="form-group full">
                 <label>Spécialités concernées</label>
+               
                 <div className="permissions-select">
                   {specialites.map((s) => (
                     <label key={s.id} className="permission-checkbox">
@@ -314,7 +316,9 @@ function Matieres() {
                     </label>
                   ))}
                 </div>
+              
               </div>
+              
               <div className="form-group full">
                 <label>Niveaux concernés</label>
                 <div className="permissions-select">
@@ -326,6 +330,7 @@ function Matieres() {
                   ))}
                 </div>
               </div>
+              
               <div className="form-group full">
                 <label>Description</label>
                 <textarea rows="3" {...register('description')}></textarea>

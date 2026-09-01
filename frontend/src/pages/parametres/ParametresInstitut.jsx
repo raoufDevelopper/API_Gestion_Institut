@@ -250,10 +250,10 @@ function ParametresInstitut() {
                                 <div className="field"><label>Adresse e-mail</label><input type="email" {...register('email')} /></div>
                                 <div className="field"><label>Téléphone</label><input type="text" {...register('telephone')} /></div>
                                 <div className="field"><label>Site web</label><input type="url" {...register('site_web')} /></div>
-                                <div className="field full"><label>Adresse</label><input type="text" {...register('adresse')} /></div>
+                                <div className="field"><label>Adresse</label><input type="text" {...register('adresse')} /></div>
                                 <div className="field"><label>Ville</label><input type="text" {...register('ville')} /></div>
                                 <div className="field"><label>Pays</label><input type="text" {...register('pays')} /></div>
-                                <div className="field"><label>Boîte postale</label><input type="text" {...register('boite_postale')} /></div>
+                                <div className="field full"><label>Boîte postale</label><input type="text" {...register('boite_postale')} /></div>
                             </div>
                         </div>
 

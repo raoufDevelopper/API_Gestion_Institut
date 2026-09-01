@@ -57,16 +57,16 @@ class Diplome(models.Model):
 class TypeCertificat(models.Model):
     code = models.SlugField(max_length=30, unique=True)
     nom = models.CharField(max_length=100)
-    auto_generable = models.BooleanField(
-        default=False,
-        help_text="Si coché, l'étudiant peut générer ce certificat lui-même en libre-service."
-    )
+    auto_generable = models.BooleanField(default=False, help_text="Si coché, l'étudiant peut générer ce certificat lui-même en libre-service.")
     class Meta:
         verbose_name = "Type de certificat"
         verbose_name_plural = "Types de certificat"
         ordering = ['nom']
     def __str__(self):
         return self.nom
+
+
+
 class Certificat(models.Model):
     type_certificat = models.ForeignKey(TypeCertificat, on_delete=models.PROTECT, related_name='certificats')
     etudiant = models.ForeignKey('utilisateurs.Etudiant', on_delete=models.CASCADE, related_name='certificats')
@@ -100,21 +100,24 @@ class Certificat(models.Model):
 # Document (catégorie fourre-tout)
 # ---------------------------------------------------------------------------
 class Document(models.Model):
+
     titre = models.CharField(max_length=200)
+
     categorie = models.CharField(max_length=100, blank=True, null=True)
+
     fichier = models.FileField(upload_to='documents/autres/')
-    concerne_etudiant = models.ForeignKey(
-        'utilisateurs.Etudiant', on_delete=models.SET_NULL, null=True, blank=True, related_name='documents'
-    )
-    concerne_personnel = models.ForeignKey(
-        'utilisateurs.Personnel', on_delete=models.SET_NULL, null=True, blank=True, related_name='documents'
-    )
-    ajoute_par = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='documents_ajoutes'
-    )
+
+    concerne_etudiant = models.ForeignKey('utilisateurs.Etudiant', on_delete=models.SET_NULL, null=True, blank=True, related_name='documents')
+
+    concerne_personnel = models.ForeignKey('utilisateurs.Personnel', on_delete=models.SET_NULL, null=True, blank=True, related_name='documents')
+
+    ajoute_par = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='documents_ajoutes')
+
     date_ajout = models.DateTimeField(auto_now_add=True)
+
     class Meta:
         verbose_name = "Document"
         ordering = ['-date_ajout']
+
     def __str__(self):
         return self.titre

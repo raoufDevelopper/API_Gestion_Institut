@@ -1,8 +1,6 @@
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save
 
 from django.dispatch import receiver
-
-from django.contrib.auth.signals import user_logged_in, user_logged_out
 
 from apps.utilisateurs.models import Etudiant, Personnel, Formateur
 
@@ -157,24 +155,7 @@ def notifier_caisse(sender, instance, created, **kwargs):
 
 
 
-from apps.bibliotheque.models import Livre, Emprunt, Reservation, Penalite
-
-
-# ---------- LIVRE (catalogue) ----------
-@receiver(post_save, sender=Livre)
-def notifier_livre(sender, instance, created, **kwargs):
-    for admin in _superusers_et_admins():
-        creer_notification(
-            destinataire=admin,
-            titre="Livre ajouté au catalogue" if created else "Livre modifié",
-            message=f"{instance.titre} — {instance.auteur}",
-            type_notification='succes' if created else 'info',
-        )
-
-
-
-
-
+from apps.bibliotheque.models import Emprunt, Reservation, Penalite
 # ---------- EMPRUNT ----------
 @receiver(post_save, sender=Emprunt)
 def notifier_emprunt(sender, instance, created, **kwargs):
