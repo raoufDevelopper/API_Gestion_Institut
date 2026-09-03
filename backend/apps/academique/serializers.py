@@ -69,6 +69,7 @@ class AnneeAcademiqueSerializer(serializers.ModelSerializer):
 
 
 class ClasseSerializer(serializers.ModelSerializer):
+    specialite_nom = serializers.CharField(source='specialite.nom', read_only=True)
     specialite_code = serializers.CharField(source='specialite.code', read_only=True)
     niveau_nom = serializers.CharField(source='niveau.nom', read_only=True)
     filiere_nom = serializers.CharField(source='filiere.nom', read_only=True)

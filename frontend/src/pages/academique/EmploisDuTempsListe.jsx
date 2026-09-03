@@ -121,6 +121,9 @@ function EmploisDuTempsListe() {
             <div className="count-top"><h2>{archive}</h2><span>Archivés</span></div>
           </div>
         </div>
+
+
+
         <div className="department-toolbar">
           <div className="toolbar-left">
             <div className="search-box">
@@ -160,7 +163,7 @@ function EmploisDuTempsListe() {
                     <td>{e.nb_seances} séances</td>
                     <td>
                       <span className={`badge ${CLASSE_BADGE_STATUT[e.statut]}`}>
-                        <span className="dot"></span>
+                        <p className='bull'>&bull;</p>
                         {STATUTS_EMPLOI.find((s) => s.value === e.statut)?.label}
                       </span>
                     </td>

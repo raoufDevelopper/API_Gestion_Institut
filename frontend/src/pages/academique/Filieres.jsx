@@ -174,7 +174,7 @@ function Filieres() {
                     <td>{f.responsable_nom || '—'}</td>
                     <td>
                       <span className={`badge-${f.statut === 'actif' ? 'success' : f.statut === 'inactif' ? 'danger' : 'orange'}`}>
-                        <span className="dot"></span>
+                        <p className='bull'>&bull;</p>
                         {STATUTS.find((s) => s.value === f.statut)?.label}
                       </span>
                     </td>
@@ -203,6 +203,12 @@ function Filieres() {
           </div>
         </div>
       </div>
+
+
+
+
+
+
       {/* MODAL DE CREATION / MODIFICATION */}
       <div className="department-modal" style={{ display: modalOuvert ? 'flex' : 'none' }}>
         <div className="modal-content">
@@ -266,12 +272,17 @@ function Filieres() {
           </p>
         </div>
       </div>
+
+
+
+
+
       {/* MODAL DETAIL */}
       <div className="department-modal" style={{ display: filiereEnDetail ? 'flex' : 'none' }}>
         <div className="modal-content model-detail">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #1e3a8a, #2563eb)' }}>
+          <div className="modal-header">
             <h2>Détail de la filière</h2>
-            <button onClick={() => setFiliereEnDetail(null)}>
+            <button onClick={() => setFiliereEnDetail(null)} className='btn-primary'>
               <i className="fas fa-times"></i>
             </button>
           </div>
@@ -281,12 +292,17 @@ function Filieres() {
               <div className="form-group"><label>Nom</label><p>{filiereEnDetail.nom}</p></div>
               <div className="form-group"><label>Responsable</label><p>{filiereEnDetail.responsable_nom || '—'}</p></div>
               <div className="form-group"><label>Description</label><p>{filiereEnDetail.description || '—'}</p></div>
-              <div className="form-group"><label>Statut</label><p>{STATUTS.find((s) => s.value === filiereEnDetail.statut)?.label}</p></div>
+              <div className="form-group">
+                <label>Statut</label>
+                <p>{STATUTS.find((s) => s.value === filiereEnDetail.statut)?.label}</p>
+              </div>
               <div className="form-group"><label>Créée le</label><p>{new Date(filiereEnDetail.date_creation).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</p></div>
             </div>
           )}
         </div>
       </div>
+
+
       <ConfirmationModal
         ouvert={!!filiereASupprimer}
         titre="Supprimer la filière"
@@ -295,6 +311,8 @@ function Filieres() {
         onAnnuler={() => setFiliereASupprimer(null)}
         chargement={suppressionEnCours}
       />
+
+
     </div>
   );
 }

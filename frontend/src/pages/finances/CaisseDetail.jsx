@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { getCaisseDetail, fermerCaisse, telechargerCaissePdf } from '../../api/finances';
 import { useAlert } from '../../context/AlertContext';
 import { BADGE_STATUT_CAISSE, telechargerFichier } from './financesConstantes';
+import { formatMontant } from '../../components/formatters';
 import '../../assets/css/crud.css';
 
 
@@ -70,7 +71,7 @@ function CaisseDetail() {
               </div>
             </div>
             <span className={`badge ${BADGE_STATUT_CAISSE[session.statut]}`}>
-              <span className="dot"></span>
+              <p className='bull'>&bull;</p>
               {session.statut === 'OUVERTE' ? 'Ouverte' : 'Fermée'}
             </span>
           </div>
@@ -82,30 +83,30 @@ function CaisseDetail() {
                 <div className="dl-group-title">Calcul du solde</div>
                 <div className="dl-row">
                   <span className="dl-k">Solde d'ouverture</span>
-                  <b className="dl-v">{session.solde_ouverture} FCFA</b>
+                  <b className="dl-v">{formatMontant(session.solde_ouverture)}</b>
                 </div>
                 <div className="dl-row">
                   <span className="dl-k">+ Paiements espèces ({mouvements_paiements.length})</span>
-                  <b className="amt green dl-v">+{session.total_paiements_especes} FCFA</b>
+                  <b className="amt green dl-v">+{formatMontant(session.total_paiements_especes)}</b>
                 </div>
                 <div className="dl-row">
                   <span className="dl-k">− Dépenses espèces ({mouvements_depenses.length})</span>
-                  <b className="amt red dl-v">−{session.total_depenses_especes} FCFA</b>
+                  <b className="amt red dl-v">−{formatMontant(session.total_depenses_especes)}</b>
                 </div>
                 <div className="dl-row total">
                   <span className="dl-k">Solde théorique</span>
-                  <b className="dl-v">{session.solde_theorique} FCFA</b>
+                  <b className="dl-v">{formatMontant(session.solde_theorique)}</b>
                 </div>
                 {session.statut === 'FERMEE' && (
                   <div style={{ marginTop: '10px' }}>
                     <div className="dl-row">
                       <span className="dl-k">Solde réel compté à la fermeture</span>
-                      <b className="dl-v">{session.solde_reel_fermeture} FCFA</b>
+                      <b className="dl-v">{formatMontant(session.solde_reel_fermeture)}</b>
                     </div>
                     <div className="dl-row total">
                       <span className="dl-k">Écart</span>
                       <b className={`dl-v amt ${parseFloat(session.ecart) === 0 ? 'green' : 'red'}`}>
-                        {parseFloat(session.ecart) === 0 ? 'Aucun écart' : `${session.ecart} FCFA`}
+                        {parseFloat(session.ecart) === 0 ? 'Aucun écart' : `${formatMontant(session.ecart)}`}
                       </b>
                     </div>
                   </div>
@@ -121,21 +122,25 @@ function CaisseDetail() {
                   <div className="table-scroll">
                     <table>
                       <thead>
-                        <tr><th>Nature</th><th>Détail</th><th className="num">Montant</th></tr>
+                        <tr>
+                          <th>Nature</th>
+                          <th>Détail</th>
+                          <th className="num">Montant</th>
+                        </tr>
                       </thead>
                       <tbody>
                         {mouvements_paiements.map((p) => (
                           <tr key={`p-${p.id}`}>
-                            <td><span className="badge emerald"><span className="dot"></span>Paiement</span></td>
+                            <td><span className="badge badge-success">&bull; Paiement</span></td>
                             <td>{p.inscription_str}</td>
-                            <td className="num" style={{ color: '#22c55e' }}>+{p.montant} FCFA</td>
+                            <td className="num" style={{ color: '#22c55e' }}>+{formatMontant(p.montant)}</td>
                           </tr>
                         ))}
                         {mouvements_depenses.map((d) => (
                           <tr key={`d-${d.id}`}>
-                            <td><span className="badge brick"><span className="dot"></span>Dépense</span></td>
+                            <td><span className="badge badge-danger">&bull; Dépense</span></td>
                             <td>{d.libelle}</td>
-                            <td className="num" style={{ color: '#e46464' }}>−{d.montant} FCFA</td>
+                            <td className="num" style={{ color: '#e46464' }}>−{formatMontant(d.montant)}</td>
                           </tr>
                         ))}
                         {mouvements_paiements.length === 0 && mouvements_depenses.length === 0 && (

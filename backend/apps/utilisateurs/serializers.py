@@ -101,7 +101,6 @@ class EtudiantCompletSerializer(serializers.Serializer):
     email = serializers.EmailField(required=False, allow_blank=True)
     password = serializers.CharField(write_only=True, required=False, allow_blank=True)
 
-
     nom = serializers.CharField()
     prenom = serializers.CharField()
     sexe = serializers.ChoiceField(choices=SEXE_CHOICES)

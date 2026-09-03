@@ -186,8 +186,8 @@ function Salles() {
                   <th>Code</th>
                   <th>Nom</th>
                   <th>Type</th>
-                  <th>Capacité</th>
                   <th>Statut</th>
+                  <th>Capacité</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -197,13 +197,13 @@ function Salles() {
                     <td><div className="cell-strong mono">{s.code}</div></td>
                     <td>{s.nom}</td>
                     <td>{s.type_salle_libelle || '—'}</td>
-                    <td>{s.capacite}</td>
                     <td>
                       <span className={`badge-${TONE_STATUT[s.statut]}`}>
-                        <span className="dot"></span>
+                        <p className='bull'>&bull;</p>
                         {STATUTS.find((st) => st.value === s.statut)?.label}
                       </span>
                     </td>
+                    <td>{s.capacite} places</td>
                     <td>
                       <button className="table-btn view" onClick={() => setSalleEnDetail(s)}>
                         <i className="fas fa-eye"></i>
@@ -235,7 +235,7 @@ function Salles() {
       <div className="department-modal" style={{ display: modalOuvert ? 'flex' : 'none' }}>
         <div className="modal-content">
 
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #400c7c, #a14fff)' }}>
+          <div className="modal-header">
             <h2>{salleEnEdition ? 'Modifier la salle' : 'Nouvelle salle'}</h2>
             <button className="btn-primary" onClick={() => setModalOuvert(false)}>
               <i className="fas fa-times"></i>
@@ -320,9 +320,9 @@ function Salles() {
       {/* MODAL DETAIL */}
       <div className="department-modal" style={{ display: salleEnDetail ? 'flex' : 'none' }}>
         <div className="modal-content model-detail">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #1e3a8a, #2563eb)' }}>
+          <div className="modal-header">
             <h2>Détail de la salle</h2>
-            <button onClick={() => setSalleEnDetail(null)}>
+            <button onClick={() => setSalleEnDetail(null)} className='btn-primary'>
               <i className="fas fa-times"></i>
             </button>
           </div>
@@ -331,7 +331,7 @@ function Salles() {
               <div className="form-group"><label>Code</label><p className="mono">{salleEnDetail.code}</p></div>
               <div className="form-group"><label>Nom</label><p>{salleEnDetail.nom}</p></div>
               <div className="form-group"><label>Type</label><p>{salleEnDetail.type_salle_libelle || '—'}</p></div>
-              <div className="form-group"><label>Capacité</label><p>{salleEnDetail.capacite}</p></div>
+              <div className="form-group"><label>Capacité</label><p>{salleEnDetail.capacite} places</p></div>
               <div className="form-group"><label>Localisation</label><p>{salleEnDetail.localisation}</p></div>
               <div className="form-group"><label>Équipements</label><p>{salleEnDetail.equipements || '—'}</p></div>
               <div className="form-group"><label>Statut</label><p>{STATUTS.find((s) => s.value === salleEnDetail.statut)?.label}</p></div>

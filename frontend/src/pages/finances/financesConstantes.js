@@ -12,7 +12,7 @@ export const BADGE_STATUT_INSCRIPTION = {
 
 export const BADGE_STATUT_FINANCIER = {
   PAYE: 'badge-success',
-  PARTIEL: 'badge-warning',
+  PARTIEL: 'badge-orange',
   NON_PAYE: 'badge-danger',
 };
 

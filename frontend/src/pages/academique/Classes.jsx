@@ -4,6 +4,8 @@ import { getClasses, creerClasse, modifierClasse, supprimerClasse, getSpecialite
 import { useAlert } from '../../context/AlertContext';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import '../../assets/css/crud.css';
+
+
 function Classes() {
   const [classes, setClasses] = useState([]);
   const [specialites, setSpecialites] = useState([]);
@@ -78,9 +80,13 @@ function Classes() {
       setSuppressionEnCours(false);
     }
   };
+
+
+
   return (
     <div className="container-principal">
       <div className="department-page">
+
         {/* HEADER */}
         <div className="panel-head">
           <div>
@@ -92,6 +98,8 @@ function Classes() {
             Nouvelle classe
           </button>
         </div>
+        
+        
         {/* TOOLBAR */}
         <div className="department-toolbar">
           <div className="toolbar-left">
@@ -106,6 +114,9 @@ function Classes() {
             </div>
           </div>
         </div>
+
+
+
         {/* TABLE */}
         <div className="department-card table-card">
           <div className="table-title">
@@ -129,7 +140,7 @@ function Classes() {
                     <td><div className="cell-strong">{c.specialite_code || '—'}</div></td>
                     <td>{c.niveau_nom || '—'}</td>
                     <td>{c.filiere_nom || '—'}</td>
-                    <td>{c.effectif}</td>
+                    <td>{c.effectif} étudiants</td>
                     <td>
                       <button className="table-btn view" onClick={() => setClasseEnDetail(c)}>
                         <i className="fas fa-eye"></i>
@@ -155,10 +166,13 @@ function Classes() {
           </div>
         </div>
       </div>
+
+
+
       {/* MODAL DE CREATION / MODIFICATION */}
       <div className="department-modal" style={{ display: modalOuvert ? 'flex' : 'none' }}>
         <div className="modal-content">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #400c7c, #a14fff)' }}>
+          <div className="modal-header">
             <h2>{classeEnEdition ? 'Modifier la classe' : 'Nouvelle classe'}</h2>
             <button className="btn-primary addInscr" onClick={() => setModalOuvert(false)}>
               <i className="fas fa-times"></i>
@@ -223,12 +237,14 @@ function Classes() {
           </p>
         </div>
       </div>
+
+      
       {/* MODAL DETAIL */}
       <div className="department-modal" style={{ display: classeEnDetail ? 'flex' : 'none' }}>
         <div className="modal-content model-detail">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #1e3a8a, #2563eb)' }}>
+          <div className="modal-header">
             <h2>Détail de la classe</h2>
-            <button onClick={() => setClasseEnDetail(null)}>
+            <button onClick={() => setClasseEnDetail(null)} className='btn-primary'>
               <i className="fas fa-times"></i>
             </button>
           </div>
@@ -237,11 +253,13 @@ function Classes() {
               <div className="form-group"><label>Filière</label><p>{classeEnDetail.filiere_nom || '—'}</p></div>
               <div className="form-group"><label>Spécialité</label><p>{classeEnDetail.specialite_code || '—'}</p></div>
               <div className="form-group"><label>Niveau</label><p>{classeEnDetail.niveau_nom || '—'}</p></div>
-              <div className="form-group"><label>Effectif</label><p>{classeEnDetail.effectif}</p></div>
+              <div className="form-group"><label>Effectif</label><p>{classeEnDetail.effectif} étudiants</p></div>
             </div>
           )}
         </div>
       </div>
+
+
       <ConfirmationModal
         ouvert={!!classeASupprimer}
         titre="Supprimer la classe"
@@ -250,6 +268,7 @@ function Classes() {
         onAnnuler={() => setClasseASupprimer(null)}
         chargement={suppressionEnCours}
       />
+
     </div>
   );
 }

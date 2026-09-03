@@ -5,6 +5,9 @@ import { getTypesPaiement, creerTypePaiement, modifierTypePaiement, supprimerTyp
 import { useAlert } from '../../context/AlertContext';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import '../../assets/css/crud.css';
+
+
+
 function TypesPaiement() {
   const [donnees, setDonnees] = useState({ resultats: [], kpis: {} });
   const [recherche, setRecherche] = useState('');
@@ -64,6 +67,9 @@ function TypesPaiement() {
     }
   };
   const { total = 0, obligatoire = 0, optionnel = 0 } = donnees.kpis;
+
+
+
   return (
     <div className="container-principal">
       <div className="department-page">
@@ -126,7 +132,7 @@ function TypesPaiement() {
                     <td>{t.nom}</td>
                     <td>
                       <span className={`badge ${t.obligatoire_a_inscription ? 'badge-danger' : 'badge-success'}`}>
-                        <span className="dot"></span>
+                        <p className='bull'>&bull;</p>
                         {t.obligatoire_a_inscription ? 'Oui' : 'Non'}
                       </span>
                     </td>
@@ -202,7 +208,7 @@ function TypesPaiement() {
 
       <div className="department-modal" style={{ display: typeEnDetail ? 'flex' : 'none' }}>
         <div className="modal-content model-detail">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #1e3a8a, #2563eb)' }}>
+          <div className="modal-header">
             <h2>Détail du type de paiement</h2>
             <button onClick={() => setTypeEnDetail(null)}>
               <i className="fas fa-times"></i>

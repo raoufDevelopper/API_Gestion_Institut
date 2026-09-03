@@ -43,7 +43,7 @@ class Niveau(models.Model):
         verbose_name_plural = "Niveaux"
 
     def __str__(self):
-        return self.code
+        return self.nom
 
 
     

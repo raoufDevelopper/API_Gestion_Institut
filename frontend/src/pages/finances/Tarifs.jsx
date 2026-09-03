@@ -6,6 +6,7 @@ import { getTypesPaiement } from '../../api/finances';
 import { getSpecialites, getNiveaux, getAnneesAcademiques } from '../../api/academique';
 import { useAlert } from '../../context/AlertContext';
 import ConfirmationModal from '../../components/ConfirmationModal';
+import { formatMontant } from '../../components/formatters';
 import '../../assets/css/crud.css';
 
 function Tarifs() {
@@ -184,9 +185,10 @@ function Tarifs() {
                     <td><div className="cell-strong">{t.type_paiement_nom}</div></td>
                     <td>{t.portee}</td>
                     <td>{t.annee_academique_libelle || '—'}</td>
-                    <td>{t.montant} FCFA</td>
+                    <td>{formatMontant(t.montant)}</td>
                     <td>
                       <span className={`badge ${t.actif ? 'badge-success' : 'badge-danger'}`}>
+                        <p className='bull'>&bull;</p>
                         {t.actif ? 'Actif' : 'Inactif'}
                       </span>
                     </td>
@@ -305,14 +307,12 @@ function Tarifs() {
       {/* MODAL DETAIL */}
       <div className="department-modal" style={{ display: tarifEnDetail ? 'flex' : 'none' }}>
         <div className="modal-content model-detail">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #1e3a8a, #2563eb)' }}>
+          <div className="modal-header">
             <h2>Détail du tarif</h2>
             <button onClick={() => setTarifEnDetail(null)}>
               <i className="fas fa-times"></i>
             </button>
           </div>
-
-
 
           {tarifEnDetail && (
             <div className="form-grid" style={{ padding: '20px' }}>
@@ -326,10 +326,11 @@ function Tarifs() {
             </div>
           )}
 
-
         </div>
       
       </div>
+
+
 
 
       {/* MODAL SIMULATEUR */}
@@ -376,23 +377,33 @@ function Tarifs() {
             </div>
             <div className="modal-footer">
               <button type="submit" className="btn-primary addInscr" style={{ background: 'linear-gradient(135deg, #400c7c, #a14fff)'}}>
-                Simuler
+                {isSubmitting ? 'simulation en cours...' : 'simuler'}
               </button>
             </div>
+
+            {resultatSimulation && (
+              <div style={{ padding: '0 20px 20px' }}>
+                {resultatSimulation.trouve ? (
+                  <div className="rn-moyenne-annuelle">
+                    <span>Montant applicable</span>
+                    <span>{formatMontant(resultatSimulation.montant)} — {resultatSimulation.portee}</span>
+                  </div>
+                ) : (
+                  <div className="empty">Aucun tarif ne correspond à cette combinaison.</div>
+                )}
+              </div>
+            )}
+
           </form>
-          {resultatSimulation && (
-            <div style={{ padding: '0 20px 20px' }}>
-              {resultatSimulation.trouve ? (
-                <div className="rn-moyenne-annuelle">
-                  <span>Montant applicable</span>
-                  <span>{resultatSimulation.montant} FCFA — {resultatSimulation.portee}</span>
-                </div>
-              ) : (
-                <div className="empty">Aucun tarif ne correspond à cette combinaison.</div>
-              )}
-            </div>
-          )}
+          
+          <hr />
+
+          <p id="consigne">
+            Le remplissage des champs marqués avec (*) est obligatoire.
+          </p>
+
         </div>
+
       </div>
 
       <ConfirmationModal

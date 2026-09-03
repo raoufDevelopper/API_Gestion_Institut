@@ -145,6 +145,7 @@
 }
 
 .ud-identite h2 { 
+  text-transform: uppercase;
   font-size: 20px; 
   font-weight: 500; 
   color: var(--text);
@@ -183,7 +184,14 @@
   position: relative;
 }
 
-.ud-citation .auteur { display: block; margin-top: 8px; font-style: normal; font-weight: 600; color: #6b7280; font-size: 11.5px; }
+.ud-citation .auteur { 
+  display: block; 
+  margin-top: 8px; 
+  font-style: normal; 
+  font-weight: 600; 
+  color: #6b7280; 
+  font-size: 11.5px; 
+}
 
 
 
@@ -312,13 +320,20 @@
 }
 
 .ud-champ-ligne .valeur-lien {
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: 8px;
+  background: rgb(72, 72, 230);
+  color: #fff;
+  padding: 7px 14px;
+  border: none;
+  border-radius: 3px;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 1px;
+  transition: 0.3s;
+}
+
+.ud-champ-ligne .valeur-lien:hover {
+  background: rgb(61, 61, 179);
 }
 
 

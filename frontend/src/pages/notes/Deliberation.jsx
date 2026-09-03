@@ -7,6 +7,8 @@ import { useAlert } from '../../context/AlertContext';
 import { PERIODES, BADGE_DECISION, LABEL_DECISION } from './notesConstantes';
 import '../../assets/css/crud.css';
 import '../../assets/css/saisieNotes.css';
+
+
 function Deliberation() {
   const [classes, setClasses] = useState([]);
   const [anneesAcademiques, setAnneesAcademiques] = useState([]);
@@ -18,16 +20,23 @@ function Deliberation() {
   const [calculEnCours, setCalculEnCours] = useState(false);
   const { afficherSucces, afficherErreur } = useAlert();
   const { register, handleSubmit, formState: { errors } } = useForm();
+
+
   useEffect(() => {
     getClasses().then((res) => setClasses(res.data));
     getAnneesAcademiques().then((res) => setAnneesAcademiques(res.data.resultats || res.data));
   }, []);
+
   const nomClasse = (idVal) => {
     const c = classes.find((c) => String(c.id) === String(idVal));
-    return c ? `${c.specialite_nom} — ${c.niveau_nom}` : '';
+    if (!c) return '';
+    return `${c.specialite_code || '—'} — ${c.niveau_nom || '—'}`;
   };
+
   const nomAnnee = (idVal) => anneesAcademiques.find((a) => String(a.id) === String(idVal))?.libelle || '';
+
   const labelPeriode = (val) => PERIODES.find((p) => p.value === val)?.label || val;
+
   const chargerContexte = async (data) => {
     setChargement(true);
     try {
@@ -80,12 +89,30 @@ function Deliberation() {
   const nbRattrapage = resultats.filter((r) => r.decision === 'RATTRAPAGE').length;
   const nbRedoublant = resultats.filter((r) => r.decision === 'REDOUBLANT').length;
   const nbIncomplet = resultats.filter((r) => r.decision === 'INCOMPLET').length;
+
+
+
+
+
+
   return (
     <div className="container-principal">
-      <div className="sn-page">
-        <div className="sn-header">
-          <h1>Délibération</h1>
-          {contexte && (
+
+      <div className="department-page">
+
+        {contexte && (
+          <div className="panel-head">
+            <div>
+              <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>Délibération</h3>
+              <div className="sn-bandeau-contexte">
+                <div className="sn-contexte-infos">
+                  <span className="sn-contexte-item">{nomClasse(contexte.classe)}</span>
+                  <span className="sn-contexte-item">{nomAnnee(contexte.annee_academique)}</span>
+                  <span className="sn-contexte-item">{labelPeriode(contexte.periode)}</span>
+                </div>
+              </div>
+            </div>
+          
             <div style={{ display: 'flex', gap: '10px' }}>
               <button className="btn-light" onClick={lancerCalcul} disabled={calculEnCours}>
                 <i className="fas fa-rotate"></i> {calculEnCours ? 'Calcul...' : 'Lancer / Recalculer'}
@@ -94,43 +121,45 @@ function Deliberation() {
                 <i className="fas fa-file-pdf"></i> Exporter le PV
               </button>
             </div>
-          )}
-        </div>
-        {contexte && (
-          <div className="sn-bandeau-contexte">
-            <div className="sn-contexte-infos">
-              <span className="sn-contexte-item">{nomClasse(contexte.classe)}</span>
-              <span className="sn-contexte-item">{nomAnnee(contexte.annee_academique)}</span>
-              <span className="sn-contexte-item">{labelPeriode(contexte.periode)}</span>
-            </div>
-            <button className="sn-btn-changer" onClick={() => setModalOuvert(true)}>
-              <i className="fas fa-rotate"></i> Changer le contexte
-            </button>
+            
           </div>
         )}
+
+
         {chargement && <div className="empty">Chargement...</div>}
         {contexte && !chargement && (
           <>
-            <div className="sn-resume-cards">
-              <div className="sn-resume-card">
-                <div className="sn-resume-icone" style={{ background: '#dcfce7', color: '#16a34a' }}><i className="fas fa-check-circle"></i></div>
-                <div><div className="sn-resume-valeur">{nbAdmis}</div><div className="sn-resume-label">Admis</div></div>
+
+            {/* KPI */}
+            <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
+              
+              <div className="department-card">
+                <div className="kpi-icon green"><i className="fas fa-check-circle"></i></div>
+                <div className="count-top"><h2>{nbAdmis}</h2><span>Admis</span></div>
               </div>
-              <div className="sn-resume-card">
-                <div className="sn-resume-icone" style={{ background: '#fef9c3', color: '#854d0e' }}><i className="fas fa-rotate"></i></div>
-                <div><div className="sn-resume-valeur">{nbRattrapage}</div><div className="sn-resume-label">Rattrapage</div></div>
+
+              <div className="department-card">
+                <div className="kpi-icon orange"><i className="fas fa-rotate"></i></div>
+                <div className="count-top"><h2>{nbRattrapage}</h2><span>Rattrapage</span></div>
               </div>
-              <div className="sn-resume-card">
-                <div className="sn-resume-icone" style={{ background: '#fef2f2', color: '#dc2626' }}><i className="fas fa-repeat"></i></div>
-                <div><div className="sn-resume-valeur">{nbRedoublant}</div><div className="sn-resume-label">Redoublant</div></div>
+
+              <div className="department-card">
+                <div className="kpi-icon red"><i className="fas fa-repeat"></i></div>
+                <div className="count-top"><h2>{nbRedoublant}</h2><span>Redoublant</span></div>
               </div>
-              <div className="sn-resume-card">
-                <div className="sn-resume-icone bleu"><i className="fas fa-circle-question"></i></div>
-                <div><div className="sn-resume-valeur">{nbIncomplet}</div><div className="sn-resume-label">Incomplet</div></div>
+
+              <div className="department-card">
+                <div className="kpi-icon blue"><i className="fas fa-circle-question"></i></div>
+                <div className="count-top"><h2>{nbIncomplet}</h2><span>Incomplet</span></div>
               </div>
+
             </div>
-            <div className="sn-table-card">
-              <div className="sn-table-toolbar">
+
+
+
+            <div className="department-toolbar">
+
+              <div className="toolbar-left">
                 <div className="search-box">
                   <i className="fas fa-search"></i>
                   <input
@@ -141,53 +170,84 @@ function Deliberation() {
                   />
                 </div>
               </div>
-              <table className="sn-table">
-                <thead>
-                  <tr>
-                    <th>Étudiant</th>
-                    <th>Moyenne</th>
-                    <th>Crédits obtenus</th>
-                    <th>Crédits requis</th>
-                    <th>Décision</th>
-                    <th>Verrou</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {resultatsFiltres.map((r) => (
-                    <tr key={r.id}>
-                      <td className="cell-strong">{r.etudiant_str}</td>
-                      <td>{r.moyenne_generale ?? '—'}</td>
-                      <td>{r.credits_obtenus}</td>
-                      <td>{r.credits_requis}</td>
-                      <td>
-                        <span className={`badge ${BADGE_DECISION[r.decision]}`}>
-                          <span className="dot"></span>
-                          {LABEL_DECISION[r.decision]}
-                        </span>
-                      </td>
-                      <td>
-                        <button
-                          className={`dl-btn-verrou ${r.verrouillee ? 'verrouillee' : ''}`}
-                          onClick={() => toggleVerrou(r.id)}
-                          title={r.verrouillee ? 'Déverrouiller' : 'Verrouiller'}
-                        >
-                          <i className={`fas ${r.verrouillee ? 'fa-lock' : 'fa-lock-open'}`}></i>
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                  {resultatsFiltres.length === 0 && (
-                    <tr><td colSpan="6"><div className="empty">Aucune délibération à afficher. Cliquez sur « Lancer / Recalculer ».</div></td></tr>
-                  )}
-                </tbody>
-              </table>
+
+              <button className="sn-btn-changer" onClick={() => setModalOuvert(true)}>
+                <i className="fas fa-rotate"></i> Changer le contexte
+              </button>
+              
             </div>
+
+
+
+            <div className="department-card table-card">
+                    
+              <div className="table-scroll">
+
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Étudiant</th>
+                      <th>NOTE</th>
+                      <th>C-obtenus</th>
+                      <th>C-requis</th>
+                      <th>Décision</th>
+                      <th>Verrou</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {resultatsFiltres.map((r) => (
+                      <tr key={r.id}>
+                        <td className="cell-strong">{r.etudiant_str}</td>
+                        <td>{r.moyenne_generale ?? '—'}</td>
+                        <td>{r.credits_obtenus}</td>
+                        <td>
+                          {r.credits_requis}
+                        </td>
+                        <td>
+                          <span className={`badge ${BADGE_DECISION[r.decision]}`}>
+                            <p className='bull'>&bull;</p>
+                            {LABEL_DECISION[r.decision]}
+                          </span>
+                        </td>
+                        <td>
+                          <button
+                            className={`dl-btn-verrou ${r.verrouillee ? 'verrouillee' : ''}`}
+                            onClick={() => toggleVerrou(r.id)}
+                            title={r.verrouillee ? 'Déverrouiller' : 'Verrouiller'}
+                          >
+                            <i className={`fas ${r.verrouillee ? 'fa-lock' : 'fa-lock-open'}`}></i>
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                    {resultatsFiltres.length === 0 && (
+                      <tr>
+                        <td colSpan="6">
+                          <div className="empty">
+                            Aucune délibération à afficher. Cliquez sur « Lancer / Recalculer ».
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+
+              </div>
+
+            </div>
+
           </>
         )}
       </div>
+
+
+
+
       <div className="department-modal" style={{ display: modalOuvert ? 'flex' : 'none' }}>
+        
         <div className="modal-content sn-modal-contexte">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #400c7c, #a14fff)' }}>
+          
+          <div className="modal-header">
             <h2>Choisir le contexte de délibération</h2>
             {contexte && (
               <button className="btn-primary addInscr" onClick={() => setModalOuvert(false)}>
@@ -197,13 +257,13 @@ function Deliberation() {
           </div>
 
 
-          <form onSubmit={handleSubmit(chargerContexte)} id="departmentForm">
+          <form onSubmit={handleSubmit(chargerContexte)} id="departmentForm" style={{ height: '355px' }}>
             <div className="form-grid" style={{ padding: '20px' }}>
               <div className="form-group">
                 <div><label>Classe</label><span className="required" style={{ color: 'red' }}>*</span></div>
                 <select {...register('classe', { required: true })}>
                   <option value="">Sélectionner...</option>
-                  {classes.map((c) => <option key={c.id} value={c.id}>{c.specialite_nom} — {c.niveau_nom}</option>)}
+                  {classes.map((c) => <option key={c.id} value={c.id}>{c.specialite_code} — {c.niveau_nom}</option>)}
                 </select>
                 {errors.classe && <div className="form-errors">Champ requis</div>}
               </div>

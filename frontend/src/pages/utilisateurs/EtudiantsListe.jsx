@@ -128,14 +128,14 @@ function EtudiantsListe() {
                         ) : (
                           <div className="avatar-mini avatar-placeholder"><i className="fas fa-user"></i></div>
                         )}
-                        <div className="cell-strong">{e.nom} {e.prenom}</div>
+                        <div className="cell-strong">{e.nom} <br /> {e.prenom}</div>
                       </div>
                     </td>
                     <td className="mono">{e.matricule}</td>
                     <td>{e.specialite_code || '—'}</td>
                     <td>
                       <span className={`badge ${BADGE_STATUT_ETUDIANT[e.statut]}`}>
-                        <span className="dot"></span>
+                        <p className='bull'>&bull;</p>
                         {STATUTS_ETUDIANT.find((s) => s.value === e.statut)?.label}
                       </span>
                     </td>

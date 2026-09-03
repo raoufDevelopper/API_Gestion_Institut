@@ -72,6 +72,7 @@ function TypesEvaluation() {
 
   
   const { total = 0, actif = 0, inactif = 0 } = donnees.kpis;
+  
   const sommePoids = donnees.resultats.filter((t) => t.actif).reduce((s, t) => s + parseFloat(t.poids), 0);
   
   
@@ -81,6 +82,7 @@ function TypesEvaluation() {
   return (
     <div className="container-principal">
       <div className="department-page">
+
         <div className="panel-head">
           <div>
             <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>Types d'évaluation</h3>
@@ -91,6 +93,8 @@ function TypesEvaluation() {
             Nouveau type
           </button>
         </div>
+        
+        
         <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
           <div className="department-card">
             <div className="kpi-icon blue"><i className="fas fa-list-check"></i></div>
@@ -105,6 +109,8 @@ function TypesEvaluation() {
             <div className="count-top"><h2>{inactif}</h2><span>Inactifs</span></div>
           </div>
         </div>
+
+
         {Math.abs(sommePoids - 1) > 0.01 && (
           <div className="edt-alerte-conflits" style={{ marginTop: '0', marginBottom: '0' }}>
             <i className="fas fa-triangle-exclamation"></i>
@@ -124,6 +130,8 @@ function TypesEvaluation() {
             </div>
           </div>
         </div>
+
+
         <div className="department-card table-card">
           <div className="table-title">
             <h2>Liste des types d'évaluation</h2>
@@ -154,7 +162,7 @@ function TypesEvaluation() {
                     </td>
                     <td>
                       <span className={`badge ${t.actif ? 'badge-success' : 'badge-danger'}`}>
-                        <span className="dot"></span>
+                        <p className='bull'>&bull;</p>
                         {t.actif ? 'Actif' : 'Inactif'}
                       </span>
                     </td>
@@ -171,6 +179,7 @@ function TypesEvaluation() {
                     </td>
                   </tr>
                 ))}
+
                 {typesFiltres.length === 0 && (
                   <tr>
                     <td colSpan="6">
@@ -178,23 +187,31 @@ function TypesEvaluation() {
                     </td>
                   </tr>
                 )}
+
               </tbody>
+
             </table>
+          
           </div>
+        
         </div>
+      
       </div>
+
+
+
 
       <div className="department-modal" style={{ display: modalOuvert ? 'flex' : 'none' }}>
         
         <div className="modal-content">
         
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #400c7c, #a14fff)' }}>
+          <div className="modal-header">
             <h2>{typeEnEdition ? "Modifier le type d'évaluation" : "Nouveau type d'évaluation"}</h2>
             <button className="btn-primary addInscr" onClick={() => setModalOuvert(false)}>
               <i className="fas fa-times"></i>
             </button>
           </div>
-        
+  
 
           <form onSubmit={handleSubmit(onSubmit)} id="departmentForm">
             <div className="form-grid">
@@ -209,12 +226,18 @@ function TypesEvaluation() {
                 {errors.libelle && <div className="form-errors">{errors.libelle.message}</div>}
               </div>
               <div className="form-group">
-                <div><label>Poids (ex: 0.40 pour 40%)</label><span className="required" style={{ color: 'red' }}>*</span></div>
+                <div><label>Poids</label><span className="required" style={{ color: 'red' }}>*</span></div>
                 <input type="number" step="0.01" min="0" max="1" {...register('poids', { required: true, valueAsNumber: true })} />
+                <div className="text-help">
+                  EX : 0.40 pour 40%. Et veillez bien à respecter cette notation.
+                </div>
               </div>
               <div className="form-group">
                 <label>Ordre d'affichage</label>
                 <input type="number" min="0" {...register('ordre', { valueAsNumber: true })} />
+                <div className="text-help">
+                  Précisez l'ordre d'affichage
+                </div>
               </div>
               
               <div className="form-group">
@@ -251,7 +274,7 @@ function TypesEvaluation() {
       
       <div className="department-modal" style={{ display: typeEnDetail ? 'flex' : 'none' }}>
         <div className="modal-content model-detail">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #1e3a8a, #2563eb)' }}>
+          <div className="modal-header">
             <h2>Détail du type d'évaluation</h2>
             <button onClick={() => setTypeEnDetail(null)}>
               <i className="fas fa-times"></i>

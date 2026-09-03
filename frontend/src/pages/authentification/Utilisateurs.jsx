@@ -235,7 +235,7 @@ function Utilisateurs() {
                                     <td>{u.role_nom || '—'}</td>
                                     <td>
                                         <span className={`badge-${u.is_active ? 'success' : 'danger'}`}>
-                                            <span className="dot"></span>
+                                            <p className='bull'>&bull;</p>
                                             {u.is_active ? 'Actif' : 'Désactivé'}
                                         </span>
                                     </td>
@@ -276,7 +276,7 @@ function Utilisateurs() {
                 
                 <div className="modal-content">
                     
-                    <div className="modal-header" style={{ background: 'linear-gradient(135deg, #400c7c, #a14fff)' }}>
+                    <div className="modal-header">
                         <h2>{utilisateurEnEdition ? "Modifier l'utilisateur" : 'Nouvel utilisateur'}</h2>
                         <button className="btn-primary addInscr" onClick={() => setModalOuvert(false)}>
                         <i className="fas fa-times"></i>
@@ -397,9 +397,9 @@ function Utilisateurs() {
             {/* MODAL DETAIL */}
             <div className="department-modal" style={{ display: utilisateurEnDetail ? 'flex' : 'none' }}>
                 <div className="modal-content model-detail">
-                <div className="modal-header" style={{ background: 'linear-gradient(135deg, #1e3a8a, #2563eb)' }}>
+                <div className="modal-header">
                     <h2>Détail de l'utilisateur</h2>
-                    <button onClick={() => setUtilisateurEnDetail(null)}>
+                    <button onClick={() => setUtilisateurEnDetail(null)} className='btn-primary'>
                     <i className="fas fa-times"></i>
                     </button>
                 </div>

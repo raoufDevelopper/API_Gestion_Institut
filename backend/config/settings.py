@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     #Mes applications
+    'apps.statistiques',
     'apps.authentification',
     'apps.utilisateurs',
     'apps.academique',

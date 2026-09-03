@@ -4,6 +4,11 @@ import { getDepense, telechargerDepensePdf } from '../../api/finances';
 import { useAlert } from '../../context/AlertContext';
 import { MODES_DEPENSE, STATUTS_DEPENSE, BADGE_STATUT_DEPENSE, telechargerFichier } from './financesConstantes';
 import '../../assets/css/crud.css';
+import { formatMontant } from '../../components/formatters';
+
+
+
+
 function DepenseDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -23,6 +28,11 @@ function DepenseDetail() {
   if (!depense) {
     return <div className="personnel"><div className="empty">Chargement...</div></div>;
   }
+
+
+
+
+
   return (
     <div className="container-principal">
       <div className="personnel">
@@ -40,7 +50,7 @@ function DepenseDetail() {
               <div className="detail-sub">{new Date(depense.date_depense).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
             </div>
             <span className={`badge ${BADGE_STATUT_DEPENSE[depense.statut]}`}>
-              <span className="dot"></span>
+              <p className='bull'>&bull;</p>
               {STATUTS_DEPENSE.find((s) => s.value === depense.statut)?.label}
             </span>
           </div>
@@ -49,15 +59,15 @@ function DepenseDetail() {
               <div className="dl-group-title">Dépense</div>
               <div className="dl-row">
                 <span className="dl-k">Montant</span>
-                <span className="dl-v mono" style={{ fontSize: '16px' }}>{depense.montant} FCFA</span>
+                <span className="dl-v amt red" style={{ fontSize: '16px' }}>- {formatMontant(depense.montant)}</span>
               </div>
               <div className="dl-row">
                 <span className="dl-k">Mode de paiement</span>
-                <span className="dl-v">{MODES_DEPENSE.find((m) => m.value === depense.mode_paiement)?.label}</span>
+                <span className="badge badge-orange">{MODES_DEPENSE.find((m) => m.value === depense.mode_paiement)?.label}</span>
               </div>
               <div className="dl-row">
                 <span className="dl-k">Session de caisse</span>
-                <span className="dl-v">{depense.caisse_session_date ? new Date(depense.caisse_session_date).toLocaleDateString('fr-FR') : 'Non applicable'}</span>
+                <span className="dl-v">{depense.caisse_session_date ? new Date(depense.caisse_session_date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }): 'Non applicable'}</span>
               </div>
               {depense.justificatif && (
                 <div className="dl-row">

@@ -4,6 +4,7 @@ import { getPaiement, telechargerPaiementPdf } from '../../api/finances';
 import { useAlert } from '../../context/AlertContext';
 import { MODES_PAIEMENT, STATUTS_PAIEMENT, BADGE_STATUT_PAIEMENT, telechargerFichier } from './financesConstantes';
 import '../../assets/css/crud.css';
+import { formatMontant } from '../../components/formatters';
 
 
 function PaiementDetail() {
@@ -50,7 +51,7 @@ function PaiementDetail() {
           <div style={{ display: 'flex', gap: '15px', flexDirection: 'column' }}>
             <h3 style={{ fontSize: '14px', fontWeight: 300 }}>Statut du paiement</h3>
             <span className={`badge ${BADGE_STATUT_PAIEMENT[paiement.statut]}`}>
-              <span className="dot"></span>
+              <p className='bull'>&bull;</p>
               {STATUTS_PAIEMENT.find((s) => s.value === paiement.statut)?.label}
             </span>
           </div>
@@ -69,9 +70,9 @@ function PaiementDetail() {
               </span>
             </div>
             <div className="dl-row"><span className="dl-k">Type</span><span className="dl-v">{paiement.type_paiement_nom}</span></div>
-            <div className="dl-row"><span className="dl-k">Montant</span><span className="dl-v mono" style={{ fontSize: '16px' }}>{paiement.montant} FCFA</span></div>
-            <div className="dl-row"><span className="dl-k">Mode de paiement</span><span className="dl-v">{MODES_PAIEMENT.find((m) => m.value === paiement.mode_paiement)?.label}</span></div>
-            <div className="dl-row"><span className="dl-k">Session de caisse</span><span className="dl-v">{paiement.caisse_session_date ? new Date(paiement.caisse_session_date).toLocaleDateString('fr-FR') : 'Non applicable'}</span></div>
+            <div className="dl-row"><span className="dl-k">Montant</span><span className="dl-v amt green" style={{ fontSize: '16px' }}>+ {formatMontant(paiement.montant)}</span></div>
+            <div className="dl-row"><span className="dl-k">Mode de paiement</span><span className="badge badge-orange">{MODES_PAIEMENT.find((m) => m.value === paiement.mode_paiement)?.label}</span></div>
+            <div className="dl-row"><span className="dl-k">Session de caisse</span><span className="dl-v">{paiement.caisse_session_date ? new Date(paiement.caisse_session_date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }): 'Non applicable'}</span></div>
             <div className="dl-row"><span className="dl-k">Enregistré par</span><span className="dl-v">{paiement.enregistre_par_nom || '—'}</span></div>
           </div>
         </div>

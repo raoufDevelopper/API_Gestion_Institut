@@ -5,6 +5,8 @@ import { useAlert } from '../../context/AlertContext';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import '../../assets/css/crud.css';
 
+
+
 function AnneesAcademiques() {
   const [donnees, setDonnees] = useState({ resultats: [], kpis: {} });
   const [recherche, setRecherche] = useState('');
@@ -153,7 +155,7 @@ function AnneesAcademiques() {
                     <td>{new Date(a.date_fin).toLocaleDateString('fr-FR')}</td>
                     <td>
                       <span className={`badge-${a.statut ? 'success' : 'danger'}`}>
-                        <span className="dot"></span>
+                        <p className='bull'>&bull;</p>
                         {a.statut ? 'Active' : 'Inactif'}
                       </span>
                     </td>
@@ -187,13 +189,13 @@ function AnneesAcademiques() {
       {/* MODAL DE CREATION / MODIFICATION */}
       <div className="department-modal" style={{ display: modalOuvert ? 'flex' : 'none' }}>
         <div className="modal-content">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #400c7c, #a14fff)' }}>
+
+          <div className="modal-header">
             <h2>{anneeEnEdition ? "Modifier l'année académique" : 'Nouvelle année académique'}</h2>
             <button className="btn-primary addInscr" onClick={() => setModalOuvert(false)}>
               <i className="fas fa-times"></i>
             </button>
           </div>
-
 
           <form onSubmit={handleSubmit(onSubmit)} id="departmentForm">
           
@@ -247,12 +249,15 @@ function AnneesAcademiques() {
           </p>
         </div>
       </div>
+
+
+
       {/* MODAL DETAIL */}
       <div className="department-modal" style={{ display: anneeEnDetail ? 'flex' : 'none' }}>
         <div className="modal-content model-detail">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #1e3a8a, #2563eb)' }}>
+          <div className="modal-header">
             <h2>Détail de l'année académique</h2>
-            <button onClick={() => setAnneeEnDetail(null)}>
+            <button onClick={() => setAnneeEnDetail(null)} className='btn-primary'>
               <i className="fas fa-times"></i>
             </button>
           </div>

@@ -89,9 +89,12 @@ function Roles() {
   };
   
   
+
+
   return (
     <div className="container-principal">
       <div className="department-page">
+
         {/* HEADER */}
         <div className="panel-head">
           <div>
@@ -103,6 +106,8 @@ function Roles() {
             Nouveau rôle
           </button>
         </div>
+        
+        
         {/* TOOLBAR */}
         <div className="department-toolbar">
           <div className="toolbar-left">
@@ -117,6 +122,8 @@ function Roles() {
             </div>
           </div>
         </div>
+        
+        
         {/* TABLE */}
         <div className="department-card table-card">
           <div className="table-title">
@@ -172,7 +179,7 @@ function Roles() {
       {/* MODAL DE CREATION / MODIFICATION */}
       <div className="department-modal" style={{ display: modalOuvert ? 'flex' : 'none' }}>
         <div className="modal-content">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #400c7c, #a14fff)' }}>
+          <div className="modal-header">
             <h2>{roleEnEdition ? 'Modifier le rôle' : 'Nouveau rôle'}</h2>
             <button className="btn-primary addInscr" onClick={() => setModalOuvert(false)}>
               <i className="fas fa-times"></i>
@@ -226,9 +233,9 @@ function Roles() {
       {/* MODAL DETAIL */}
       <div className="department-modal" style={{ display: roleEnDetail ? 'flex' : 'none' }}>
         <div className="modal-content model-detail">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #1e3a8a, #2563eb)' }}>
+          <div className="modal-header">
             <h2>Détail du rôle</h2>
-            <button onClick={() => setRoleEnDetail(null)}>
+            <button onClick={() => setRoleEnDetail(null)} className='btn-primary'>
               <i className="fas fa-times"></i>
             </button>
           </div>

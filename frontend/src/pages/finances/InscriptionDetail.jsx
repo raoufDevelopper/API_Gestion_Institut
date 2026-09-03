@@ -5,6 +5,7 @@ import { getInscription, ajouterFrais, getTarifSuggere, telechargerInscriptionPd
 import { getTypesPaiement } from '../../api/finances';
 import { useAlert } from '../../context/AlertContext';
 import { BADGE_STATUT_INSCRIPTION, STATUTS_INSCRIPTION, BADGE_STATUT_FINANCIER, LABEL_STATUT_FINANCIER, telechargerFichier } from './financesConstantes';
+import { formatMontant } from '../../components/formatters';
 import '../../assets/css/crud.css';
 import '../../assets/css/finance.css';
 
@@ -89,12 +90,12 @@ function InscriptionDetail() {
             <div className="dl-group">
               <div className="dl-group-title">Scolarité</div>
               <div className="dl-row"><span className="dl-k">Classe</span><span className="dl-v">{inscription.classe_str}</span></div>
-              <div className="dl-row"><span className="dl-k">Date d'inscription</span><span className="dl-v mono">{new Date(inscription.date_inscription).toLocaleDateString('fr-FR')}</span></div>
+              <div className="dl-row"><span className="dl-k">Date d'inscription</span><span className="dl-v mono">{new Date(inscription.date_inscription).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</span></div>
               <div className="dl-row">
                 <span className="dl-k">Statut administratif</span>
                 <span className="dl-v">
                   <span className={`badge ${BADGE_STATUT_INSCRIPTION[inscription.statut]}`}>
-                    <span className="dot"></span>
+                    <p className='bull'>&bull;</p>
                     {STATUTS_INSCRIPTION.find((s) => s.value === inscription.statut)?.label}
                   </span>
                 </span>
@@ -102,14 +103,14 @@ function InscriptionDetail() {
             </div>
             <div className="dl-group">
               <div className="dl-group-title">Situation financière — total</div>
-              <div className="dl-row"><span className="dl-k">Total dû</span><span className="dl-v mono">{inscription.total_du} FCFA</span></div>
-              <div className="dl-row"><span className="dl-k">Total payé</span><span className="dl-v mono" style={{ color: '#22c55e' }}>{inscription.montant_paye} FCFA</span></div>
-              <div className="dl-row"><span className="dl-k">Reste à payer</span><span className="dl-v mono">{inscription.reste_a_payer} FCFA</span></div>
+              <div className="dl-row"><span className="dl-k">Total dû</span><span className="dl-v mono">{formatMontant(inscription.total_du)}</span></div>
+              <div className="dl-row"><span className="dl-k">Total payé</span><span className="dl-v mono" style={{ color: '#22c55e' }}>{formatMontant(inscription.montant_paye)}</span></div>
+              <div className="dl-row"><span className="dl-k">Reste à payer</span><span className="dl-v mono">{formatMontant(inscription.reste_a_payer)}</span></div>
               <div className="dl-row">
                 <span className="dl-k">Statut financier</span>
                 <span className="dl-v">
                   <span className={`badge ${BADGE_STATUT_FINANCIER[inscription.statut_paiement]}`}>
-                    <span className="dot"></span>
+                    <p className='bull'>&bull;</p>
                     {LABEL_STATUT_FINANCIER[inscription.statut_paiement]}
                   </span>
                 </span>
@@ -130,11 +131,11 @@ function InscriptionDetail() {
                       {inscription.frais.map((f) => (
                         <tr key={f.id}>
                           <td>{f.type_paiement_nom}</td>
-                          <td className="num">{f.montant_du} FCFA</td>
-                          <td className="num" style={{ color: '#22c55e' }}>{f.montant_paye} FCFA</td>
+                          <td className="num">{formatMontant(f.montant_du)}</td>
+                          <td className="num" style={{ color: '#22c55e' }}>{formatMontant(f.montant_paye)}</td>
                           <td>
                             <span className={`badge ${BADGE_STATUT_FINANCIER[f.statut_paiement]}`}>
-                              <span className="dot"></span>
+                              <p className='bull'>&bull;</p>
                               {LABEL_STATUT_FINANCIER[f.statut_paiement]}
                             </span>
                           </td>
@@ -169,11 +170,12 @@ function InscriptionDetail() {
                         <tr key={p.id}>
                           <td className="mono">{p.numero_recu}</td>
                           <td>{p.type_paiement_nom}</td>
-                          <td>{new Date(p.date_paiement).toLocaleDateString('fr-FR')}</td>
-                          <td className="num">{p.montant} FCFA</td>
+                          <td>{new Date(p.date_paiement).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
+                          <td className="num">{formatMontant(p.montant)}</td>
                           <td>
                             <span className={`badge ${p.statut === 'VALIDE' ? 'badge-success' : 'badge-danger'}`}>
-                              <span className="dot"></span>{p.statut}
+                              <p className='bull'>&bull;</p>
+                              {p.statut}
                             </span>
                           </td>
                         </tr>
@@ -194,15 +196,18 @@ function InscriptionDetail() {
           </div>
         </div>
       </div>
+
+
+
       <div className="department-modal" style={{ display: modalFraisOuvert ? 'flex' : 'none' }}>
         <div className="modal-content">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #7a5503,#d3b429)' }}>
+          <div className="modal-header">
             <h2>Ajouter un frais</h2>
             <button className="addInscr" onClick={() => setModalFraisOuvert(false)}>
               <i className="fas fa-times"></i>
             </button>
           </div>
-          <form onSubmit={handleSubmit(onSubmitFrais)} id="departmentForm">
+          <form onSubmit={handleSubmit(onSubmitFrais)} id="departmentForm" style={{ height: '300px' }}>
             <div className="form-grid">
               <div className="form-group">
                 <div><label>Type de frais</label><span className="required" style={{ color: 'red' }}>*</span></div>

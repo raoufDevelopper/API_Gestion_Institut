@@ -116,6 +116,7 @@ function EmploiDuTempsDetail() {
               <label className='cle'><i class = 'fa-solid fa-circle-info'></i> Statut</label>
               <p>
                 <span className={`badge ${CLASSE_BADGE_STATUT[emploi.statut]}`}>
+                  <p className='bull'>&bull;</p>
                   {STATUTS_EMPLOI.find((s) => s.value === emploi.statut)?.label}
                 </span>
               </p>

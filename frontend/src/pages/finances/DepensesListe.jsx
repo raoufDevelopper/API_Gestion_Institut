@@ -6,6 +6,11 @@ import { useAlert } from '../../context/AlertContext';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import { MODES_DEPENSE, STATUTS_DEPENSE, BADGE_STATUT_DEPENSE } from './financesConstantes';
 import '../../assets/css/crud.css';
+import { formatMontant } from '../../components/formatters';
+
+
+
+
 function DepensesListe() {
   const [donnees, setDonnees] = useState({ resultats: [], kpis: {} });
   const [categories, setCategories] = useState([]);
@@ -172,18 +177,18 @@ function DepensesListe() {
                   {depensesFiltrees.map((d) => (
                     <tr className="row-link" key={d.id}>
                       <td>
-                        <span className={`badge ${d.categorie_est_tresorerie ? 'badge-warning' : 'badge-danger'}`}>
-                          <span className="dot"></span>
+                        <span className={`badge ${d.categorie_est_tresorerie ? 'badge-success' : 'badge-danger'}`}>
+                          <p className='bull'>&bull;</p>
                           {d.categorie_nom}
                         </span>
                       </td>
                       <td className="cell-strong">{d.libelle}</td>
-                      <td className="mono" style={{ color: 'var(--text-600)', fontSize: '12.5px' }}>{new Date(d.date_depense).toLocaleDateString('fr-FR')}</td>
+                      <td className="mono" style={{ color: 'var(--text-600)', fontSize: '12.5px' }}>{new Date(d.date_depense).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
                       <td>{MODES_DEPENSE.find((m) => m.value === d.mode_paiement)?.label}</td>
-                      <td className="cell-amount">{d.montant} FCFA</td>
+                      <td className="cell-amount">{formatMontant(d.montant)}</td>
                       <td>
                         <span className={`badge ${BADGE_STATUT_DEPENSE[d.statut]}`}>
-                          <span className="dot"></span>
+                          <p className='bull'>&bull;</p>
                           {STATUTS_DEPENSE.find((s) => s.value === d.statut)?.label}
                         </span>
                       </td>
@@ -213,7 +218,7 @@ function DepensesListe() {
 
       <div className="department-modal" style={{ display: modalOuvert ? 'flex' : 'none' }}>
         <div className="modal-content">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #7a5503,#d3b429)' }}>
+          <div className="modal-header">
             <h2>{depenseEnEdition ? 'Modifier la dépense' : 'Nouvelle dépense'}</h2>
             <button className="btn-primary addInscr" onClick={() => setModalOuvert(false)}>
               <i className="fas fa-times"></i>

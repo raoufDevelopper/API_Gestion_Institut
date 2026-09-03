@@ -17,7 +17,10 @@ const MENUS = [
     titre: 'Tableau de bord',
     classe: 'tb',
     items: [
-      // à enrichir quand l'app statistiques sera construite
+      { label: 'Résultats', to: '/statistiques/academique', icone: 'fa-chart-line', permission: 'gerer_notes' },
+      { label: 'Bibliothèque', to: '/statistiques/bibliotheque', icone: 'fa-chart-pie', permission: 'gerer_bibliotheque_ressources' },
+      { label: 'Finance', to: '/statistiques/finance', icone: 'fa-sack-dollar', permission: 'gerer_finances' },
+      { label: 'Document', to: '/statistiques/documents', icone: 'fa-folder-tree', permission: 'gerer_documents' },
     ],
   },
 

@@ -173,14 +173,14 @@ function EtudiantForm() {
                   <div style={{ display: 'flex', gap: '10px' }}>
                     <button
                       type="button"
-                      className={modeCompte === 'nouveau' ? 'btn-primary addInscr' : 'btn-light'}
+                      className={modeCompte === 'nouveau' ? 'btn-primary addInscr' : 'btn-light bascul'}
                       onClick={() => setModeCompte('nouveau')}
                     >
                       <i className="fas fa-user-plus"></i> Créer un nouveau compte
                     </button>
                     <button
                       type="button"
-                      className={modeCompte === 'existant' ? 'btn-primary addInscr' : 'btn-light'}
+                      className={modeCompte === 'existant' ? 'btn-primary addInscr' : 'btn-light bascul'}
                       onClick={() => setModeCompte('existant')}
                     >
                       <i className="fas fa-user-check"></i> Utiliser un compte existant

@@ -99,10 +99,24 @@ function ConsultationNotes() {
 
   return (
     <div className="container-principal">
-      <div className="sn-page">
-        <div className="sn-header">
-          <h1>Consultation des notes</h1>
-          {contexte && (
+
+      <div className="department-page">
+
+        {contexte && (
+          <div className="panel-head">
+            
+            <div>
+              <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>Consultation des notes</h3>
+              <div className="sn-bandeau-contexte">
+                <div className="sn-contexte-infos">
+                  <span className="sn-contexte-item">{nomClasse(contexte.classe)}</span>
+                  <span className="sn-contexte-item">{nomMatiere(contexte.matiere)}</span>
+                  <span className="sn-contexte-item">{nomAnnee(contexte.annee_academique)}</span>
+                  <span className="sn-contexte-item">{contexte.semestre}</span>
+                </div>
+              </div>
+            </div>
+
             <div style={{ display: 'flex', gap: '10px' }}>
               <button className="btn-light" onClick={allerVersReleve}>
                 <i className="fas fa-file-lines"></i> Voir le relevé
@@ -111,101 +125,122 @@ function ConsultationNotes() {
                 <i className="fas fa-file-pdf"></i> Exporter en PDF
               </button>
             </div>
-          )}
-        </div>
-        {contexte && (
-          <div className="sn-bandeau-contexte">
-            <div className="sn-contexte-infos">
-              <span className="sn-contexte-item">{nomClasse(contexte.classe)}</span>
-              <span className="sn-contexte-item">{nomMatiere(contexte.matiere)}</span>
-              <span className="sn-contexte-item">{nomAnnee(contexte.annee_academique)}</span>
-              <span className="sn-contexte-item">{contexte.semestre}</span>
-            </div>
-            <button className="sn-btn-changer" onClick={() => setModalContexteOuvert(true)}>
-              <i className="fas fa-rotate"></i> Changer le contexte
-            </button>
+          
           </div>
         )}
+        
         {contexte && !chargementTableau && (
           <>
-            <div className="sn-resume-cards">
-              <div className="sn-resume-card">
-                <div className="sn-resume-icone violet"><i className="fas fa-users"></i></div>
-                <div><div className="sn-resume-valeur">{lignes.length}</div><div className="sn-resume-label">Étudiants</div></div>
+            <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(320px,1fr))' }}>
+
+              <div className="department-card">
+                <div className="kpi-icon blue"><i className="fas fa-users"></i></div>
+                <div className="count-top"><h2>{lignes.length}</h2><span>Étudiants</span></div>
               </div>
-              <div className="sn-resume-card">
-                <div className="sn-resume-icone vert"><i className="fas fa-check"></i></div>
-                <div><div className="sn-resume-valeur">{nbEvalues}</div><div className="sn-resume-label">Évalués</div></div>
+
+              <div className="department-card">
+                <div className="kpi-icon green"><i className="fas fa-check"></i></div>
+                <div className="count-top"><h2>{nbEvalues}</h2><span>Évalués</span></div>
               </div>
-              <div className="sn-resume-card">
-                <div className="sn-resume-icone" style={{ background: '#fef2f2', color: '#dc2626' }}><i className="fas fa-user-clock"></i></div>
-                <div><div className="sn-resume-valeur">{nbNonEvalues}</div><div className="sn-resume-label">Non évalués</div></div>
+
+              <div className="department-card">
+                <div className="kpi-icon red"><i className="fas fa-user-clock"></i></div>
+                <div className="count-top"><h2>{nbNonEvalues}</h2><span>Non évalués</span></div>
               </div>
-              <div className="sn-resume-card">
-                <div className="sn-resume-icone bleu"><i className="fas fa-chart-simple"></i></div>
-                <div><div className="sn-resume-valeur">{moyenneGenerale ?? '—'}</div><div className="sn-resume-label">Moyenne générale</div></div>
+
+              <div className="department-card">
+                <div className="kpi-icon violet"><i className="fas fa-chart-simple"></i></div>
+                <div className="count-top"><h2>{moyenneGenerale ?? '—'}</h2><span>Moyenne générale</span></div>
               </div>
-              <div className="sn-resume-card">
-                <div className="sn-resume-icone" style={{ background: '#fef9c3', color: '#854d0e' }}><i className="fas fa-triangle-exclamation"></i></div>
-                <div><div className="sn-resume-valeur">{nbSousLaMoyenne}</div><div className="sn-resume-label">Sous la moyenne</div></div>
+
+              <div className="department-card">
+                <div className="kpi-icon orange"><i className="fas fa-triangle-exclamation"></i></div>
+                <div className="count-top"><h2>{nbSousLaMoyenne}</h2><span>Sous la moyenne</span></div>
               </div>
+
             </div>
-            <div className="sn-table-card">
-              <div className="sn-table-toolbar">
+
+
+
+            <div className="department-toolbar">
+
+              <div className="toolbar-left">
                 <div className="search-box">
                   <i className="fas fa-search"></i>
-                  <input
-                    type="text"
-                    placeholder="Rechercher un étudiant..."
-                    value={recherche}
-                    onChange={(e) => setRecherche(e.target.value)}
-                  />
+                  <input type="text" placeholder="Rechercher un étudiant..." value={recherche} onChange={(e) => setRecherche(e.target.value)}/>
                 </div>
               </div>
-              <table className="sn-table">
-                <thead>
-                  <tr>
-                    <th>Matricule</th>
-                    <th>Nom & Prénom</th>
-                    {typesEvaluation.map((t) => <th key={t.id}>{t.code}</th>)}
-                    <th onClick={toggleTri} style={{ cursor: 'pointer' }}>
-                      Moyenne {triMoyenne === 'desc' ? '↓' : triMoyenne === 'asc' ? '↑' : ''}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {lignesFiltrees.map((l) => (
-                    <tr key={l.etudiant_id}>
-                      <td className="mono">{l.matricule}</td>
-                      <td className="cell-strong">{l.nom} {l.prenom}</td>
-                      {l.notes_par_type.map((n, i) => (
-                        <td key={i}>{n.valeur ?? '—'}</td>
-                      ))}
-                      <td>
-                        {l.moyenne !== null ? (
-                          <span className={`badge ${parseFloat(l.moyenne) >= 10 ? 'badge-success' : 'badge-danger'}`}>
-                            <span className="dot"></span>
-                            {l.moyenne}
-                          </span>
-                        ) : (
-                          <span className="badge badge-warning"><span className="dot"></span>Incomplet</span>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                  {lignesFiltrees.length === 0 && (
-                    <tr><td colSpan={typesEvaluation.length + 3}><div className="empty">Aucun étudiant trouvé.</div></td></tr>
-                  )}
-                </tbody>
-              </table>
+
+              <div className="toolbar-right">
+                <button className="sn-btn-changer" onClick={() => setModalContexteOuvert(true)}>
+                  <i className="fas fa-rotate"></i> Changer le contexte
+                </button>
+              </div>
+              
             </div>
+
+
+
+
+            <div className="department-card table-card">
+                    
+              <div className="table-scroll">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Matricule</th>
+                      <th>Nom & Prénom</th>
+                      {typesEvaluation.map((t) => <th key={t.id} className='statuSaisie'>{t.code}</th>)}
+                      <th onClick={toggleTri} style={{ cursor: 'pointer' }}>
+                        Moyenne {triMoyenne === 'desc' ? '↓' : triMoyenne === 'asc' ? '↑' : ''}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {lignesFiltrees.map((l) => (
+                      <tr key={l.etudiant_id}>
+                        <td className="mono">{l.matricule}</td>
+                        <td className="cell-strong">{l.nom} {l.prenom}</td>
+                        {l.notes_par_type.map((n, i) => (
+                          <td key={i}>
+                            <span className={`badge ${parseFloat(n.valeur) >= 10 ? 'badge-aqua' : 'badge-orange'}`}>
+                              {n.valeur ?? '—'}
+                            </span>
+                          </td>
+                        ))}
+                        <td>
+                          {l.moyenne !== null ? (
+                            <span className={`badge ${parseFloat(l.moyenne) >= 10 ? 'badge-success' : 'badge-danger'}`}>
+                              <p className='bull'>&#9758;</p>
+                              {l.moyenne}
+                            </span>
+                          ) : (
+                            <span className="badge badge-orange"><p className='bull'>&bull;</p>Incomplet</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                    {lignesFiltrees.length === 0 && (
+                      <tr><td colSpan={typesEvaluation.length + 3}><div className="empty">Aucun étudiant trouvé.</div></td></tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+
           </>
         )}
+        
         {chargementTableau && <div className="empty">Chargement...</div>}
+
       </div>
+  
+  
+  
       <div className="department-modal" style={{ display: modalContexteOuvert ? 'flex' : 'none' }}>
         <div className="modal-content sn-modal-contexte">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #400c7c, #a14fff)' }}>
+          <div className="modal-header">
             <h2>Choisir le contexte de consultation</h2>
             {contexte && (
               <button className="btn-primary addInscr" onClick={() => setModalContexteOuvert(false)}>

@@ -112,8 +112,8 @@ function FormateurDetail() {
 
                 <div className="ud-bloc">
                     <div className="ud-bloc-titre">
-                    <div className="ud-bloc-icone violet"><i className="fas fa-id-card"></i></div>
-                    Informations d'identité
+                        <div className="ud-bloc-icone violet"><i className="fas fa-id-card"></i></div>
+                        Informations d'identité
                     </div>
                     <div className="ud-champ-ligne"><span className="cle">Nom complet</span><span className="valeur">{personnel.nom} {personnel.prenom}</span></div>
                     <div className="ud-champ-ligne"><span className="cle">Sexe</span><span className="valeur">{personnel.sexe === 'M' ? 'Masculin' : 'Féminin'}</span></div>
@@ -124,8 +124,8 @@ function FormateurDetail() {
 
                 <div className="ud-bloc">
                     <div className="ud-bloc-titre">
-                    <div className="ud-bloc-icone vert"><i className="fas fa-phone"></i></div>
-                    Coordonnées
+                        <div className="ud-bloc-icone vert"><i className="fas fa-phone"></i></div>
+                        Coordonnées
                     </div>
                     <div className="ud-champ-ligne"><span className="cle">Téléphone</span><span className="valeur">{personnel.telephone || '—'}</span></div>
                     <div className="ud-champ-ligne"><span className="cle">Email</span><span className="valeur">{personnel.email || '—'}</span></div>
@@ -134,8 +134,8 @@ function FormateurDetail() {
 
                 <div className="ud-bloc fill">
                     <div className="ud-bloc-titre">
-                    <div className="ud-bloc-icone bleu"><i className="fas fa-chalkboard-teacher"></i></div>
-                    Enseignement
+                        <div className="ud-bloc-icone bleu"><i className="fas fa-chalkboard-teacher"></i></div>
+                        Enseignement
                     </div>
                     <div className="ud-champ-ligne"><span className="cle">Type de contrat</span><span className="valeur">{TYPES_CONTRAT.find((t) => t.value === formateur.type_contrat)?.label}</span></div>
                     <div className="ud-champ-ligne"><span className="cle">Filières</span><span className="valeur">{(formateur.filiere_codes || []).join(', ') || '—'}</span></div>
@@ -149,8 +149,8 @@ function FormateurDetail() {
             <div className="ud-grid-2">
                 <div className="ud-bloc fill">
                     <div className="ud-bloc-titre">
-                    <div className="ud-bloc-icone violet"><i className="fas fa-id-card"></i></div>
-                    Informations d'identité
+                        <div className="ud-bloc-icone violet"><i className="fas fa-id-card"></i></div>
+                        Informations d'identité
                     </div>
                     <div className="ud-champ-ligne"><span className="cle">Nom complet</span><span className="valeur">{personnel.nom} {personnel.prenom}</span></div>
                     <div className="ud-champ-ligne"><span className="cle">Sexe</span><span className="valeur">{personnel.sexe === 'M' ? 'Masculin' : 'Féminin'}</span></div>
@@ -165,8 +165,8 @@ function FormateurDetail() {
             <div className="ud-grid-2">
             <div className="ud-bloc fill">
                 <div className="ud-bloc-titre">
-                <div className="ud-bloc-icone vert"><i className="fas fa-phone"></i></div>
-                Coordonnées
+                    <div className="ud-bloc-icone vert"><i className="fas fa-phone"></i></div>
+                    Coordonnées
                 </div>
                 <div className="ud-champ-ligne"><span className="cle">Téléphone</span><span className="valeur">{personnel.telephone || '—'}</span></div>
                 <div className="ud-champ-ligne"><span className="cle">Email</span><span className="valeur">{personnel.email || '—'}</span></div>
@@ -180,8 +180,8 @@ function FormateurDetail() {
             <div className="ud-grid-2">
             <div className="ud-bloc fill">
                 <div className="ud-bloc-titre">
-                <div className="ud-bloc-icone bleu"><i className="fas fa-chalkboard-teacher"></i></div>
-                Enseignement
+                    <div className="ud-bloc-icone bleu"><i className="fas fa-chalkboard-teacher"></i></div>
+                    Enseignement
                 </div>
                 <div className="ud-champ-ligne"><span className="cle">Type de contrat</span><span className="valeur">{TYPES_CONTRAT.find((t) => t.value === formateur.type_contrat)?.label}</span></div>
                 <div className="ud-champ-ligne"><span className="cle">Filières</span><span className="valeur">{(formateur.filiere_codes || []).join(', ') || '—'}</span></div>

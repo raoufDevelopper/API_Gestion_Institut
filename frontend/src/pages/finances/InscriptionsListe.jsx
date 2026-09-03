@@ -6,6 +6,7 @@ import { getEtudiants } from '../../api/utilisateurs';
 import { getClasses, getAnneesAcademiques } from '../../api/academique';
 import { useAlert } from '../../context/AlertContext';
 import ConfirmationModal from '../../components/ConfirmationModal';
+import { formatMontant } from '../../components/formatters';
 import { STATUTS_INSCRIPTION, BADGE_STATUT_INSCRIPTION, BADGE_STATUT_FINANCIER, LABEL_STATUT_FINANCIER } from './financesConstantes';
 import '../../assets/css/crud.css';
 
@@ -83,11 +84,19 @@ function InscriptionsListe() {
       setSuppressionEnCours(false);
     }
   };
+
+
   const { total = 0, validee = 0, en_attente = 0, annulee = 0 } = donnees.kpis;
+
+
+
+
   return (
     <div className="container-principal">
       <div className="personnel">
+
         <div className="department-page">
+
           <div className="panel-head">
             <div>
               <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>Journal des inscriptions</h3>
@@ -98,6 +107,9 @@ function InscriptionsListe() {
               Nouvelle inscription
             </button>
           </div>
+
+
+
           <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(350px,1fr))' }}>
             <div className="department-card">
               <div className="kpi-icon blue"><i className="fa-solid fa-user-plus"></i></div>
@@ -116,6 +128,7 @@ function InscriptionsListe() {
               <div className="count-top"><h2>{annulee}</h2><span>Annulées</span></div>
             </div>
           </div>
+
 
 
           <div className="department-toolbar">
@@ -168,18 +181,18 @@ function InscriptionsListe() {
                         <div className="cell-strong" style={{ marginBottom: '5px' }}>{i.etudiant_str}</div>
                         <span>{i.etudiant_matricule}</span>
                       </td>
-                      <td>{new Date(i.date_inscription).toLocaleDateString('fr-FR')}</td>
-                      <td className="num">{i.total_du} FCFA</td>
-                      <td className="num">{i.montant_paye} FCFA</td>
+                      <td>{new Date(i.date_inscription).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
+                      <td className="num">{formatMontant(i.total_du)}</td>
+                      <td className="num">{formatMontant(i.montant_paye)}</td>
                       <td>
                         <span className={`badge ${BADGE_STATUT_FINANCIER[i.statut_paiement]}`}>
-                          <span className="dot"></span>
+                          <p className='bull'>&bull;</p>
                           {LABEL_STATUT_FINANCIER[i.statut_paiement]}
                         </span>
                       </td>
                       <td>
                         <span className={`badge ${BADGE_STATUT_INSCRIPTION[i.statut]}`}>
-                          <span className="dot"></span>
+                          <p className='bull'>&bull;</p>
                           {STATUTS_INSCRIPTION.find((s) => s.value === i.statut)?.label}
                         </span>
                       </td>
@@ -210,7 +223,7 @@ function InscriptionsListe() {
 
       <div className="department-modal" style={{ display: modalOuvert ? 'flex' : 'none' }}>
         <div className="modal-content">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #7a5503,#d3b429)' }}>
+          <div className="modal-header">
             <h2>{inscriptionEnEdition ? "Modifier l'inscription" : 'Nouvelle inscription'}</h2>
             <button className="btn-primary addInscr" onClick={() => setModalOuvert(false)}>
               <i className="fas fa-times"></i>
@@ -265,7 +278,11 @@ function InscriptionsListe() {
           <hr />
           <p id="consigne">Le remplissage des champs marqués avec (*) est obligatoire.</p>
         </div>
+
       </div>
+
+
+
       <ConfirmationModal
         ouvert={!!inscriptionASupprimer}
         titre="Supprimer l'inscription"
@@ -274,6 +291,8 @@ function InscriptionsListe() {
         onAnnuler={() => setInscriptionASupprimer(null)}
         chargement={suppressionEnCours}
       />
+
+
     </div>
   );
 }

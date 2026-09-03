@@ -4,6 +4,9 @@ import { getTypesSalle, creerTypeSalle, modifierTypeSalle, supprimerTypeSalle } 
 import { useAlert } from '../../context/AlertContext';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import '../../assets/css/crud.css';
+
+
+
 function TypesSalle() {
   const [typesSalle, setTypesSalle] = useState([]);
   const [recherche, setRecherche] = useState('');
@@ -67,9 +70,15 @@ function TypesSalle() {
       setSuppressionEnCours(false);
     }
   };
+
+
+
+
+
   return (
     <div className="container-principal">
       <div className="department-page">
+  
         {/* HEADER */}
         <div className="panel-head">
           <div>
@@ -81,6 +90,8 @@ function TypesSalle() {
             Nouveau type
           </button>
         </div>
+  
+  
         {/* TOOLBAR */}
         <div className="department-toolbar">
           <div className="toolbar-left">
@@ -95,6 +106,9 @@ function TypesSalle() {
             </div>
           </div>
         </div>
+  
+  
+  
         {/* TABLE */}
         <div className="department-card table-card">
           <div className="table-title">
@@ -142,10 +156,13 @@ function TypesSalle() {
           </div>
         </div>
       </div>
+
+
+
       {/* MODAL DE CREATION / MODIFICATION */}
       <div className="department-modal" style={{ display: modalOuvert ? 'flex' : 'none' }}>
         <div className="modal-content">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #400c7c, #a14fff)' }}>
+          <div className="modal-header">
             <h2>{typeSalleEnEdition ? 'Modifier le type de salle' : 'Nouveau type de salle'}</h2>
             <button className="btn-primary addInscr" onClick={() => setModalOuvert(false)}>
               <i className="fas fa-times"></i>
@@ -159,6 +176,9 @@ function TypesSalle() {
                   <span className="required" style={{ color: 'red' }}>*</span>
                 </div>
                 <input type="text" {...register('code', { required: 'Le code est requis' })} />
+                <div className="text-help">
+                  EX : S-INFO, SCL, S-TP, LAB..
+                </div>
                 {errors.code && <div className="form-errors">{errors.code.message}</div>}
               </div>
               <div className="form-group">
@@ -167,6 +187,9 @@ function TypesSalle() {
                   <span className="required" style={{ color: 'red' }}>*</span>
                 </div>
                 <input type="text" {...register('libelle', { required: 'Le libellé est requis' })} />
+                <div className="text-help">
+                  EX : salle informatique, salle de classe, laboratoire ...
+                </div>
                 {errors.libelle && <div className="form-errors">{errors.libelle.message}</div>}
               </div>
               <div className="form-group full">
@@ -187,12 +210,15 @@ function TypesSalle() {
           </p>
         </div>
       </div>
+
+
+
       {/* MODAL DETAIL */}
       <div className="department-modal" style={{ display: typeSalleEnDetail ? 'flex' : 'none' }}>
         <div className="modal-content model-detail">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #1e3a8a, #2563eb)' }}>
+          <div className="modal-header">
             <h2>Détail du type de salle</h2>
-            <button onClick={() => setTypeSalleEnDetail(null)}>
+            <button onClick={() => setTypeSalleEnDetail(null)} className='btn-primary'>
               <i className="fas fa-times"></i>
             </button>
           </div>
@@ -206,6 +232,8 @@ function TypesSalle() {
           )}
         </div>
       </div>
+
+
       <ConfirmationModal
         ouvert={!!typeSalleASupprimer}
         titre="Supprimer le type de salle"

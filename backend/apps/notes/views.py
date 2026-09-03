@@ -311,6 +311,7 @@ def releve_notes(request):
         except Etudiant.DoesNotExist:
             return Response({'detail': 'Étudiant introuvable.'}, status=status.HTTP_404_NOT_FOUND)
     releves = construire_releves(classe, annee_academique, periode, etudiant_choisi)
+    types_actifs = list(TypeEvaluation.objects.filter(actif=True))
     resultat = []
     for r in releves:
         resultat.append({
@@ -327,8 +328,14 @@ def releve_notes(request):
                         {
                             'matiere': ligne['matiere'].nom,
                             'coefficient': ligne['coefficient'],
+                            'notes': [
+                                {
+                                    'type_code': item['type_evaluation'].code,
+                                    'valeur': str(item['valeur']) if item['valeur'] is not None else None,
+                                }
+                                for item in ligne['notes_detail']
+                            ],
                             'moyenne': str(ligne['moyenne']) if ligne['moyenne'] is not None else None,
-                            'moyenne_ponderee': str(ligne['moyenne_ponderee']) if ligne['moyenne_ponderee'] is not None else None,
                         }
                         for ligne in d['detail_matieres']
                     ],
@@ -338,8 +345,10 @@ def releve_notes(request):
             'moyenne_annuelle': str(r['moyenne_annuelle']) if r['moyenne_annuelle'] is not None else None,
             'mention_annuelle': r['mention_annuelle'],
         })
-    return Response(resultat)
-
+    return Response({
+        'releves': resultat,
+        'types_evaluation': [{'code': t.code, 'libelle': t.libelle} for t in types_actifs],
+    })
 
 
 

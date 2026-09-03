@@ -6,6 +6,7 @@ import { getInscriptions, getTypesPaiement, getCaisses } from '../../api/finance
 import { useAlert } from '../../context/AlertContext';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import { MODES_PAIEMENT, STATUTS_PAIEMENT, BADGE_STATUT_PAIEMENT } from './financesConstantes';
+import { formatMontant } from '../../components/formatters';
 import '../../assets/css/crud.css';
 
 
@@ -173,16 +174,16 @@ function PaiementsListe() {
                       <td>{p.inscription_str}</td>
                       <td className="mono cell-strong">{p.numero_recu}</td> 
                       <td>{p.type_paiement_nom}</td>
-                      <td className="cell-amount">{p.montant} FCFA</td>
+                      <td className="cell-amount">{formatMontant(p.montant)}</td>
                       <td>
                         <span className={`badge ${BADGE_STATUT_PAIEMENT[p.statut]}`}>
-                          <span className="dot"></span>
+                          <p className='bull'>&bull;</p>
                           {STATUTS_PAIEMENT.find((s) => s.value === p.statut)?.label}
                         </span>
                       </td>
-                      <td className="mono" style={{ color: 'var(--text-600)', fontSize: '12.5px' }}>{new Date(p.date_paiement).toLocaleDateString('fr-FR')}</td>
+                      <td className="mono" style={{ color: 'var(--text-600)', fontSize: '12.5px' }}>{new Date(p.date_paiement).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
                       <td>{MODES_PAIEMENT.find((m) => m.value === p.mode_paiement)?.label}</td>
-                      <td style={{ color: 'var(--text-400)', fontSize: '12.5px' }}>{p.caisse_session_date ? new Date(p.caisse_session_date).toLocaleDateString('fr-FR') : '—'}</td>
+                      <td style={{ color: 'var(--text-400)', fontSize: '12.5px' }}>{p.caisse_session_date ? new Date(p.caisse_session_date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }): '—'}</td>
                       <td>
                         <button className="table-btn view" onClick={() => navigate(`/finances/paiements/${p.id}`)}>
                           <i className="fas fa-eye"></i>
@@ -209,7 +210,7 @@ function PaiementsListe() {
 
       <div className="department-modal" style={{ display: modalOuvert ? 'flex' : 'none' }}>
         <div className="modal-content">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #7a5503,#d3b429)' }}>
+          <div className="modal-header">
             <h2>{paiementEnEdition ? 'Modifier le paiement' : 'Nouveau paiement'}</h2>
             <button className="btn-primary addInscr" onClick={() => setModalOuvert(false)}>
               <i className="fas fa-times"></i>

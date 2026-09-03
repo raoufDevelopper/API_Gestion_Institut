@@ -76,13 +76,14 @@ function PersonnelDetail() {
             )}
             <div className="ud-identite">
                 <h2>{personnel.nom} {personnel.prenom}</h2>
-                <span className="badge badge-blue"><span className="blue dot"></span>  {personnel.poste || 'Personnel'}</span>
+                <span className="badge badge-violet"><p className='bull'>&bull;</p> {personnel.poste || 'Personnel'}</span>
                 <div className="ud-meta-row">
                     <div className="ud-meta-item"><i className="fas fa-id-badge"></i><span className="label">Matricule</span>{personnel.matricule}</div>
                     <div className="ud-meta-item"><i className="fas fa-calendar"></i><span className="label">Embauché le</span>{new Date(personnel.date_embauche).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
                     <div className="ud-meta-item">
                     <i className="fas fa-shield"></i><span className="label">Statut</span>
                     <span className={`badge ${BADGE_STATUT_PERSONNEL[personnel.statut]}`}>
+                        <p className='bull'>&bull;</p>
                         {STATUTS_PERSONNEL.find((s) => s.value === personnel.statut)?.label}
                     </span>
                     </div>
@@ -147,19 +148,19 @@ function PersonnelDetail() {
                     </div>
                     <div className="ud-champ-ligne">
                         <span className="cle">CNI</span>
-                        {personnel.cni ? <a href={personnel.cni} target="_blank" rel="noreferrer" className="valeur">Voir le fichier</a> : <span className="valeur">—</span>}
+                        {personnel.cni ? <a href={personnel.cni} target="_blank" rel="noreferrer" className="valeur-lien"><i className="fas fa-eye"></i> Voir le fichier</a> : <span className="valeur">—</span>}
                     </div>
                     <div className="ud-champ-ligne">
                         <span className="cle">Diplôme</span>
-                        {personnel.diplome ? <a href={personnel.diplome} target="_blank" rel="noreferrer" className="valeur">Voir le fichier</a> : <span className="valeur">—</span>}
+                        {personnel.diplome ? <a href={personnel.diplome} target="_blank" rel="noreferrer" className="valeur-lien"><i className="fas fa-eye"></i> Voir le fichier</a> : <span className="valeur">—</span>}
                     </div>
                     <div className="ud-champ-ligne">
                         <span className="cle">Lettre de motivation</span>
-                        {personnel.motivation ? <a href={personnel.motivation} target="_blank" rel="noreferrer" className="valeur">Voir le fichier</a> : <span className="valeur">—</span>}
+                        {personnel.motivation ? <a href={personnel.motivation} target="_blank" rel="noreferrer" className="valeur-lien"><i className="fas fa-eye"></i> Voir le fichier</a> : <span className="valeur">—</span>}
                     </div>
                     <div className="ud-champ-ligne">
                         <span className="cle">Lettre de recommandation</span>
-                        {personnel.recommandation ? <a href={personnel.recommandation} target="_blank" rel="noreferrer" className="valeur">Voir le fichier</a> : <span className="valeur">—</span>}
+                        {personnel.recommandation ? <a href={personnel.recommandation} target="_blank" rel="noreferrer" className="valeur-lien"><i className="fas fa-eye"></i> Voir le fichier</a> : <span className="valeur">—</span>}
                     </div>
                 </div>
 
@@ -217,24 +218,24 @@ function PersonnelDetail() {
             <div className="ud-grid-2">
             <div className="ud-bloc fill">
                 <div className="ud-bloc-titre">
-                <div className="ud-bloc-icone violet"><i className="fas fa-file"></i></div>
-                Documents
+                    <div className="ud-bloc-icone violet"><i className="fas fa-file"></i></div>
+                    Documents
                 </div>
                 <div className="ud-champ-ligne">
-                <span className="cle">CNI</span>
-                {personnel.cni ? <a href={personnel.cni} target="_blank" rel="noreferrer" className="valeur">Voir le fichier</a> : <span className="valeur">—</span>}
+                    <span className="cle">CNI</span>
+                    {personnel.cni ? <a href={personnel.cni} target="_blank" rel="noreferrer" className="valeur-lien"><i className="fas fa-eye"></i> Voir le fichier</a> : <span className="valeur">—</span>}
                 </div>
                 <div className="ud-champ-ligne">
-                <span className="cle">Diplôme</span>
-                {personnel.diplome ? <a href={personnel.diplome} target="_blank" rel="noreferrer" className="valeur">Voir le fichier</a> : <span className="valeur">—</span>}
+                    <span className="cle">Diplôme</span>
+                    {personnel.diplome ? <a href={personnel.diplome} target="_blank" rel="noreferrer" className="valeur-lien"><i className="fas fa-eye"></i> Voir le fichier</a> : <span className="valeur">—</span>}
                 </div>
                 <div className="ud-champ-ligne">
-                <span className="cle">Lettre de motivation</span>
-                {personnel.motivation ? <a href={personnel.motivation} target="_blank" rel="noreferrer" className="valeur">Voir le fichier</a> : <span className="valeur">—</span>}
+                    <span className="cle">Lettre de motivation</span>
+                    {personnel.motivation ? <a href={personnel.motivation} target="_blank" rel="noreferrer" className="valeur-lien"><i className="fas fa-eye"></i> Voir le fichier</a> : <span className="valeur">—</span>}
                 </div>
                 <div className="ud-champ-ligne">
-                <span className="cle">Lettre de recommandation</span>
-                {personnel.recommandation ? <a href={personnel.recommandation} target="_blank" rel="noreferrer" className="valeur">Voir le fichier</a> : <span className="valeur">—</span>}
+                    <span className="cle">Lettre de recommandation</span>
+                    {personnel.recommandation ? <a href={personnel.recommandation} target="_blank" rel="noreferrer" className="valeur-lien"><i className="fas fa-eye"></i> Voir le fichier</a> : <span className="valeur">—</span>}
                 </div>
             </div>
             </div>

@@ -64,10 +64,17 @@ function CategoriesDepense() {
       setSuppressionEnCours(false);
     }
   };
+
   const { total = 0, tresorerie = 0, operationnelle = 0 } = donnees.kpis;
+  
+  
+  
+  
+  
   return (
     <div className="container-principal">
       <div className="department-page">
+
         <div className="panel-head">
           <div>
             <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>Catégories de dépense</h3>
@@ -125,7 +132,7 @@ function CategoriesDepense() {
                     <td><div className="cell-strong">{c.nom}</div></td>
                     <td>
                       <span className={`badge ${c.est_tresorerie ? 'badge-orange' : 'badge-success'}`}>
-                        <span className="dot"></span>
+                        <p className='bull'>&bull;</p>
                         {c.est_tresorerie ? 'Trésorerie' : 'Opérationnelle'}
                       </span>
                     </td>
@@ -150,16 +157,26 @@ function CategoriesDepense() {
           </div>
         </div>
       </div>
+
+
+
+
+
       <div className="department-modal" style={{ display: modalOuvert ? 'flex' : 'none' }}>
         <div className="modal-content">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #400c7c, #a14fff)' }}>
+          <div className="modal-header">
             <h2>{categorieEnEdition ? 'Modifier la catégorie' : 'Nouvelle catégorie'}</h2>
             <button className="btn-primary addInscr" onClick={() => setModalOuvert(false)}>
               <i className="fas fa-times"></i>
             </button>
           </div>
-          <form onSubmit={handleSubmit(onSubmit)} id="departmentForm">
+
+
+
+
+          <form onSubmit={handleSubmit(onSubmit)} id="departmentForm" style={{ height: '320px' }}>
             <div className="form-grid">
+
               <div className="form-group">
                 <div><label>Nom</label><span className="required" style={{ color: 'red' }}>*</span></div>
                 <input type="text" {...register('nom', { required: 'Le nom est requis' })} />
@@ -174,6 +191,10 @@ function CategoriesDepense() {
                     <span className="slider"></span>
                   </label>
                 </label>
+                <div className="text-help">
+                  Cochez si cette catégorie de dépense doit faire partie  
+                  des calcules des mouvements de la caisse.
+                </div>
               </div>
 
             
@@ -184,6 +205,8 @@ function CategoriesDepense() {
               </button>
             </div>
           </form>
+
+
           <hr />
           <p id="consigne">Le remplissage des champs marqués avec (*) est obligatoire.</p>
         </div>
@@ -194,7 +217,7 @@ function CategoriesDepense() {
 
       <div className="department-modal" style={{ display: categorieEnDetail ? 'flex' : 'none' }}>
         <div className="modal-content model-detail">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #1e3a8a, #2563eb)' }}>
+          <div className="modal-header">
             <h2>Détail de la catégorie</h2>
             <button onClick={() => setCategorieEnDetail(null)}>
               <i className="fas fa-times"></i>

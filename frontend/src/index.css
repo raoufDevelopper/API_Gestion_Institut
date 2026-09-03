@@ -139,13 +139,15 @@ img {
 .badge-orange,
 .badge-violet,
 .badge-aqua,
-.badge-blue
+.badge-blue,
+.badge-warning
 {
-  display:inline-flex;
+  display: inline-flex;
   align-items:center;
   justify-content:center;
+  gap: 3px;
   min-width: 90px;
-  padding: 8px 15px;
+  padding: 5px 13px;
   border-radius:30px;
   font-size: 14px;
   font-weight: normal;
@@ -182,6 +184,14 @@ img {
   color: hsl(180, 23%, 46%) !important;
 }
 
+.badge-warning{
+  background:rgba(153, 146, 51, 0.2);
+  color: hsl(49, 88%, 48%) !important;
+}
+
+.bull {
+    font-size: 22px;
+}
 
 
 

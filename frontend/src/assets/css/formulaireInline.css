@@ -107,7 +107,7 @@
 .fi-champ textarea, 
 .fi-photo-upload input {
   width: 100%;
-  padding: 15px;
+  padding: 12px;
   border: 1px solid var(--input);
   border-radius: 5px;
   font-size: 14px;
@@ -182,7 +182,10 @@
 .fi-photo-preview img {
   width: 100%;
   height: 100%;
+  border-radius: 100%;
   object-fit: cover;
+  padding: 3px;
+  border: solid 2px var((--input));
 }
 
 .fi-footer {

@@ -171,15 +171,19 @@ function Niveaux() {
           </div>
         </div>
       </div>
+
+
+
       {/* MODAL DE CREATION / MODIFICATION */}
       <div className="department-modal" style={{ display: modalOuvert ? 'flex' : 'none' }}>
         <div className="modal-content">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #400c7c, #a14fff)' }}>
+          <div className="modal-header">
             <h2>{niveauEnEdition ? 'Modifier le niveau' : 'Nouveau niveau'}</h2>
             <button className="btn-primary addInscr" onClick={() => setModalOuvert(false)}>
               <i className="fas fa-times"></i>
             </button>
           </div>
+
           <form onSubmit={handleSubmit(onSubmit)} id="departmentForm">
             <div className="form-grid">
               <div className="form-group">
@@ -188,6 +192,11 @@ function Niveaux() {
                   <span className="required" style={{ color: 'red' }}>*</span>
                 </div>
                 <input type="text" {...register('code', { required: 'Le code est requis' })} />
+                <div className="text-help">
+                  EX : NIV1, NIV2, NIV3... L1, L2, L3... 1A, 2A, 3A... 
+                  <br /> Selon le système de nomenclature 
+                  utilisé dans votre institu (Licence, Niveau, Année ...)
+                </div>
                 {errors.code && <div className="form-errors">{errors.code.message}</div>}
               </div>
               <div className="form-group">
@@ -196,6 +205,11 @@ function Niveaux() {
                   <span className="required" style={{ color: 'red' }}>*</span>
                 </div>
                 <input type="text" {...register('nom', { required: 'Le nom est requis' })} />
+                <div className="text-help">
+                  EX : Niveau 1... Licence2... Première année... 
+                  <br /> Selon le système de nomenclature 
+                  utilisé dans votre institu (Licence, Niveau, Année ...)
+                </div>
                 {errors.nom && <div className="form-errors">{errors.nom.message}</div>}
               </div>
               <div className="form-group">
@@ -223,12 +237,15 @@ function Niveaux() {
           </p>
         </div>
       </div>
+
+
+
       {/* MODAL DETAIL */}
       <div className="department-modal" style={{ display: niveauEnDetail ? 'flex' : 'none' }}>
         <div className="modal-content model-detail">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #1e3a8a, #2563eb)' }}>
+          <div className="modal-header">
             <h2>Détail du niveau</h2>
-            <button onClick={() => setNiveauEnDetail(null)}>
+            <button onClick={() => setNiveauEnDetail(null)} className='btn-primary'>
               <i className="fas fa-times"></i>
             </button>
           </div>
@@ -242,6 +259,8 @@ function Niveaux() {
           )}
         </div>
       </div>
+
+
       <ConfirmationModal
         ouvert={!!niveauASupprimer}
         titre="Supprimer le niveau"

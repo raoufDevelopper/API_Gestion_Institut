@@ -7,6 +7,8 @@ import ConfirmationModal from '../../components/ConfirmationModal';
 import { STATUTS_PERSONNEL, BADGE_STATUT_PERSONNEL } from './utilisateursConstantes';
 import '../../assets/css/crud.css';
 
+import { formatMontant } from '../../components/formatters';
+
 
 
 function PersonnelsListe() {
@@ -169,17 +171,17 @@ function PersonnelsListe() {
                         ) : (
                           <div className="avatar-mini avatar-placeholder"><i className="fas fa-user"></i></div>
                         )}
-                        <div className="cell-strong">{p.nom} {p.prenom}</div>
+                        <div className="cell-strong">{p.nom} <br /> {p.prenom}</div>
                       </div>
                     </td>
                    
                     <td className="mono">{p.matricule}</td>
                     
-                    <td>{p.salaire || '—'}</td>
+                    <td>{formatMontant(p.salaire) || '—'}</td>
                    
                     <td>
                       <span className={`badge ${BADGE_STATUT_PERSONNEL[p.statut]}`}>
-                        <span className="dot"></span>
+                        <p className='bull'>&bull;</p>
                         {STATUTS_PERSONNEL.find((s) => s.value === p.statut)?.label}
                       </span>
                     </td>

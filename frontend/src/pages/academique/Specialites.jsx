@@ -159,6 +159,7 @@ function Specialites() {
                     <td>{s.filiere_nom || '—'}</td>
                     <td>
                       <span className={`badge-${s.statut === 'actif' ? 'success' : s.statut === 'inactif' ? 'danger' : 'orange'}`}>
+                        <p className='bull'>&bull;</p>
                         {STATUTS.find((st) => st.value === s.statut)?.label}
                       </span>
                     </td>
@@ -187,10 +188,13 @@ function Specialites() {
           </div>
         </div>
       </div>
+
+
+
       {/* MODAL DE CREATION / MODIFICATION */}
       <div className="department-modal" style={{ display: modalOuvert ? 'flex' : 'none' }}>
         <div className="modal-content">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #400c7c, #a14fff)' }}>
+          <div className="modal-header">
             <h2>{specialiteEnEdition ? 'Modifier la spécialité' : 'Nouvelle spécialité'}</h2>
             <button className="btn-primary addInscr" onClick={() => setModalOuvert(false)}>
               <i className="fas fa-times"></i>
@@ -254,12 +258,14 @@ function Specialites() {
           </p>
         </div>
       </div>
+
+
       {/* MODAL DETAIL */}
       <div className="department-modal" style={{ display: specialiteEnDetail ? 'flex' : 'none' }}>
         <div className="modal-content model-detail">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #1e3a8a, #2563eb)' }}>
+          <div className="modal-header">
             <h2>Détail de la spécialité</h2>
-            <button onClick={() => setSpecialiteEnDetail(null)}>
+            <button onClick={() => setSpecialiteEnDetail(null)} className='btn-primary'>
               <i className="fas fa-times"></i>
             </button>
           </div>

@@ -6,6 +6,10 @@ import { useAlert } from '../../context/AlertContext';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import { TYPES_CONTRAT } from './utilisateursConstantes';
 import '../../assets/css/crud.css';
+
+
+
+
 function FormateursListe() {
   const [formateurs, setFormateurs] = useState([]);
   const [recherche, setRecherche] = useState('');

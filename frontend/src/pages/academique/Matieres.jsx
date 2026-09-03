@@ -195,8 +195,8 @@ function Matieres() {
                   <th>Code</th>
                   <th>Nom</th>
                   <th>Coefficient</th>
-                  <th>Semestre</th>
                   <th>Statut</th>
+                  <th>Semestre</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -205,14 +205,14 @@ function Matieres() {
                   <tr className="row-link" key={m.id}>
                     <td><div className="cell-strong mono">{m.code}</div></td>
                     <td>{m.nom}</td>
-                    <td>{m.coefficient}</td>
-                    <td>{SEMESTRES.find((s) => s.value === m.semestre)?.label}</td>
-                    <td>
+                    <td>{m.coefficient} (crédits)</td>
+                     <td>
                       <span className={`badge-${m.statut === 'actif' ? 'success' : m.statut === 'inactif' ? 'danger' : 'orange'}`}>
-                        <span className="dot"></span>
+                        <p className='bull'>&bull;</p>
                         {STATUTS.find((s) => s.value === m.statut)?.label}
                       </span>
                     </td>
+                    <td>{SEMESTRES.find((s) => s.value === m.semestre)?.label}</td>
                     <td>
                       <button className="table-btn view" onClick={() => setMatiereEnDetail(m)}>
                         <i className="fas fa-eye"></i>
@@ -244,7 +244,7 @@ function Matieres() {
       {/* MODAL DE CREATION / MODIFICATION */}
       <div className="department-modal" style={{ display: modalOuvert ? 'flex' : 'none' }}>
         <div className="modal-content">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #400c7c, #a14fff)' }}>
+          <div className="modal-header">
             <h2>{matiereEnEdition ? 'Modifier la matière' : 'Nouvelle matière'}</h2>
             <button className="btn-primary addInscr" onClick={() => setModalOuvert(false)}>
               <i className="fas fa-times"></i>
@@ -307,7 +307,6 @@ function Matieres() {
 
               <div className="form-group full">
                 <label>Spécialités concernées</label>
-               
                 <div className="permissions-select">
                   {specialites.map((s) => (
                     <label key={s.id} className="permission-checkbox">
@@ -354,9 +353,9 @@ function Matieres() {
       {/* MODAL DETAIL */}
       <div className="department-modal" style={{ display: matiereEnDetail ? 'flex' : 'none' }}>
         <div className="modal-content model-detail">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #1e3a8a, #2563eb)' }}>
+          <div className="modal-header">
             <h2>Détail de la matière</h2>
-            <button onClick={() => setMatiereEnDetail(null)}>
+            <button onClick={() => setMatiereEnDetail(null)} className='btn-primary'>
               <i className="fas fa-times"></i>
             </button>
           </div>

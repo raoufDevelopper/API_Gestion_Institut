@@ -90,6 +90,7 @@ function EtudiantDetail() {
                         
                         <div className="ud-meta-item">
                             <span className={`badge ${BADGE_STATUT_ETUDIANT[etudiant.statut]}`}> 
+                                <p className='bull'>&bull;</p>
                                 {STATUTS_ETUDIANT.find((s) => s.value === etudiant.statut)?.label}
                             </span>
                         </div>
@@ -195,15 +196,19 @@ function EtudiantDetail() {
                         </div>
                         <div className="ud-champ-ligne">
                             <span className="cle">CNI</span>
-                            {etudiant.cni ? <a href={etudiant.cni} target="_blank" rel="noreferrer" className="valeur">Voir le fichier</a> : <span className="valeur">—</span>}
+                            {etudiant.cni ? <a href={etudiant.cni} target="_blank" rel="noreferrer" className="valeur-lien">
+                                <i className="fas fa-eye"></i> Voir le fichier
+                            </a> : <span className="valeur">—</span>}
                         </div>
                         <div className="ud-champ-ligne">
                             <span className="cle">Diplôme</span>
-                            {etudiant.diplome ? <a href={etudiant.diplome} target="_blank" rel="noreferrer" className="valeur">Voir le fichier</a> : <span className="valeur">—</span>}
+                            {etudiant.diplome ? <a href={etudiant.diplome} target="_blank" rel="noreferrer" className="valeur-lien">
+                                <i className="fas fa-eye"></i> Voir le fichier</a> : <span className="valeur">—</span>}
                         </div>
                         <div className="ud-champ-ligne">
                             <span className="cle">Acte de naissance</span>
-                            {etudiant.acte_naissance ? <a href={etudiant.acte_naissance} target="_blank" rel="noreferrer" className="valeur">Voir le fichier</a> : <span className="valeur">—</span>}
+                            {etudiant.acte_naissance ? <a href={etudiant.acte_naissance} target="_blank" rel="noreferrer" className="valeur-lien">
+                                <i className="fas fa-eye"></i> Voir le fichier</a> : <span className="valeur">—</span>}
                         </div>
                     </div>
 
@@ -283,15 +288,18 @@ function EtudiantDetail() {
                         </div>
                         <div className="ud-champ-ligne">
                             <span className="cle">CNI</span>
-                            {etudiant.cni ? <a href={etudiant.cni} target="_blank" rel="noreferrer" className="valeur">Voir le fichier</a> : <span className="valeur">—</span>}
+                            {etudiant.cni ? <a href={etudiant.cni} target="_blank" rel="noreferrer" className="valeur-lien">
+                                <i className="fas fa-eye"></i> Voir le fichier</a> : <span className="valeur">—</span>}
                         </div>
                         <div className="ud-champ-ligne">
                             <span className="cle">Diplôme</span>
-                            {etudiant.diplome ? <a href={etudiant.diplome} target="_blank" rel="noreferrer" className="valeur">Voir le fichier</a> : <span className="valeur">—</span>}
+                            {etudiant.diplome ? <a href={etudiant.diplome} target="_blank" rel="noreferrer" className="valeur-lien">
+                                <i className="fas fa-eye"></i> Voir le fichier</a> : <span className="valeur">—</span>}
                         </div>
                         <div className="ud-champ-ligne">
                             <span className="cle">Acte de naissance</span>
-                            {etudiant.acte_naissance ? <a href={etudiant.acte_naissance} target="_blank" rel="noreferrer" className="valeur">Voir le fichier</a> : <span className="valeur">—</span>}
+                            {etudiant.acte_naissance ? <a href={etudiant.acte_naissance} target="_blank" rel="noreferrer" className="valeur-lien">
+                                <i className="fas fa-eye"></i> Voir le fichier</a> : <span className="valeur">—</span>}
                         </div>
                     </div>
                 </div>

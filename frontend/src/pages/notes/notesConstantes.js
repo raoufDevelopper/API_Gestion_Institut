@@ -11,9 +11,9 @@ export const PERIODES = [
 
 export const BADGE_DECISION = {
   ADMIS: 'badge-success',
-  RATTRAPAGE: 'badge-warning',
+  RATTRAPAGE: 'badge-orange',
   REDOUBLANT: 'badge-danger',
-  INCOMPLET: 'badge-blue',
+  INCOMPLET: 'badge-warning',
 };
 
 export const LABEL_DECISION = {
@@ -25,10 +25,10 @@ export const LABEL_DECISION = {
 
 export const COULEUR_MENTION = {
   'Excellent': 'badge-success',
-  'Très Bien': 'badge-success',
-  'Bien': 'badge-blue',
-  'Assez Bien': 'badge-blue',
+  'Très Bien': 'badge-aqua',
+  'Bien': 'badge-violet',
+  'Assez Bien': 'badge-orange',
   'Passable': 'badge-warning',
   'Échec': 'badge-danger',
-  'Non noté': 'badge-warning',
+  'Non noté': 'badge-orange',
 };

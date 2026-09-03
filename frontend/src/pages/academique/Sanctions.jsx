@@ -120,9 +120,16 @@ function Sanctions() {
 
 
   const { total = 0, actif = 0, inactif = 0, suspendu = 0 } = donnees.kpis;
+
+
+
+
+
+
   return (
     <div className="container-principal">
       <div className="department-page">
+
         {/* HEADER */}
         <div className="panel-head">
           <div>
@@ -134,6 +141,7 @@ function Sanctions() {
             Nouvelle sanction
           </button>
         </div>
+
         {/* KPI */}
         <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
           <div className="department-card">
@@ -194,19 +202,19 @@ function Sanctions() {
                     <td>{s.nom}</td>
                     <td>
                       <span className={`badge-${TONE_TYPES[s.type]}`}>
-                        <span className="dot"></span>
+                        <p className='bull'>&bull;</p>
                         {TYPES.find((t) => t.value === s.type)?.label}
                       </span>
                     </td>
                     <td>
                       <span className={`badge-${TONE_GRAVITE[s.gravite]}`}>
-                        <span className="dot"></span>
+                        <p className='bull'>&bull;</p>
                         {GRAVITES.find((g) => g.value === s.gravite)?.label}
                       </span>
                     </td>
                     <td>
                       <span className={`badge-${s.statut === 'actif' ? 'success' : s.statut === 'inactif' ? 'danger' : 'orange'}`}>
-                        <span className="dot"></span>
+                        <p className='bull'>&bull;</p>
                         {STATUTS.find((st) => st.value === s.statut)?.label}
                       </span>
                     </td>
@@ -235,10 +243,13 @@ function Sanctions() {
           </div>
         </div>
       </div>
+
+
+
       {/* MODAL DE CREATION / MODIFICATION */}
       <div className="department-modal" style={{ display: modalOuvert ? 'flex' : 'none' }}>
         <div className="modal-content">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #400c7c, #a14fff)' }}>
+          <div className="modal-header">
             <h2>{sanctionEnEdition ? 'Modifier la sanction' : 'Nouvelle sanction'}</h2>
             <button className="btn-primary addInscr" onClick={() => setModalOuvert(false)}>
               <i className="fas fa-times"></i>
@@ -251,7 +262,7 @@ function Sanctions() {
                   <label>Code</label>
                   <span className="required" style={{ color: 'red' }}>*</span>
                 </div>
-                <input type="text" {...register('code', { required: 'Le code est requis' })} />
+                <input type="text" {...register('code', { required: 'Le code est requis' })} placeholder='EX : SAN-1'/>
                 {errors.code && <div className="form-errors">{errors.code.message}</div>}
               </div>
               <div className="form-group">
@@ -259,7 +270,7 @@ function Sanctions() {
                   <label>Nom</label>
                   <span className="required" style={{ color: 'red' }}>*</span>
                 </div>
-                <input type="text" {...register('nom', { required: 'Le nom est requis' })} />
+                <input type="text" {...register('nom', { required: 'Le nom est requis' })} placeholder='EX : Non respect du reglement intérieur'/>
                 {errors.nom && <div className="form-errors">{errors.nom.message}</div>}
               </div>
               <div className="form-group">
@@ -312,12 +323,15 @@ function Sanctions() {
           </p>
         </div>
       </div>
+
+
+
       {/* MODAL DETAIL */}
       <div className="department-modal" style={{ display: sanctionEnDetail ? 'flex' : 'none' }}>
         <div className="modal-content model-detail">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #1e3a8a, #2563eb)' }}>
+          <div className="modal-header">
             <h2>Détail de la sanction</h2>
-            <button onClick={() => setSanctionEnDetail(null)}>
+            <button onClick={() => setSanctionEnDetail(null)} className="btn-primary">
               <i className="fas fa-times"></i>
             </button>
           </div>

@@ -120,13 +120,23 @@ function SaisieNotes() {
 
 
   return (
-    <div className="container-principal">
-      
-      <div className="sn-page">
-        <div className="sn-header">
-          <h1>Saisie des notes</h1>
-        </div>
-        {contexte && (
+   <div className="container-principal">
+
+    <div className="department-page">
+
+      {/* HEADER */}
+        
+      {contexte && (
+        <div className="panel-head">
+          
+          <div>
+            <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>Saisie des notes</h3>
+            <div className="sub">
+              Saisissez et enregistrez les notes des apprenats <br />
+              pour chaque matière et période d'évaluation.
+            </div>
+          </div>
+        
           <div className="sn-bandeau-contexte">
             <div className="sn-contexte-infos">
               <span className="sn-contexte-item">{nomClasse(contexte.classe)}</span>
@@ -135,75 +145,85 @@ function SaisieNotes() {
               <span className="sn-contexte-item">{contexte.semestre}</span>
               <span className="sn-contexte-item">{nomType(contexte.type_evaluation)}</span>
             </div>
-            <button className="sn-btn-changer" onClick={demanderChangementContexte}>
-              <i className="fas fa-rotate"></i> Changer le contexte
-            </button>
           </div>
-        )}
-        {contexte && !chargementTableau && (
-          <>
-            <div className="sn-resume-cards">
-              <div className="sn-resume-card">
-                <div className="sn-resume-icone violet"><i className="fas fa-users"></i></div>
-                <div>
-                  <div className="sn-resume-valeur">{etudiants.length}</div>
-                  <div className="sn-resume-label">Étudiants</div>
-                </div>
-              </div>
-              <div className="sn-resume-card">
-                <div className="sn-resume-icone vert"><i className="fas fa-check"></i></div>
-                <div>
-                  <div className="sn-resume-valeur">{nbSaisies} / {etudiants.length}</div>
-                  <div className="sn-resume-label">Notes saisies</div>
-                </div>
-              </div>
-              <div className="sn-resume-card">
-                <div className="sn-resume-icone bleu"><i className="fas fa-chart-simple"></i></div>
-                <div>
-                  <div className="sn-resume-valeur">{moyenneGroupe ?? '—'}</div>
-                  <div className="sn-resume-label">Moyenne du groupe</div>
-                </div>
+
+        </div>
+      )}
+
+
+        
+      {contexte && !chargementTableau && (
+        <>
+          {/* KPI */}
+          <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
+          
+            <div className="department-card">
+              <div className="kpi-icon blue"><i className="fas fa-users"></i></div>
+              <div className="count-top"><h2>{etudiants.length}</h2><span>Étudiants</span></div>
+            </div>
+            <div className="department-card">
+              <div className="kpi-icon green"><i className="fas fa-user-check"></i></div>
+              <div className="count-top"><h2>{nbSaisies} / {etudiants.length}</h2><span>Notes saisies</span></div>
+            </div>
+            <div className="department-card">
+              <div className="kpi-icon violet"><i className="fas fa-chart-simple"></i></div>
+              <div className="count-top"><h2>{moyenneGroupe ?? '—'}</h2><span>Moyenne du groupe</span></div>
+            </div>
+          
+          </div> 
+
+
+          <div className="department-toolbar">
+
+            <div className="toolbar-left">
+              <div className="search-box">
+                <i className="fas fa-search"></i>
+                <input type="text" placeholder="Rechercher un étudiant..." value={recherche} onChange={(e) => setRecherche(e.target.value)}/>
               </div>
             </div>
-            <div className="sn-table-card">
-              <div className="sn-table-toolbar">
-                <div className="search-box">
-                  <i className="fas fa-search"></i>
-                  <input
-                    type="text"
-                    placeholder="Rechercher un étudiant..."
-                    value={recherche}
-                    onChange={(e) => setRecherche(e.target.value)}
-                  />
-                </div>
-              </div>
-              <table className="sn-table">
+
+            <div className="toolbar-right">
+              <button className="sn-btn-changer" onClick={demanderChangementContexte}>
+                <i className="fas fa-rotate"></i> Changer le contexte
+              </button>
+            </div>
+            
+          </div>
+
+
+          <div className="department-card table-card">
+                    
+            <div className="table-title">
+              <h2>Liste des notes</h2>
+              <span>{etudiants.length} etudiants</span>
+            </div>
+            
+            <div className="table-scroll">
+
+              <table>
+                
                 <thead>
                   <tr>
-                    <th>Statut</th>
+                    <th className='statuSaisie'>Statut</th>
                     <th>Matricule</th>
                     <th>Nom & Prénom</th>
                     <th>Note / 20</th>
                   </tr>
                 </thead>
+                
                 <tbody>
                   {etudiantsFiltres.map((e, index) => (
                     <tr key={e.etudiant_id}>
-                      <td>
+                      <td style={{ maxWidth: '50px' }}>
                         <span className={`sn-statut-dot ${e.valeurLocale !== '' ? 'saisie' : 'vide'}`}></span>
                       </td>
                       <td className="mono">{e.matricule}</td>
                       <td className="cell-strong">{e.nom} {e.prenom}</td>
                       <td>
                         <div className="sn-note-input-wrapper">
-                          <input
-                            type="number"
-                            step="0.25"
-                            min="0"
-                            max="20"
+                          <input type="number" step="0.25" min="0" max="20"
                             className={`sn-note-input ${e.valeurLocale !== '' && (e.valeurLocale < 0 || e.valeurLocale > 20) ? 'hors-plage' : ''}`}
-                            value={e.valeurLocale}
-                            onChange={(evt) => modifierValeur(e.etudiant_id, evt.target.value)}
+                            value={e.valeurLocale} onChange={(evt) => modifierValeur(e.etudiant_id, evt.target.value)}
                             onKeyDown={(evt) => {
                               if (evt.key === 'Enter') {
                                 evt.preventDefault();
@@ -222,27 +242,40 @@ function SaisieNotes() {
                       </td>
                     </tr>
                   ))}
+
                   {etudiantsFiltres.length === 0 && (
                     <tr><td colSpan="4"><div className="empty">Aucun étudiant trouvé.</div></td></tr>
                   )}
+
                 </tbody>
+
               </table>
-              <div className="sn-footer-sticky">
-                <button className="btn-primary addInscr" onClick={enregistrerTout} disabled={enregistrementEnCours}>
-                  <i className="fas fa-save"></i>
-                  {enregistrementEnCours ? 'Enregistrement...' : 'Enregistrer toutes les notes'}
-                </button>
-              </div>
+
             </div>
-          </>
-        )}
-        {!contexte && !modalContexteOuvert && (
-          <div className="sn-empty-state">
-            <i className="fas fa-clipboard-list"></i>
-            <p>Aucun contexte sélectionné.</p>
+
+
+            <div className="sn-footer-sticky">
+              <button className="btn-primary addInscr" onClick={enregistrerTout} disabled={enregistrementEnCours}>
+                <i className="fas fa-save"></i>
+                {enregistrementEnCours ? 'Enregistrement...' : 'Enregistrer toutes les notes'}
+              </button>
+            </div>
+
           </div>
-        )}
-        {chargementTableau && <div className="empty">Chargement des étudiants...</div>}
+
+        </>
+      )}
+
+
+      {!contexte && !modalContexteOuvert && (
+        <div className="sn-empty-state">
+          <i className="fas fa-clipboard-list"></i>
+          <p>Aucun contexte sélectionné.</p>
+        </div>
+      )}
+      
+      {chargementTableau && <div className="empty">Chargement des étudiants...</div>}
+
       </div>
 
 

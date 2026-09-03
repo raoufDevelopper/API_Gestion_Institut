@@ -93,6 +93,11 @@ import AuteursListe from './pages/bibliotheque/AuteursListe';
 import EditeursListe from './pages/bibliotheque/EditeursListe';
 import CategoriesListe from './pages/bibliotheque/CategoriesListe';
 
+import DashboardAcademique from './pages/statistiques/DashboardAcademique';
+import DashboardBibliotheque from './pages/statistiques/DashboardBibliotheque'
+import DashboardFinance from './pages/statistiques/DashboardFinance';
+import DashboardDocuments from './pages/statistiques/DashboardDocuments';
+
 
 function App() {
 
@@ -629,6 +634,36 @@ function App() {
                     </RouteProtegee>
                   } />
 
+
+
+
+
+
+
+                  {/* ================ statistiques ================ */}
+                  <Route path="/statistiques/academique" element={
+                    <RouteProtegee permission="gerer_notes">
+                      <DashboardAcademique />
+                    </RouteProtegee>
+                  } />
+                  
+                  <Route path="/statistiques/bibliotheque" element={
+                    <RouteProtegee permission="gerer_bibliotheque_ressources">
+                      <DashboardBibliotheque />
+                    </RouteProtegee>
+                  } />
+
+                  <Route path="/statistiques/documents" element={
+                    <RouteProtegee permission="gerer_documents">
+                      <DashboardDocuments />
+                    </RouteProtegee>
+                  } />
+                  
+                  <Route path="/statistiques/finance" element={
+                    <RouteProtegee permission="gerer_finances">
+                      <DashboardFinance />
+                    </RouteProtegee>
+                  } />
 
                 </Route>
                 

@@ -27,18 +27,24 @@
         <h2>{{ releve.etudiant.matricule }} — {{ releve.etudiant.nom }} {{ releve.etudiant.prenom }}</h2>
         {% for detail in releve.details_semestres %}
         <table>
-            <tr><th colspan="3">{{ detail.semestre }}</th></tr>
-            <tr><th>Matière</th><th>Coefficient</th><th>Moyenne</th></tr>
+            <tr><th colspan="{{ types_actifs|length|add:2 }}">{{ detail.semestre }}</th></tr>
+            <tr>
+                <th>Matière</th>
+                {% for t in types_actifs %}<th>{{ t.code }}</th>{% endfor %}
+                <th>Moyenne</th>
+            </tr>
             {% for ligne in detail.detail_matieres %}
             <tr>
                 <td>{{ ligne.matiere }}</td>
-                <td>{{ ligne.coefficient }}</td>
+                {% for note_item in ligne.notes_detail %}
+                    <td>{{ note_item.valeur|default:"—" }}</td>
+                {% endfor %}
                 <td>{{ ligne.moyenne|default:"—" }}</td>
             </tr>
             {% endfor %}
-            <tr>
-                <td colspan="2" class="moyenne-generale">Moyenne générale</td>
-                <td class="moyenne-generale">{{ detail.moyenne_generale|default:"—" }}</td>
+            <tr class="moyenne-generale">
+                <td colspan="{{ types_actifs|length|add:1 }}">Moyenne générale</td>
+                <td>{{ detail.moyenne_generale|default:"—" }}</td>
             </tr>
         </table>
         <span class="mention">{{ detail.mention }}</span>

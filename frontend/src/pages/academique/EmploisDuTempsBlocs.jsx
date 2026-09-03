@@ -84,8 +84,7 @@ function EmploisDuTempsBlocs() {
           <div>
             <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>Aperçu des emplois du temps</h3>
             <div className="sub">
-              Recherchez et consuletez un ou une liste d'emplois du 
-              temps
+              Recherchez et consuletez un ou une liste d'emplois du temps
             </div>
           </div>
         </div>
@@ -136,7 +135,7 @@ function EmploisDuTempsBlocs() {
                           
                           <div className="edt-carte-header">
                             <span className={`${CLASSE_BADGE_STATUT[e.statut]}`}>
-                              <span className="dot"></span>
+                              <p className='bull'>&bull;</p>
                               {STATUTS_EMPLOI.find((s) => s.value === e.statut)?.label}
                             </span>
                           </div>
