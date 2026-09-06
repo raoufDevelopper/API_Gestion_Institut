@@ -77,3 +77,7 @@ export const getAcquisitions = () => api.get('bibliotheque/acquisitions/');
 export const getAcquisition = (id) => api.get(`bibliotheque/acquisitions/${id}/`);
 export const creerAcquisition = (data) => api.post('bibliotheque/acquisitions/', data);
 export const receptionnerAcquisition = (id) => api.post(`bibliotheque/acquisitions/${id}/reception/`);
+
+
+export const modifierLocalisation = (id, data) => api.patch(`bibliotheque/localisations/${id}/`, data);
+export const supprimerLocalisation = (id) => api.delete(`bibliotheque/localisations/${id}/`);

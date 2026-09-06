@@ -168,6 +168,8 @@ main {
     margin-bottom: 0;
 }
 
+
+
 .department-card{
     background: var(--card);
     border-radius: 10px;
@@ -186,6 +188,11 @@ main {
     gap:18px;
 }
 
+.department-card .count-top {
+    display: flex;
+    flex-direction: column;
+}
+
 .department-card .count-top h2{
     color: var(--text);
     font-size: 1.3rem;
@@ -197,6 +204,17 @@ main {
     font-size: 14px;
 }
 
+#concerne {
+    display: flex;
+    justify-content: center;
+    margin-top: 3px;
+    font-size: 11px;
+    background: #7837c4;
+    color: #fff;
+    padding: 3px;
+    border-radius: 30px;
+}
+
 .kpi-icon{
     width:65px;
     height:65px;
@@ -205,6 +223,11 @@ main {
     justify-content:center;
     align-items:center;
     font-size:1.4rem;
+}
+
+.department-kpi.academique .department-card .kpi-icon {
+    width:85px;
+    height:85px;
 }
 
 .kpi-icon.blue{
@@ -663,6 +686,7 @@ td:not(:first-of-type){
 .modal-header button{
     position: absolute;
     width: 30px;
+    height: 30px;
     display: flex;
     justify-content: center;
     align-items: center;

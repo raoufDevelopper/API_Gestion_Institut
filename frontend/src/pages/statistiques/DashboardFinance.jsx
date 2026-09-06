@@ -7,8 +7,13 @@ import {
 import { getDashboardFinance, getFiltresFinance } from '../../api/statistiques';
 import '../../assets/css/crud.css';
 import '../../assets/css/dashboard.css';
+
+
 const ONGLETS = ['Vue générale', 'Analyses', 'Caisse & Alertes'];
+
 const COULEURS = ['#16a34a', '#dc2626', '#fb923c', '#2563eb', '#a14fff', '#6b7280'];
+
+
 function DashboardFinance() {
   const [donnees, setDonnees] = useState(null);
   const [options, setOptions] = useState({ annees_academiques: [], filieres: [], specialites: [], types_paiement: [], categories_depense: [], caisses: [], caissiers: [] });
@@ -19,10 +24,15 @@ function DashboardFinance() {
   const maj = (champ, valeur) => setFiltres((prev) => ({ ...prev, [champ]: valeur || undefined }));
   if (!donnees) return <div className="container-principal"><div className="empty">Chargement...</div></div>;
   const { kpis, situation_caisse, alertes } = donnees;
+
+
+
   return (
     <div className="container-principal">
       <div className="department-page">
+
         <div className="dash-header"><h1>Finance</h1></div>
+        
         <div className="dash-filtres-bar">
           <input type="date" onChange={(e) => maj('date_debut', e.target.value)} title="Date début" />
           <input type="date" onChange={(e) => maj('date_fin', e.target.value)} title="Date fin" />

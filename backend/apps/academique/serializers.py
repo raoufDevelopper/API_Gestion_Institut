@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from .models import Niveau, Filiere, Specialite, TypeSalle, Salle, Matiere, AnneeAcademique, Classe, EmploiDuTemps, Seance, Sanction
 
+from django.core.exceptions import ValidationError
 
 
 
@@ -81,36 +82,70 @@ class ClasseSerializer(serializers.ModelSerializer):
 
 
 class EmploiDuTempsSerializer(serializers.ModelSerializer):
-    classe_str = serializers.CharField(source='classe.__str__', read_only=True)
-    nom_affiche = serializers.CharField(read_only=True)
-    nb_seances = serializers.IntegerField(read_only=True, default=0)
-    annee_academique_libelle = serializers.CharField(source='annee_academique.libelle', read_only=True)
+    classe_str = serializers.CharField(
+        source='classe.__str__',
+        read_only=True
+    )
+    nom_affiche = serializers.CharField(
+        read_only=True
+    )
+    nb_seances = serializers.IntegerField(
+        read_only=True,
+        default=0
+    )
+    annee_academique_libelle = serializers.CharField(
+        source='annee_academique.libelle',
+        read_only=True
+    )
     formateurs_ids = serializers.SerializerMethodField()
     class Meta:
         model = EmploiDuTemps
         fields = '__all__'
+    def get_formateurs_ids(self, obj):
+        return list(
+            obj.seances
+            .exclude(formateur__isnull=True)
+            .values_list(
+                'formateur_id',
+                flat=True
+            )
+            .distinct()
+        )
 
-    def formateurs_ids(self, obj):
-        return list(obj.seances.exclude(formateurs__isnull = True).values_list('formateurs_ids', flat = True).distinct())
-
+    
 
 
 
 class SeanceSerializer(serializers.ModelSerializer):
-    matiere_nom = serializers.CharField(source='matiere.nom', read_only=True)
-    salle_nom = serializers.CharField(source='salle.nom', read_only=True)
-    formateur_str = serializers.CharField(source='formateur.__str__', read_only=True)
+    matiere_nom = serializers.CharField(
+        source='matiere.nom',
+        read_only=True
+    )
+    salle_nom = serializers.CharField(
+        source='salle.nom',
+        read_only=True
+    )
+    formateur_str = serializers.CharField(
+        source='formateur.__str__',
+        read_only=True
+    )
     class Meta:
         model = Seance
         fields = '__all__'
     def validate(self, data):
-        instance = Seance(pk=self.instance.pk if self.instance else None, **{
-            **{k: v for k, v in data.items()}
-        })
+        """
+        Validation des conflits avant l'enregistrement.
+        """
+        instance = self.instance or Seance()
+        for attr, value in data.items():
+            setattr(instance, attr, value)
         try:
-            instance.clean()
-        except Exception as e:
-            raise serializers.ValidationError(str(e))
+            instance.full_clean()
+        except ValidationError as e:
+            raise serializers.ValidationError(
+                e.message_dict if hasattr(e, 'message_dict')
+                else e.messages
+            )
         return data
 
 

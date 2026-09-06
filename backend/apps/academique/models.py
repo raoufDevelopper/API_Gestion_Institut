@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.db import models
 
 from django.urls import reverse
@@ -306,9 +308,10 @@ class EmploiDuTemps(models.Model):
         ('S2', 'Semestre 2'),
     )
 
-    classe = models.ForeignKey(Classe, on_delete=models.CASCADE, related_name="emplois_du_temps")
 
-    semestre = models.CharField(max_length=2, choices=SEMESTRES_CHOICES, default='S1')
+    classe = models.ForeignKey( Classe, on_delete=models.CASCADE, related_name="emplois_du_temps")
+
+    semestre = models.CharField( max_length=2, choices=SEMESTRES_CHOICES, default='S1')
 
     annee_academique = models.ForeignKey(AnneeAcademique, on_delete=models.CASCADE, related_name="emplois_du_temps", null=True, blank=True)
 
@@ -323,26 +326,57 @@ class EmploiDuTemps(models.Model):
     date_creation = models.DateTimeField(auto_now_add=True)
 
     date_modification = models.DateTimeField(auto_now=True)
-
+    
+    
     class Meta:
         ordering = ["-date_modification"]
         verbose_name = "Emploi du temps"
         verbose_name_plural = "Emplois du temps"
 
+
     def __str__(self):
         return self.titre or f"EDT {self.classe} - {self.semestre}"
 
+
     def get_absolute_url(self):
         return reverse("academique:emploi_detail", args=[self.pk])
-    
+
+
     def clean(self):
-        if self.semaine_debut and self.semaine_fin and self.semaine_debut >= self.semaine_fin:
-            raise ValidationError("La semaine de début doit être antérieure à la semaine de fin.")
+        """
+        Vérifie que la période représente exactement
+        une semaine de 7 jours, commençant un lundi.
+        """
+        if self.semaine_debut and self.semaine_fin:
+            # La date de fin doit être exactement 7 jours
+            # après la date de début.
+            if self.semaine_fin - self.semaine_debut != timedelta(days=6):
+                raise ValidationError({
+                    "semaine_fin": (
+                        "La période d'un emploi du temps doit "
+                        "correspondre exactement à 7 jours."
+                    )
+                })
+            
+            # La semaine doit commencer un lundi.
+            if self.semaine_debut.weekday() != 0:
+                raise ValidationError({
+                    "semaine_debut": (
+                        "La date de début de la semaine doit être un lundi."
+                    )
+                })
+            
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
 
     @property
     def nom_affiche(self):
         return self.titre or f"{self.classe} — {self.semestre}"
     
+
+
 
 
 
@@ -373,11 +407,11 @@ class Seance(models.Model):
         ("DIM", "Dimanche"),
     ]
 
-    emploi_du_temps = models.ForeignKey(EmploiDuTemps, on_delete=models.CASCADE, related_name="seances", null=True, blank=True)
+    emploi_du_temps = models.ForeignKey(EmploiDuTemps, on_delete=models.CASCADE, related_name="seances", null=True,blank=True)
 
     matiere = models.ForeignKey(Matiere, on_delete=models.CASCADE, related_name="seances", null=True, blank=True)
 
-    formateur = models.ForeignKey('utilisateurs.Formateur', on_delete=models.CASCADE, related_name="seances", null=True, blank=True)
+    formateur = models.ForeignKey('utilisateurs.Formateur',  on_delete=models.CASCADE, related_name="seances", null=True, blank=True)
 
     salle = models.ForeignKey(Salle, on_delete=models.CASCADE, related_name="seances", null=True, blank=True)
 
@@ -389,53 +423,109 @@ class Seance(models.Model):
 
     heure_fin = models.TimeField()
 
+
     class Meta:
         ordering = ["jour", "heure_debut"]
         verbose_name = "Séance"
         verbose_name_plural = "Séances"
 
     def __str__(self):
-        return f"{self.matiere} ({self.get_jour_display()} {self.heure_debut}-{self.heure_fin})"
-
-
+        return (f"{self.matiere} " f"({self.get_jour_display()} " f"{self.heure_debut}-{self.heure_fin})")
 
     def clean(self):
+        """
+        Vérifie :
+        1. La validité des horaires.
+        2. Les conflits de salle.
+        3. Les conflits de formateur.
+        4. Les conflits de classe.
+        5. Les conflits entre différents emplois du temps
+           appartenant à la même semaine.
+        """
+        # ---------------------------------------------------------
+        # 1. Vérification des horaires
+        # ---------------------------------------------------------
+        if self.heure_debut and self.heure_fin:
+            if self.heure_debut >= self.heure_fin:
+                raise ValidationError({
+                    "heure_fin": (
+                        "L'heure de fin doit être postérieure "
+                        "à l'heure de début."
+                    )
+                })
 
-        # 1. Vérifier que l'heure de fin est après l'heure de début
-        if self.heure_debut and self.heure_fin and self.heure_debut >= self.heure_fin:
-            raise ValidationError("L'heure de fin doit être postérieure à l'heure de début.")
+        # Impossible de vérifier les conflits sans EDT.
+        if not self.emploi_du_temps_id:
+            return
 
+        edt = self.emploi_du_temps
 
-        # 2. Vérifier les chevauchements sur le même jour
-        chevauchements = Seance.objects.filter(jour=self.jour).exclude(pk=self.pk)
+        # L'EDT doit avoir une période valide.
+        if not edt.semaine_debut or not edt.semaine_fin:
+            return
 
-        for seance in chevauchements:
-            chevauche = self.heure_debut < seance.heure_fin and self.heure_fin > seance.heure_debut
+        # ---------------------------------------------------------
+        # 2. Rechercher les séances de la même semaine
+        # ---------------------------------------------------------
+        #
+        # IMPORTANT :
+        # On ne filtre PAS sur emploi_du_temps=self.emploi_du_temps.
+        #
+        # Cela permet de détecter les conflits entre plusieurs
+        # emplois du temps appartenant à la même semaine.
+        # ---------------------------------------------------------
+        seances = Seance.objects.filter(
+            emploi_du_temps__semaine_debut = edt.semaine_debut,
+            emploi_du_temps__semaine_fin = edt.semaine_fin,
+            jour=self.jour,
+        ).exclude(pk=self.pk)
+
+        # ---------------------------------------------------------
+        # 3. Vérification des chevauchements horaires
+        # ---------------------------------------------------------
+        for seance in seances:
+
+            if not seance.heure_debut or not seance.heure_fin:
+                continue
+
+            chevauche = (self.heure_debut < seance.heure_fin and self.heure_fin > seance.heure_debut)
 
             if not chevauche:
                 continue
 
-            # Conflit de salle
-            if self.salle_id and seance.salle_id == self.salle_id:
+            # -----------------------------------------------------
+            # 4. Conflit de salle
+            # -----------------------------------------------------
+            if (self.salle_id and seance.salle_id and self.salle_id == seance.salle_id):
                 raise ValidationError(
-                    f"Conflit de salle : {self.salle} est déjà occupée le {self.get_jour_display()} "
-                    f"de {seance.heure_debut} à {seance.heure_fin}."
+                    f"Conflit de salle : {self.salle} est déjà occupée "
+                    f"le {self.get_jour_display()} "
+                    f"de {seance.heure_debut.strftime('%H:%M')} "
+                    f"à {seance.heure_fin.strftime('%H:%M')}."
                 )
 
-            # Conflit de formateur
-            if self.formateur_id and seance.formateur_id == self.formateur_id:
+            # -----------------------------------------------------
+            # 5. Conflit de formateur
+            # -----------------------------------------------------
+            if (self.formateur_id and seance.formateur_id and self.formateur_id == seance.formateur_id):
                 raise ValidationError(
-                    f"Conflit de formateur : {self.formateur} a déjà une séance le {self.get_jour_display()} "
-                    f"de {seance.heure_debut} à {seance.heure_fin}."
+                    f"Conflit de formateur : {self.formateur} a déjà "
+                    f"une séance le {self.get_jour_display()} "
+                    f"de {seance.heure_debut.strftime('%H:%M')} "
+                    f"à {seance.heure_fin.strftime('%H:%M')}."
                 )
 
-            # Conflit de classe (via emploi_du_temps -> classe)
-            if self.emploi_du_temps_id and seance.emploi_du_temps_id:
-                if self.emploi_du_temps.classe_id == seance.emploi_du_temps.classe_id:
-                    raise ValidationError(
-                        f"Conflit de classe : cette classe a déjà une séance le {self.get_jour_display()} "
-                        f"de {seance.heure_debut} à {seance.heure_fin}."
-                    )
+            # -----------------------------------------------------
+            # 6. Conflit de classe
+            # -----------------------------------------------------
+            if (edt.classe_id and seance.emploi_du_temps and seance.emploi_du_temps.classe_id == edt.classe_id):
+                raise ValidationError(
+                    f"Conflit de classe : la classe "
+                    f"{edt.classe} a déjà une séance "
+                    f"le {self.get_jour_display()} "
+                    f"de {seance.heure_debut.strftime('%H:%M')} "
+                    f"à {seance.heure_fin.strftime('%H:%M')}."
+                )
 
     def save(self, *args, **kwargs):
         self.full_clean()

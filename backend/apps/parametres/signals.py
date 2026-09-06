@@ -10,6 +10,8 @@ from apps.notes.models import Deliberation
 
 from .services import creer_notification
 
+from apps.bibliotheque.models import Emprunt, Reservation, Penalite
+
 
 
 
@@ -155,26 +157,28 @@ def notifier_caisse(sender, instance, created, **kwargs):
 
 
 
-from apps.bibliotheque.models import Emprunt, Reservation, Penalite
+
 # ---------- EMPRUNT ----------
 @receiver(post_save, sender=Emprunt)
 def notifier_emprunt(sender, instance, created, **kwargs):
-    emprunteur_user = instance.etudiant.user if instance.etudiant else (
-        instance.personnel.user if instance.personnel else None
+
+    emprunteur_user = instance.adherent.etudiant.user if instance.adherent.etudiant else (
+        instance.adherent.personnel.user if instance.adherent.personnel else None
     )
+
     if emprunteur_user:
         if created:
             creer_notification(
                 destinataire=emprunteur_user,
                 titre="Emprunt enregistré",
-                message=f"{instance.exemplaire.livre.titre} — retour prévu le {instance.date_retour_prevue}",
+                message=f"{instance.exemplaire.ressource} — retour prévu le {instance.date_retour_prevue}",
                 type_notification='info',
             )
         elif instance.statut == 'retourne':
             creer_notification(
                 destinataire=emprunteur_user,
                 titre="Retour confirmé",
-                message=f"Le retour de « {instance.exemplaire.livre.titre} » a bien été enregistré.",
+                message=f"Le retour de « {instance.exemplaire.ressource} » a bien été enregistré.",
                 type_notification='succes',
             )
     for admin in _superusers_et_admins():
@@ -192,8 +196,8 @@ def notifier_emprunt(sender, instance, created, **kwargs):
 # ---------- RESERVATION ----------
 @receiver(post_save, sender=Reservation)
 def notifier_reservation(sender, instance, created, **kwargs):
-    reservataire_user = instance.etudiant.user if instance.etudiant else (
-        instance.personnel.user if instance.personnel else None
+    reservataire_user = instance.adherent.etudiant.user if instance.adherent.etudiant else (
+        instance.adherent.personnel.user if instance.adherent.personnel else None
     )
     if not reservataire_user:
         return
@@ -201,14 +205,14 @@ def notifier_reservation(sender, instance, created, **kwargs):
         creer_notification(
             destinataire=reservataire_user,
             titre="Réservation enregistrée",
-            message=f"Vous êtes en attente pour « {instance.livre.titre} ».",
+            message=f"Vous êtes en attente pour « {instance.ressource} ».",
             type_notification='info',
         )
     elif instance.statut == 'disponible':
         creer_notification(
             destinataire=reservataire_user,
             titre="Livre disponible",
-            message=f"« {instance.livre.titre} » est maintenant disponible pour vous. Merci de passer le récupérer rapidement.",
+            message=f"« {instance.ressource} » est maintenant disponible pour vous. Merci de passer le récupérer rapidement.",
             type_notification='succes',
             envoyer_email=True,
         )
@@ -220,8 +224,8 @@ def notifier_reservation(sender, instance, created, **kwargs):
 # ---------- PENALITE ----------
 @receiver(post_save, sender=Penalite)
 def notifier_penalite(sender, instance, created, **kwargs):
-    emprunteur_user = instance.emprunt.etudiant.user if instance.emprunt.etudiant else (
-        instance.emprunt.personnel.user if instance.emprunt.personnel else None
+    emprunteur_user = instance.emprunt.adherent.etudiant.user if instance.emprunt.adherent.etudiant else (
+        instance.emprunt.adherent.personnel.user if instance.emprunt.adherent.personnel else None
     )
     if not emprunteur_user:
         return

@@ -5,6 +5,8 @@ import { useAlert } from '../../context/AlertContext';
 import { BADGE_STATUT_DIPLOME, STATUTS_DIPLOME, telechargerFichier } from './documentsConstantes';
 import '../../assets/css/crud.css';
 import '../../assets/css/documents.css';
+
+
 function DiplomeDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -13,11 +15,14 @@ function DiplomeDetail() {
   const [motif, setMotif] = useState('');
   const [revocationEnCours, setRevocationEnCours] = useState(false);
   const { afficherSucces, afficherErreur } = useAlert();
+
   const charger = async () => {
     const res = await getDiplome(id);
     setDiplome(res.data);
   };
+
   useEffect(() => { charger(); }, [id]);
+
   const telecharger = async () => {
     try {
       const res = await telechargerDiplome(id);
@@ -26,9 +31,11 @@ function DiplomeDetail() {
       afficherErreur('Erreur lors du téléchargement.');
     }
   };
+
   const imprimer = () => {
     if (diplome.fichier) window.open(diplome.fichier, '_blank');
   };
+
   const confirmerRevocation = async () => {
     if (!motif.trim()) {
       afficherErreur('Un motif de révocation est requis.');
@@ -47,7 +54,12 @@ function DiplomeDetail() {
       setRevocationEnCours(false);
     }
   };
+
   if (!diplome) return <div className="container-principal"><div className="empty">Chargement...</div></div>;
+
+
+
+
   return (
     <div className="container-principal">
       <div className="personnel">
@@ -67,7 +79,7 @@ function DiplomeDetail() {
               <button className="btn-light" onClick={telecharger}><i className="fas fa-download"></i> Télécharger</button>
               <button className="btn-light" onClick={imprimer}><i className="fas fa-print"></i> Imprimer</button>
               {diplome.statut === 'valide' && (
-                <button className="btn-light" style={{ color: '#dc2626' }} onClick={() => setModalRevocationOuvert(true)}>
+                <button className="btn-light" style={{ color: '#f06363' }} onClick={() => setModalRevocationOuvert(true)}>
                   <i className="fas fa-ban"></i> Révoquer
                 </button>
               )}
@@ -76,23 +88,36 @@ function DiplomeDetail() {
           <div className="doc-detail-grid">
             <div className="dl-group">
               <div className="dl-group-title">Informations du diplôme</div>
-              <div className="dl-row"><span className="dl-k">N° Diplôme</span><span className="dl-v mono">{diplome.numero_diplome}</span></div>
-              <div className="dl-row"><span className="dl-k">Étudiant</span><span className="dl-v">{diplome.etudiant_str}</span></div>
-              <div className="dl-row"><span className="dl-k">Mention</span><span className="dl-v">{diplome.mention || '—'}</span></div>
-              <div className="dl-row"><span className="dl-k">Date d'obtention</span><span className="dl-v">{new Date(diplome.date_obtention).toLocaleDateString('fr-FR')}</span></div>
-              <div className="dl-row"><span className="dl-k">Signé par</span><span className="dl-v">{diplome.signe_par_str || '—'}</span></div>
+              <div className="dl-row">
+                <span className="dl-k">N° Diplôme</span>
+                <span className="badge badge-orange">{diplome.numero_diplome}</span>
+              </div>
+              <div className="dl-row">
+                <span className="dl-k">Étudiant</span>
+                <span className="dl-v etu">{diplome.etudiant_str}</span>
+              </div>
+              
+              {/*<div className="dl-row"><span className="dl-k">Signé par</span><span className="dl-v">{diplome.signe_par_str || '—'}</span></div>*/}
               <div className="dl-row">
                 <span className="dl-k">Statut</span>
                 <span className="dl-v">
                   <span className={`badge ${BADGE_STATUT_DIPLOME[diplome.statut]}`}>
-                    <span className="dot"></span>
+                    <p className='bull'>&bull;</p>
                     {STATUTS_DIPLOME.find((s) => s.value === diplome.statut)?.label}
                   </span>
                 </span>
               </div>
+              <div className="dl-row">
+                <span className="dl-k">Mention</span>
+                <span className="badge badge-violet">
+                  <p className='bull'>&bull;</p>
+                  {diplome.mention || '—'}
+                </span>
+              </div>
               {diplome.statut === 'revoque' && (
-                <div className="dl-row"><span className="dl-k">Motif de révocation</span><span className="dl-v">{diplome.motif_revocation}</span></div>
+                <div className="dl-row"><span className="dl-k">Motif de révocation</span><span className="adge badge-danger">{diplome.motif_revocation}</span></div>
               )}
+              <div className="dl-row"><span className="dl-k">Date d'obtention</span><span className="dl-v">{new Date(diplome.date_obtention).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</span></div>
               <div className="dl-row"><span className="dl-k">Généré par</span><span className="dl-v">{diplome.genere_par_nom || '—'}</span></div>
             </div>
             <div className="doc-preview-panel">
@@ -106,34 +131,57 @@ function DiplomeDetail() {
           </div>
         </div>
       </div>
+
+
+
+
+
       <div className="department-modal" style={{ display: modalRevocationOuvert ? 'flex' : 'none' }}>
-        <div className="modal-content">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #7a0303, #d32929)' }}>
+            
+        <div className="modal-content confirmation-modal" style={{ animation: 'pop .3s ease'}}>
+        
+          <div className="confirme-header">
             <h2>Révoquer le diplôme</h2>
-            <button className="addInscr" onClick={() => setModalRevocationOuvert(false)}>
-              <i className="fas fa-times"></i>
-            </button>
           </div>
-          <div style={{ padding: '20px' }}>
-            <p style={{ marginBottom: '10px', fontSize: '13px', color: '#6b7280' }}>
-              Cette action est irréversible. Merci de préciser le motif de la révocation :
-            </p>
-            <textarea
-              rows="4"
-              style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #e5e7eb' }}
-              value={motif}
-              onChange={(e) => setMotif(e.target.value)}
-            ></textarea>
+        
+          <div className="confirmation-body">
+            <p>êtes-vous sur le point de Révoquer un ce diplôme</p>
+              <div>
+                <p id="attention">
+                  <i className="fas fa-triangle-exclamation confirmation-icon"></i>
+                  Attention
+                </p>
+                <p style={{ marginBottom: '10px', fontSize: '13px', color: 'var(--text)' }}>
+                  Vous êtes sur le point de Révoquer un ce diplôme. Cette action est irreversible.
+                </p>
+              </div>
+              <textarea
+                rows="4"
+                placeholder='Veillez entrer le motif de la revocation ici'
+                value={motif}
+                onChange={(e) => setMotif(e.target.value)}
+              ></textarea>
           </div>
-          <div className="modal-footer">
+        
+          <div className="modal-footer" style={{ justifyContent: "center" }}>
             <button className="btn-light" onClick={() => setModalRevocationOuvert(false)}>Annuler</button>
             <button className="btn-danger" onClick={confirmerRevocation} disabled={revocationEnCours}>
               {revocationEnCours ? 'Révocation...' : 'Confirmer la révocation'}
             </button>
           </div>
+        
         </div>
+        
       </div>
+
+
+
     </div>
+
   );
+
 }
+
+
+
 export default DiplomeDetail;

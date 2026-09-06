@@ -64,8 +64,12 @@ function AuteursListe() {
     <div className="container-principal">
       <div className="department-page">
 
+        {/* HEADER */}
         <div className="panel-head">
-          <div><h3 style={{ fontSize: '20px', marginBottom: '8px' }}>Auteurs</h3></div>
+          <div>
+            <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>Gestion des Auteurs</h3>
+            <div className="sub">{filtres.length} Auteurs(s)</div>
+          </div>
           <button className="btn-primary addInscr" onClick={ouvrirCreation}><i className="fas fa-plus"></i> Ajouter un auteur</button>
         </div>
         
@@ -74,25 +78,59 @@ function AuteursListe() {
         </div>
         
         <div className="department-card table-card">
-          <div className="table-title"><h2>Auteurs</h2><span>{filtres.length}</span></div>
+          <div className="table-title"><h2>Liste des Auteurs</h2><span>{filtres.length} Auteurs</span></div>
           <div className="table-scroll">
             <table>
-              <thead><tr><th>Nom</th><th>Prénom</th><th>Nationalité</th><th>Ressources</th><th>Actions</th></tr></thead>
+              
+              <thead>
+                <tr>
+                  <th>auteur</th>
+                  <th>Nationalité</th>
+                  <th>Ressources</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              
+              
               <tbody>
+
                 {filtres.map((a) => (
                   <tr className="row-link" key={a.id}>
-                    <td className="cell-strong">{a.nom}</td><td>{a.prenom || '—'}</td><td>{a.nationalite || '—'}</td><td>{a.nb_ressources}</td>
+                    <td>
+                      <div className="cell-with-avatar">
+                        {a.photo ? (
+                          <img src={a.photo} alt="" className="avatar-mini" />
+                        ) : (
+                          <div className="avatar-mini avatar-placeholder"><i className="fas fa-user"></i></div>
+                        )}
+                        <div className="cell-strong">{a.nom || '—'} {a.prenom || '—'}</div>
+                      </div>
+                    </td>
+                    <td>{a.nationalite || '—'}</td>
+                    <td>{a.nb_ressources} ressources</td>
                     <td>
                       <button className="table-btn edit" onClick={() => ouvrirEdition(a)}><i className="fas fa-pen"></i></button>
                       <button className="table-btn delete" onClick={() => setAuteurASupprimer(a)}><i className="fas fa-trash"></i></button>
                     </td>
                   </tr>
                 ))}
-                {filtres.length === 0 && <tr><td colSpan="5"><div className="empty">Aucun auteur.</div></td></tr>}
+
+                {filtres.length === 0 && 
+                  <tr>
+                    <td colSpan="5">
+                      <div className="empty">Aucun auteur.</div>
+                    </td>
+                  </tr>
+                }
+              
               </tbody>
+
             </table>
+          
           </div>
+        
         </div>
+      
       </div>
 
 
@@ -112,7 +150,16 @@ function AuteursListe() {
             </div>
             <div className="modal-footer"><button type="submit" className="btn-primary addInscr" disabled={isSubmitting}>Enregistrer</button></div>
           </form>
+          
+          <hr />
+                    
+          <p id="consigne">
+            Le remplissage des champs marqués avec (*) est obligatoire.
+            Soumettez le formulaire si consigne respectée !
+          </p>
+
         </div>
+
       </div>
 
       <ConfirmationModal 

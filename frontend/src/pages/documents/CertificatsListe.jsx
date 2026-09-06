@@ -171,7 +171,7 @@ function CertificatsListe() {
 
       <div className="department-modal" style={{ display: certificatEnDetail ? 'flex' : 'none' }}>
         <div className="modal-content model-detail">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #1e3a8a, #2563eb)' }}>
+          <div className="modal-header">
             <h2>Détail du certificat</h2>
             <button onClick={() => setCertificatEnDetail(null)}>
               <i className="fas fa-times"></i>

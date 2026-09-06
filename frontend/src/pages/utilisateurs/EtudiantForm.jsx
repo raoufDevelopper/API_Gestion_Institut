@@ -31,7 +31,10 @@ function EtudiantForm() {
   const { register, handleSubmit, trigger, reset, formState: { errors, isSubmitting } } = useForm();
  
   useEffect(() => {
-    getSpecialites().then((res) => setSpecialites(res.data.resultats || res.data));
+    getSpecialites().then((res) => {
+      const toutes = res.data.resultats || res.data;
+      setSpecialites(toutes.filter((s) => s.statut === 'actif'));
+    }); 
     getNiveaux().then((res) => setNiveaux(res.data));
     getClasses().then((res) => setClasses(res.data));
   }, []);

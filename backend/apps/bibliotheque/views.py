@@ -8,7 +8,7 @@ from rest_framework import status
 from apps.authentification.decorators import permission_requise
 from .models import Categorie, Auteur, Editeur, Ressource, Localisation, Exemplaire, Adherent, RegleBibliotheque, Emprunt, StatutEmprunt, Reservation, StatutReservation, Penalite, TypePenalite, Inventaire, LigneInventaire, Fournisseur, Acquisition, LigneAcquisition, StatutExemplaire, valider_nouvel_emprunt, traiter_retour_exemplaire
 from .serializers import CategorieSerializer, AuteurSerializer, EditeurSerializer, LocalisationSerializer, RessourceListeSerializer, RessourceDetailSerializer, RessourceCreationSerializer, ExemplaireSerializer, CreationExemplairesEnMasseSerializer, AdherentSerializer, RegleBibliothequeSerializer, EmpruntSerializer, NouvelEmpruntSerializer, RetourEmpruntSerializer, ReservationSerializer, PenaliteSerializer, InventaireSerializer, InventaireDetailSerializer, LigneInventaireSerializer, FournisseurSerializer, AcquisitionSerializer, LigneAcquisitionSerializer
-
+from .models import _user_de_adherent
 
 
 
@@ -213,6 +213,28 @@ def liste_creer_localisations(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['GET', 'PATCH', 'DELETE'])
+@permission_classes([IsAuthenticated])
+@permission_requise('gerer_bibliotheque_exemplaires')
+def detail_localisation(request, pk):
+    try:
+        localisation = Localisation.objects.get(pk=pk)
+    except Localisation.DoesNotExist:
+        return Response({'detail': 'Localisation introuvable.'}, status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'GET':
+        return Response(LocalisationSerializer(localisation).data)
+    if request.method == 'PATCH':
+        serializer = LocalisationSerializer(localisation, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    if localisation.exemplaires.exists():
+        return Response({'detail': "Impossible de supprimer : des exemplaires y sont localisés."}, status=status.HTTP_400_BAD_REQUEST)
+    localisation.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 
 
 
@@ -264,6 +286,10 @@ def liste_creer_ressources(request):
         ressource = serializer.save()
         return Response(RessourceDetailSerializer(ressource, context={'request': request}).data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
 @api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_bibliotheque_ressources')
@@ -330,6 +356,10 @@ def liste_creer_exemplaires(request):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_bibliotheque_exemplaires')
@@ -345,6 +375,10 @@ def creer_exemplaires_en_masse(request):
         )
         crees.append(exemplaire)
     return Response(ExemplaireSerializer(crees, many=True, context={'request': request}).data, status=status.HTTP_201_CREATED)
+
+
+
+
 @api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_bibliotheque_exemplaires')
@@ -412,6 +446,10 @@ def liste_creer_adherents(request):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
 @api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_bibliotheque_adherents')
@@ -461,6 +499,9 @@ def liste_regles(request):
     for type_adherent, _ in RegleBibliotheque.TYPE_CHOICES:
         RegleBibliotheque.pour(type_adherent)
     return Response(RegleBibliothequeSerializer(RegleBibliotheque.objects.all(), many=True).data)
+
+
+
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_bibliotheque_parametres')
@@ -498,24 +539,33 @@ def modifier_regle(request, pk):
 def liste_emprunts(request):
     emprunts = Emprunt.objects.select_related('adherent', 'exemplaire__ressource').all()
     statut = request.GET.get('statut')
+
     if statut == 'EN_COURS':
         emprunts = emprunts.filter(statut__in=['EN_COURS', 'EN_RETARD'])
     elif statut:
         emprunts = emprunts.filter(statut=statut)
+
     q = request.GET.get('q', '').strip()
+
     if q:
         emprunts = emprunts.filter(
             Q(numero__icontains=q) | Q(exemplaire__ressource__titre__icontains=q) |
             Q(adherent__etudiant__nom__icontains=q) | Q(adherent__personnel__nom__icontains=q)
         )
+
     type_adherent = request.GET.get('type_adherent')
+
     if type_adherent == 'ETUDIANT':
         emprunts = emprunts.filter(adherent__etudiant__isnull=False)
     elif type_adherent == 'FORMATEUR':
         emprunts = emprunts.filter(adherent__formateur__isnull=False)
     elif type_adherent == 'PERSONNEL':
         emprunts = emprunts.filter(adherent__personnel__isnull=False, adherent__formateur__isnull=True)
+
     return Response(EmpruntSerializer(emprunts, many=True).data)
+
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_bibliotheque_emprunts')
@@ -539,6 +589,9 @@ def enregistrer_emprunt(request):
     exemplaire.statut = StatutExemplaire.EMPRUNTE
     exemplaire.save(update_fields=['statut'])
     return Response(EmpruntSerializer(emprunt).data, status=status.HTTP_201_CREATED)
+
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_bibliotheque_emprunts')
@@ -584,6 +637,9 @@ def retourner_emprunt(request, pk):
                 Penalite.objects.create(emprunt=emprunt, type_penalite=TypePenalite.RETARD, montant=montant)
     emprunt.save()
     return Response(EmpruntSerializer(emprunt).data)
+
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_bibliotheque_emprunts')
@@ -594,6 +650,9 @@ def liste_retards(request):
     if q:
         en_retard = [e for e in en_retard if q.lower() in str(e.adherent.personne).lower() or q.lower() in e.exemplaire.ressource.titre.lower()]
     return Response(EmpruntSerializer(en_retard, many=True).data)
+
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_bibliotheque_emprunts')
@@ -655,6 +714,9 @@ def liste_creer_reservations(request):
             return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         return Response(ReservationSerializer(reservation).data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_bibliotheque_reservations')
@@ -666,23 +728,33 @@ def annuler_reservation(request, pk):
     reservation.statut = StatutReservation.ANNULEE
     reservation.save(update_fields=['statut'])
     return Response(ReservationSerializer(reservation).data)
+
+
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_bibliotheque_reservations')
 def relancer_reservations(request):
-    """Envoie un rappel (notification) à tous les adhérents ayant une réservation 'DISPONIBLE'."""
+
     from apps.parametres.services import creer_notification
+
     reservations = Reservation.objects.filter(statut=StatutReservation.DISPONIBLE).select_related('adherent', 'ressource')
+
     nb_envoyes = 0
+
     for r in reservations:
-        user = getattr(r.adherent.personne, 'user', None)
+        user = _user_de_adherent(r.adherent)
+
         if user:
             creer_notification(
                 destinataire=user, titre="Ouvrage disponible",
                 message=f"« {r.ressource.titre} » est disponible. Merci de passer le récupérer avant le {r.date_expiration}.",
                 type_notification='info', envoyer_email=True,
             )
+
             nb_envoyes += 1
+
     return Response({'detail': f'{nb_envoyes} rappel(s) envoyé(s).'})
 
 

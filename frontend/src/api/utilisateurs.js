@@ -27,7 +27,7 @@ export const telechargerFichePersonnel = (id) => api.get(`utilisateurs/personnel
 
 
 // Formateurs
-export const getFormateurs = () => api.get('utilisateurs/formateurs/');
+export const getFormateurs = (params) => api.get('utilisateurs/formateurs/', { params });
 
 export const getFormateur = (id) => api.get(`utilisateurs/formateurs/${id}/`);
 

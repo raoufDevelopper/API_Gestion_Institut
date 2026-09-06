@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<style>
+    @page { size: A4; margin: 1.5cm; }
+    body { font-family: 'Helvetica', sans-serif; font-size: 9pt; color: #1a1a1a; }
+    .entete { background: #400c7c; color: white; padding: 14px 18px; border-radius: 6px; margin-bottom: 18px; }
+    .entete .titre { font-size: 15pt; font-weight: bold; }
+    .kpi-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+    .kpi-box { border: 1px solid #e5e7eb; border-radius: 6px; padding: 10px 14px; width: 30%; }
+    .kpi-box .valeur { font-size: 14pt; font-weight: bold; color: #400c7c; }
+    .kpi-box .label { font-size: 8pt; color: #6b7280; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    th, td { border: 1px solid #e2e8f0; padding: 5px 8px; font-size: 8pt; text-align: left; }
+    th { background: #ede4fb; color: #400c7c; }
+    h2 { font-size: 11pt; color: #400c7c; margin: 16px 0 8px; }
+</style>
+</head>
+<body>
+    <div class="entete">
+        <div class="titre">Dashboard — Résultats académiques</div>
+        <div>Généré le {{ date_generation }}</div>
+    </div>
+    <div class="kpi-grid">
+        <div class="kpi-box"><div class="valeur">{{ donnees.kpis.apprenants_evalues }}</div><div class="label">Apprenants évalués</div></div>
+        <div class="kpi-box"><div class="valeur">{{ donnees.kpis.moyenne_generale|default:"—" }}/20</div><div class="label">Moyenne générale</div></div>
+        <div class="kpi-box"><div class="valeur">{{ donnees.kpis.taux_reussite }}%</div><div class="label">Taux de réussite</div></div>
+        <div class="kpi-box"><div class="valeur">{{ donnees.kpis.taux_echec }}%</div><div class="label">Taux d'échec</div></div>
+        <div class="kpi-box"><div class="valeur">{{ donnees.kpis.taux_rattrapage }}%</div><div class="label">Taux de rattrapage</div></div>
+        <div class="kpi-box"><div class="valeur">{{ donnees.kpis.mentions }}</div><div class="label">Mentions obtenues</div></div>
+    </div>
+    <h2>Top 10 des meilleurs apprenants</h2>
+    <table>
+        <tr><th>Nom</th><th>Matricule</th><th>Classe</th><th>Moyenne</th><th>Mention</th></tr>
+        {% for a in donnees.top_apprenants %}
+        <tr><td>{{ a.nom }}</td><td>{{ a.matricule }}</td><td>{{ a.classe }}</td><td>{{ a.moyenne }}</td><td>{{ a.mention }}</td></tr>
+        {% endfor %}
+    </table>
+    <h2>Performance par filière</h2>
+    <table>
+        <tr><th>Filière</th><th>Apprenants</th><th>Moyenne</th><th>Taux de réussite</th></tr>
+        {% for f in donnees.toutes_filieres %}
+        <tr><td>{{ f.filiere }}</td><td>{{ f.apprenants }}</td><td>{{ f.moyenne }}</td><td>{{ f.taux_reussite }}%</td></tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

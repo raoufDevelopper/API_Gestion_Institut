@@ -64,14 +64,17 @@ img {
   margin: 0 auto 18px;
   font-size: 26px;
 }
+
 .alert-popup-card.succes .alert-popup-icon {
   background:rgba(34,197,94,.2);
   color:#22c55e;
 }
+
 .alert-popup-card.erreur .alert-popup-icon {
   background:rgba(239,68,68,.2);
   color: #dc2626;
 }
+
 .alert-popup-message {
   font-size: 14px;
   font-weight: 500;
@@ -80,6 +83,7 @@ img {
   line-height: 23px;
   letter-spacing: 2px;
 }
+
 .alert-popup-hint {
   font-size: 12px;
   color: #9ca3af;
@@ -100,6 +104,10 @@ img {
   STATUS
 =========================== */
 
+.academique .department-card .kpi-icon i {
+    color: #fff;
+}
+
 .badge .dot { 
   width: 6px; 
   height: 6px; 
@@ -108,27 +116,27 @@ img {
 }
 
 
-.blue.dot { 
+.blue.dot, .blue-icone { 
   background: #4441ff; 
 }
 
-.green.dot { 
+.green.dot, .green-icone { 
   background: #22c55e; 
 }
 
-.aqua.dot { 
+.aqua.dot, .aqua-icone { 
   background: hsl(180, 23%, 46%); 
 }
 
-.danger.dot { 
+.danger.dot, .red-icone { 
   background: #ef4444; 
 }
 
-.orange.dot { 
+.orange.dot, .orange-icone { 
   background:#f97316 !important; 
 }
 
-.violet.dot { 
+.violet.dot, .violet-icone { 
   background:#be5bf7 !important; 
 }
 
@@ -193,6 +201,32 @@ img {
     font-size: 22px;
 }
 
+
+
+
+.department-card.blue {
+    background: rgba(5, 5, 233, 0.15); 
+}
+
+.department-card.orange {
+    background:rgba(249,115,22,.15);
+}
+
+.department-card.green {
+    background:rgba(34,197,94,.15);
+}
+
+.department-card.red {
+    background:rgba(239,68,68,.15);
+}
+
+.department-card.aqua {
+    background:rgba(51, 153, 144, 0.15);
+}
+
+.department-card.violet {
+    background:rgba(188, 106, 255, 0.15);
+}
 
 
 
@@ -669,7 +703,8 @@ button:hover,
     line-height: 23px;
 }
 
-.container-principal .add #btnNewTeacher,
+.container-principal 
+.add #btnNewTeacher,
 #form button {
     background:linear-gradient(
         135deg,
@@ -684,7 +719,8 @@ button:hover,
     border-radius: 5px;
 }
 
-.container-principal .add #btnNewTeacher:hover, 
+.container-principal 
+.add #btnNewTeacher:hover, 
 #form button:hover {
     background:linear-gradient(
         135deg,
@@ -1179,4 +1215,79 @@ button:hover,
         transition: none;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*================= loader.jsx ===========================*/
+
+.loader-conteneur {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 60px 20px;
+}
+
+.loader-spinner {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 10px solid var(--card);
+  border-top-color: #7121cc;
+  animation: loader-tourner 0.8s linear infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.loader-point {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #893ae2;
+  animation: loader-pulser 1.2s ease-in-out infinite;
+}
+
+.loader-label {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: 2px;
+  margin-top: 15px;
+  color: #9ca3af;
+}
+
+@keyframes loader-tourner {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes loader-pulser {
+  0%, 100% { transform: scale(0.85); opacity: 0.6; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+
+
+
+
+
+
+
+
 

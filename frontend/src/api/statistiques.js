@@ -16,3 +16,9 @@ export const getFiltresFinance = () => api.get('statistiques/finance/filtres/');
 export const getDashboardDocuments = (params) => api.get('statistiques/documents/', { params });
 
 export const getFiltresDocuments = () => api.get('statistiques/documents/filtres/');
+
+export const exporterAcademiquePdf = (params) => api.get('statistiques/academique/export/pdf/', { params, responseType: 'blob' });
+
+export const exporterAcademiqueExcel = (params) => api.get('statistiques/academique/export/excel/', { params, responseType: 'blob' });
+
+

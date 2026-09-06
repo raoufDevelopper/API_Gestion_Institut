@@ -38,4 +38,5 @@ urlpatterns = [
     path('acquisitions/', views.liste_creer_acquisitions, name='liste_creer_acquisitions'),
     path('acquisitions/<int:pk>/', views.detail_acquisition, name='detail_acquisition'),
     path('acquisitions/<int:pk>/reception/', views.reception_acquisition, name='reception_acquisition'),
+    path('localisations/<int:pk>/', views.detail_localisation, name='detail_localisation'),
 ]

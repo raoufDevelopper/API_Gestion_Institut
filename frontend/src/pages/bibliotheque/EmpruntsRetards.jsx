@@ -4,6 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import { getRetards, relancerReservations } from '../../api/bibliotheque';
 import { useAlert } from '../../context/AlertContext';
 import '../../assets/css/crud.css';
+
+
+
 function EmpruntsRetards() {
   const [retards, setRetards] = useState([]);
   const [recherche, setRecherche] = useState('');
@@ -18,16 +21,28 @@ function EmpruntsRetards() {
       afficherErreur("Erreur lors de l'envoi des rappels.");
     }
   };
+
+
+
   return (
     <div className="container-principal">
       <div className="department-page">
+
         <div className="panel-head">
-          <div><h3 style={{ fontSize: '20px', marginBottom: '8px' }}>Emprunts en retard</h3></div>
+          <div>
+            <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>Emprunts en retard</h3>
+            <div className="sub">
+              Visualisez la liste des emprunts en retard et envoyez 
+              des rappels aux concernés.
+            </div>
+          </div>
         </div>
-        <div className="edt-alerte-conflits" style={{ marginBottom: '16px' }}>
+
+        <div className="edt-alerte-conflits" style={{ marginBottom: '0' }}>
           <i className="fas fa-triangle-exclamation"></i>
           <div>{retards.length} emprunt(s) en retard. Merci de rappeler les adhérents concernés.</div>
         </div>
+
         <div className="department-toolbar">
           <div className="toolbar-left">
             <div className="search-box">
@@ -36,11 +51,24 @@ function EmpruntsRetards() {
             </div>
           </div>
         </div>
+
+
         <div className="department-card table-card">
-          <div className="table-title"><h2>Retards</h2><span>{retards.length}</span></div>
+          <div className="table-title">
+            <h2>Retards</h2>
+            <span>{retards.length}</span>
+          </div>
           <div className="table-scroll">
             <table>
-              <thead><tr><th>Emprunteur</th><th>Ressource</th><th>Date retour prévu</th><th>Jours de retard</th><th>Actions</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>Emprunteur</th>
+                  <th>Ressource</th>
+                  <th>Date retour prévu</th>
+                  <th>Jours de retard</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
               <tbody>
                 {retards.map((r) => (
                   <tr className="row-link" key={r.id}>
@@ -58,7 +86,7 @@ function EmpruntsRetards() {
             </table>
           </div>
         </div>
-        <div style={{ marginTop: '16px' }}>
+        <div style={{ marginTop: '0px' }}>
           <button className="btn-primary addInscr" onClick={envoyerRappels}>Envoyer des rappels à tous</button>
         </div>
       </div>

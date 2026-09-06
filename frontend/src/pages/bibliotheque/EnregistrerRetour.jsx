@@ -4,6 +4,8 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { getEmprunts, retournerEmprunt } from '../../api/bibliotheque';
 import { useAlert } from '../../context/AlertContext';
 import '../../assets/css/crud.css';
+
+
 function EnregistrerRetour() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -39,52 +41,115 @@ function EnregistrerRetour() {
       setEnCours(false);
     }
   };
+
+
+
+
   return (
     <div className="container-principal">
+
       <div className="department-page">
-        <div className="panel-head"><h3 style={{ fontSize: '20px' }}>Retour d'un exemplaire</h3></div>
-        <div className="department-card" style={{ padding: '20px', maxWidth: '600px' }}>
-          <div className="form-group" style={{ marginBottom: '16px' }}>
+
+        <div className="fi-header" style={{ marginBottom: "-25px" }}>
+          <div>
+            <button className="ud-retour" onClick={() => navigate('/bibliotheque/emprunts')}>
+              <i className="fas fa-arrow-left"></i> 
+              Retour à la liste 
+            </button>
+            <span> {' > '} Retour d'un exemplairet</span>
+          </div>
+        </div>
+
+        <div className="panel-head" style={{ marginBottom: '25px' }}>
+          <div>
+            <h3 style={{ fontSize: '20px' }}>Retour d'un exemplaire</h3>
+            <span className='sub'>Retourner un emprunt...</span>
+          </div>
+        </div>
+
+
+
+  
+        <div className="department-card" style={{ padding: '20px'}}>
+
+          <div className="fi-champ full" style={{ marginBottom: '16px' }}>
             <label>Scanner ou saisir le code de l'exemplaire</label>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <input type="text" value={codeRecherche} onChange={(e) => setCodeRecherche(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && rechercher()} placeholder="EX-2026-0001" />
-              <button className="btn-light" onClick={rechercher}><i className="fas fa-search"></i></button>
+          </div>
+
+          {/* TOOLBAR */}
+          <div className="department-toolbar" style={{ marginBottom: '25px' }}>
+            <div className="toolbar-left">
+              <div className="search-box" style={{ background: 'var(--bg)' }}>
+                <i className="fas fa-search"></i>
+                <input type="text"
+                  value={codeRecherche} 
+                  onChange={(e) => setCodeRecherche(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && rechercher()} 
+                  placeholder="EX-2026-0001" 
+                />
+              </div>
+            </div>
+            <div className="toolbar-right">
+              <button className="btn-primary addInscr" style={{ padding: '13px 20px', margin: '0' }} onClick={rechercher}>
+                <i className="fas fa-search"></i>
+              </button>
             </div>
           </div>
+    
+
           {emprunt && (
-            <>
-              <div className="dl-group" style={{ marginBottom: '16px' }}>
+            <div>
+
+              <div className="dl-group" style={{ marginBottom: '25px' }}>
                 <div className="dl-row"><span className="dl-k">Ressource</span><span className="dl-v">{emprunt.ressource_str}</span></div>
                 <div className="dl-row"><span className="dl-k">Emprunteur</span><span className="dl-v">{emprunt.adherent_str}</span></div>
                 <div className="dl-row"><span className="dl-k">Date d'emprunt</span><span className="dl-v">{new Date(emprunt.date_emprunt).toLocaleDateString('fr-FR')}</span></div>
                 <div className="dl-row"><span className="dl-k">Retour prévu</span><span className="dl-v">{new Date(emprunt.date_retour_prevue).toLocaleDateString('fr-FR')}</span></div>
                 {emprunt.est_en_retard && (
-                  <div className="dl-row"><span className="dl-k">Retard</span><span className="dl-v" style={{ color: '#dc2626' }}>{emprunt.jours_de_retard} jour(s)</span></div>
+                  <div className="dl-row"><span className="dl-k">Retard</span><span className="badge badge-danger">{emprunt.jours_de_retard} jour(s)</span></div>
                 )}
               </div>
-              <div className="form-group" style={{ marginBottom: '16px' }}>
-                <label>État de l'exemplaire</label>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+
+
+              <div>
+
+                <div>
+
+                  <label>État de l'exemplaire</label>
+
                   {[['BON', 'Bon'], ['ABIME', 'Abîmé'], ['TRES_ABIME', 'Très abîmé'], ['PERDU', 'Perdu']].map(([val, label]) => (
-                    <label key={val} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <input type="radio" name="etat" value={val} checked={etatRetour === val} onChange={(e) => setEtatRetour(e.target.value)} />
-                      {label}
+                    
+                    <label className="dl-group" key={val}>
+                      <div className="dl-row"><span className="dl-k">{label}</span><span className="dl-v"><input type="radio" name="etat" value={val} checked={etatRetour === val} onChange={(e) => setEtatRetour(e.target.value)}/></span></div>
                     </label>
+                    
                   ))}
+
                 </div>
+
+
+                <div className="fi-champ" style={{ marginBottom: '16px' }}>
+                  <label>Commentaires</label>
+                  <textarea rows="2" value={commentaire} onChange={(e) => setCommentaire(e.target.value)}></textarea>
+                </div>
+                
+                <button className="btn-primary addInscr" onClick={enregistrer} disabled={enCours}>
+                  {enCours ? 'Enregistrement...' : 'Enregistrer le retour'}
+                </button>
+
               </div>
-              <div className="form-group" style={{ marginBottom: '16px' }}>
-                <label>Commentaires</label>
-                <textarea rows="2" value={commentaire} onChange={(e) => setCommentaire(e.target.value)}></textarea>
-              </div>
-              <button className="btn-primary addInscr" onClick={enregistrer} disabled={enCours} style={{ width: '100%' }}>
-                {enCours ? 'Enregistrement...' : 'Enregistrer le retour'}
-              </button>
-            </>
+              
+            </div>
           )}
+
         </div>
+
       </div>
+
     </div>
+
   );
+
 }
+
+
 export default EnregistrerRetour;

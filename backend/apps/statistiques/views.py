@@ -1,134 +1,225 @@
 from decimal import Decimal
+
 from django.db.models import Avg, Count, Q, Sum
+
 from django.utils import timezone
+
 from rest_framework.decorators import api_view, permission_classes
+
 from rest_framework.permissions import IsAuthenticated
+
 from rest_framework.response import Response
+
 from apps.authentification.decorators import permission_requise
-from apps.notes.models import Note, Deliberation, TypeEvaluation
-from apps.notes.services import calculer_moyenne_generale, mention
+
+from apps.notes.models import Note, Deliberation
+
+from apps.notes.services import mention
+
 from apps.utilisateurs.models import Etudiant
+
 from apps.academique.models import AnneeAcademique, Filiere, Specialite, Classe, Niveau, Matiere
+
 from django.db.models.functions import TruncMonth
+
 from apps.finances.models import Paiement, Depense, Inscription, CaisseSession, TypePaiement, CategorieDepense
-from apps.bibliotheque.models import (
-    Ressource, Exemplaire, Emprunt, Adherent, Reservation, Penalite, Categorie,
-    StatutExemplaire, StatutEmprunt, StatutReservation,
-)
 
+from apps.bibliotheque.models import Ressource, Exemplaire, Emprunt, Adherent, Reservation, Penalite, Categorie, StatutExemplaire, StatutReservation
 
+import io
 
-def _appliquer_filtres_etudiants(etudiants, params):
-    filiere = params.get('filiere')
-    if filiere:
-        etudiants = etudiants.filter(specialite__filiere_id=filiere)
-    specialite = params.get('specialite')
-    if specialite:
-        etudiants = etudiants.filter(specialite_id=specialite)
-    classe = params.get('classe')
-    if classe:
-        etudiants = etudiants.filter(classe_id=classe)
-    niveau = params.get('niveau')
-    if niveau:
-        etudiants = etudiants.filter(niveau_id=niveau)
-    sexe = params.get('sexe')
-    if sexe:
-        etudiants = etudiants.filter(sexe=sexe)
-    return etudiants
+from django.http import HttpResponse
+
+from django.template.loader import render_to_string
+
+from weasyprint import HTML
+
+import openpyxl
+
+from openpyxl.styles import Font, PatternFill
 
 
 
 
+
+
+
+
+
+# ---------------------------------------------------------------------------
+# Helpers communs
+# ---------------------------------------------------------------------------
+def _deliberations_filtrees(params, annee_override=None, periode_override=None):
+    qs = Deliberation.objects.select_related(
+        'etudiant', 'etudiant__specialite__filiere', 'etudiant__specialite',
+        'etudiant__classe', 'etudiant__niveau',
+    )
+    annee_id = annee_override if annee_override is not None else params.get('annee_academique')
+    if annee_id:
+        qs = qs.filter(annee_academique_id=annee_id)
+    periode = periode_override if periode_override is not None else params.get('semestre')
+    if periode:
+        qs = qs.filter(periode=periode)
+    if params.get('filiere'):
+        qs = qs.filter(etudiant__specialite__filiere_id=params['filiere'])
+    if params.get('specialite'):
+        qs = qs.filter(etudiant__specialite_id=params['specialite'])
+    if params.get('classe'):
+        qs = qs.filter(etudiant__classe_id=params['classe'])
+    if params.get('niveau'):
+        qs = qs.filter(etudiant__niveau_id=params['niveau'])
+    if params.get('sexe'):
+        qs = qs.filter(etudiant__sexe=params['sexe'])
+    return qs
+
+
+
+def _notes_filtrees(params):
+    etudiants = Etudiant.objects.filter(statut='ACTIF')
+    if params.get('filiere'):
+        etudiants = etudiants.filter(specialite__filiere_id=params['filiere'])
+    if params.get('specialite'):
+        etudiants = etudiants.filter(specialite_id=params['specialite'])
+    if params.get('classe'):
+        etudiants = etudiants.filter(classe_id=params['classe'])
+    if params.get('niveau'):
+        etudiants = etudiants.filter(niveau_id=params['niveau'])
+    if params.get('sexe'):
+        etudiants = etudiants.filter(sexe=params['sexe'])
+    notes = Note.objects.filter(etudiant__in=etudiants)
+    if params.get('annee_academique'):
+        notes = notes.filter(annee_academique_id=params['annee_academique'])
+    if params.get('semestre'):
+        notes = notes.filter(semestre=params['semestre'])
+    if params.get('matiere'):
+        notes = notes.filter(matiere_id=params['matiere'])
+    return etudiants, notes
+
+
+
+def _stats_deliberations(qs):
+    """Calcule toutes les statistiques dérivées d'un queryset de Deliberation."""
+    total = qs.count()
+    if total == 0:
+        return {
+            'total': 0, 'admis': 0, 'ajournes': 0, 'redoublants': 0,
+            'taux_reussite': 0, 'taux_echec': 0, 'taux_rattrapage': 0,
+            'moyenne_generale': None, 'mentions': 0, 'taux_mentions': 0,
+            'meilleure': None, 'plus_faible': None,
+        }
+    admis = qs.filter(decision='ADMIS').count()
+    ajournes = qs.filter(decision='RATTRAPAGE').count()
+    redoublants = qs.filter(decision='REDOUBLANT').count()
+    moyennes_valides = qs.exclude(moyenne_generale__isnull=True)
+    moyenne_generale = moyennes_valides.aggregate(m=Avg('moyenne_generale'))['m']
+    mentions = moyennes_valides.filter(moyenne_generale__gte=10).count()
+    meilleure_dl = moyennes_valides.order_by('-moyenne_generale').first()
+    plus_faible_dl = moyennes_valides.order_by('moyenne_generale').first()
+    def _fiche(dl):
+        if not dl:
+            return None
+        etu = dl.etudiant
+        return {
+            'nom': f"{etu.nom} {etu.prenom}",
+            'matricule': etu.matricule,
+            'classe': str(etu.classe) if etu.classe else '—',
+            'moyenne': float(dl.moyenne_generale),
+        }
+    return {
+        'total': total, 'admis': admis, 'ajournes': ajournes, 'redoublants': redoublants,
+        'taux_reussite': round((admis / total) * 100, 1),
+        'taux_echec': round((redoublants / total) * 100, 1),
+        'taux_rattrapage': round((ajournes / total) * 100, 1),
+        'moyenne_generale': round(float(moyenne_generale), 2) if moyenne_generale is not None else None,
+        'mentions': mentions,
+        'taux_mentions': round((mentions / moyennes_valides.count()) * 100, 1) if moyennes_valides.count() else 0,
+        'meilleure': _fiche(meilleure_dl),
+        'plus_faible': _fiche(plus_faible_dl),
+    }
+
+
+
+
+def _periode_precedente(annee_id, semestre):
+    """Détermine (annee_id, periode) du semestre précédent pour la comparaison."""
+    if not semestre or not annee_id:
+        return None, None
+    try:
+        annee = AnneeAcademique.objects.get(pk=annee_id)
+    except AnneeAcademique.DoesNotExist:
+        return None, None
+    if semestre == 'S2':
+        return annee_id, 'S1'
+    if semestre == 'S1':
+        precedente = AnneeAcademique.objects.filter(date_debut__lt=annee.date_debut).order_by('-date_debut').first()
+        if precedente:
+            return precedente.id, 'S2'
+    return None, None
+
+
+
+
+def _delta(actuel, precedent, relatif=False):
+    """Renvoie {valeur, sens} ou None si comparaison impossible."""
+    if actuel is None or precedent is None:
+        return None
+    if relatif:
+        if precedent == 0:
+            return None
+        valeur = round(((actuel - precedent) / precedent) * 100, 1)
+    else:
+        valeur = round(actuel - precedent, 2)
+    return {'valeur': valeur, 'sens': 'hausse' if valeur > 0 else ('baisse' if valeur < 0 else 'stable')}
+
+
+
+
+# ---------------------------------------------------------------------------
+# Dashboard principal
+# ---------------------------------------------------------------------------
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_notes')
 def dashboard_academique(request):
-    annee_id = request.GET.get('annee_academique')
-    semestre = request.GET.get('semestre')
-    matiere_id = request.GET.get('matiere')
+    params = request.GET
+    annee_id = params.get('annee_academique')
     if not annee_id:
-        annee = AnneeAcademique.objects.filter(statut=True).first()
-        annee_id = annee.id if annee else None
-    etudiants = Etudiant.objects.filter(statut='ACTIF')
-    etudiants = _appliquer_filtres_etudiants(etudiants, request.GET)
-    notes_qs = Note.objects.filter(etudiant__in=etudiants)
-    if annee_id:
-        notes_qs = notes_qs.filter(annee_academique_id=annee_id)
-    if semestre:
-        notes_qs = notes_qs.filter(semestre=semestre)
-    if matiere_id:
-        notes_qs = notes_qs.filter(matiere_id=matiere_id)
-    # ---- KPI ----
-    apprenants_evalues = notes_qs.values('etudiant').distinct().count()
+        annee_active = AnneeAcademique.objects.filter(statut=True).first()
+        annee_id = annee_active.id if annee_active else None
+    params_effectifs = params.copy()
+    params_effectifs['annee_academique'] = annee_id
+    # ---- Stats principales (basées sur les délibérations déjà calculées) ----
+    deliberations = _deliberations_filtrees(params_effectifs)
+    stats = _stats_deliberations(deliberations)
+    # ---- Stats de la période précédente (pour comparaison) ----
+    annee_prec_id, semestre_prec = _periode_precedente(annee_id, params.get('semestre'))
+    stats_prec = None
+    if annee_prec_id and semestre_prec:
+        deliberations_prec = _deliberations_filtrees(params_effectifs, annee_override=annee_prec_id, periode_override=semestre_prec)
+        stats_prec = _stats_deliberations(deliberations_prec)
+    comparaisons = {}
+    if stats_prec:
+        comparaisons = {
+            'apprenants_evalues': _delta(stats['total'], stats_prec['total'], relatif=True),
+            'taux_reussite': _delta(stats['taux_reussite'], stats_prec['taux_reussite']),
+            'taux_echec': _delta(stats['taux_echec'], stats_prec['taux_echec']),
+            'moyenne_generale': _delta(stats['moyenne_generale'], stats_prec['moyenne_generale']),
+        }
+    # ---- Notes brutes (évaluations, tranches, matières) ----
+    etudiants, notes_qs = _notes_filtrees(params_effectifs)
     evaluations_realisees = notes_qs.count()
-    moyennes_individuelles = []
-    for etudiant in etudiants.filter(id__in=notes_qs.values_list('etudiant', flat=True).distinct()):
-        semestres_a_calculer = [semestre] if semestre else ['S1', 'S2']
-        for sem in semestres_a_calculer:
-            if not annee_id:
-                continue
-            annee_obj = AnneeAcademique.objects.filter(id=annee_id).first()
-            if not annee_obj:
-                continue
-            moy, _ = calculer_moyenne_generale(etudiant, annee_obj, sem)
-            if moy is not None:
-                moyennes_individuelles.append({'etudiant': etudiant, 'moyenne': float(moy)})
-    moyenne_generale = None
-    taux_reussite = 0
-    taux_echec = 0
-    meilleure_moyenne = None
-    apprenants_difficulte = 0
-    if moyennes_individuelles:
-        valeurs = [m['moyenne'] for m in moyennes_individuelles]
-        moyenne_generale = round(sum(valeurs) / len(valeurs), 2)
-        nb_reussite = sum(1 for v in valeurs if v >= 10)
-        taux_reussite = round((nb_reussite / len(valeurs)) * 100, 1)
-        taux_echec = round(100 - taux_reussite, 1)
-        meilleure_moyenne = max(valeurs)
-        apprenants_difficulte = sum(1 for v in valeurs if v < 8)
-    kpis = {
-        'apprenants_evalues': apprenants_evalues,
-        'evaluations_realisees': evaluations_realisees,
-        'moyenne_generale': moyenne_generale,
-        'taux_reussite': taux_reussite,
-        'taux_echec': taux_echec,
-        'meilleure_moyenne': meilleure_moyenne,
-        'apprenants_en_difficulte': apprenants_difficulte,
-    }
-    # ---- Courbe : évolution moyenne dans le temps (par année académique) ----
-    evolution = []
-    for annee in AnneeAcademique.objects.order_by('date_debut'):
-        notes_annee = Note.objects.filter(etudiant__in=etudiants, annee_academique=annee)
-        if not notes_annee.exists():
-            continue
-        moys = []
-        for etu in etudiants.filter(id__in=notes_annee.values_list('etudiant', flat=True).distinct()):
-            for sem in ['S1', 'S2']:
-                moy, _ = calculer_moyenne_generale(etu, annee, sem)
-                if moy is not None:
-                    moys.append(float(moy))
-        if moys:
-            evolution.append({'annee': annee.libelle, 'moyenne': round(sum(moys) / len(moys), 2)})
-    # ---- Taux de réussite par filière ----
-    par_filiere = []
-    for filiere in Filiere.objects.filter(statut='actif'):
-        etus_filiere = etudiants.filter(specialite__filiere=filiere)
-        moys = []
-        for etu in etus_filiere:
-            if annee_id:
-                annee_obj = AnneeAcademique.objects.filter(id=annee_id).first()
-                for sem in ([semestre] if semestre else ['S1', 'S2']):
-                    if annee_obj:
-                        moy, _ = calculer_moyenne_generale(etu, annee_obj, sem)
-                        if moy is not None:
-                            moys.append(float(moy))
-        if moys:
-            taux = round((sum(1 for m in moys if m >= 10) / len(moys)) * 100, 1)
-            par_filiere.append({'filiere': filiere.nom, 'taux_reussite': taux})
-    # ---- Répartition par tranche de notes ----
+    comparaisons['evaluations_realisees'] = None
+    if stats_prec:
+        params_prec = params_effectifs.copy()
+        params_prec['annee_academique'] = annee_prec_id
+        params_prec['semestre'] = semestre_prec
+        _, notes_prec_qs = _notes_filtrees(params_prec)
+        comparaisons['evaluations_realisees'] = _delta(evaluations_realisees, notes_prec_qs.count(), relatif=True)
+    moyennes_deliberations = deliberations.exclude(moyenne_generale__isnull=True).values_list('moyenne_generale', flat=True)
     tranches = {'0-8': 0, '8-10': 0, '10-12': 0, '12-14': 0, '14-16': 0, '16-20': 0}
-    for m in moyennes_individuelles:
-        v = m['moyenne']
+
+    for v in moyennes_deliberations:
+        v = float(v)
         if v < 8: tranches['0-8'] += 1
         elif v < 10: tranches['8-10'] += 1
         elif v < 12: tranches['10-12'] += 1
@@ -136,62 +227,93 @@ def dashboard_academique(request):
         elif v < 16: tranches['14-16'] += 1
         else: tranches['16-20'] += 1
     repartition_tranches = [{'tranche': k, 'nombre': v} for k, v in tranches.items()]
-    # ---- Moyenne par matière ----
-    par_matiere = []
     matieres_concernees = Matiere.objects.filter(id__in=notes_qs.values_list('matiere', flat=True).distinct())
+    par_matiere = []
+
     for mat in matieres_concernees:
-        moy_mat = notes_qs.filter(matiere=mat).aggregate(m=Avg('valeur'))['m']
-        if moy_mat is not None:
-            par_matiere.append({'matiere': mat.nom, 'moyenne': round(float(moy_mat), 2)})
-    # ---- Comparaison hommes/femmes ----
+        moy = notes_qs.filter(matiere=mat).aggregate(m=Avg('valeur'))['m']
+        if moy is not None:
+            par_matiere.append({'matiere': mat.nom, 'moyenne': round(float(moy), 2)})
+    # ---- Comparaison sexe (sur délibérations) ----
     comparaison_sexe = []
-    for sexe_code, sexe_label in [('M', 'Masculin'), ('F', 'Féminin')]:
-        moys_sexe = [m['moyenne'] for m in moyennes_individuelles if m['etudiant'].sexe == sexe_code]
-        if moys_sexe:
-            comparaison_sexe.append({'sexe': sexe_label, 'moyenne': round(sum(moys_sexe) / len(moys_sexe), 2)})
+    for code, label in [('M', 'Masculin'), ('F', 'Féminin')]:
+        dl_sexe = deliberations.filter(etudiant__sexe=code).exclude(moyenne_generale__isnull=True)
+        if dl_sexe.exists():
+            comparaison_sexe.append({'sexe': label, 'moyenne': round(float(dl_sexe.aggregate(m=Avg('moyenne_generale'))['m']), 2)})
+    # ---- Performance par filière (top 5 + total pour "voir tout") ----
+    toutes_filieres = []
+    for filiere in Filiere.objects.filter(statut='actif'):
+        dl_filiere = deliberations.filter(etudiant__specialite__filiere=filiere)
+        s = _stats_deliberations(dl_filiere)
+        if s['total'] > 0:
+            toutes_filieres.append({'filiere': filiere.nom, 'apprenants': s['total'], 'moyenne': s['moyenne_generale'], 'taux_reussite': s['taux_reussite']})
+    toutes_filieres.sort(key=lambda x: x['taux_reussite'], reverse=True)
     # ---- Performance par classe ----
-    par_classe = []
+    toutes_classes = []
     for classe in Classe.objects.all():
-        moys_classe = [m['moyenne'] for m in moyennes_individuelles if m['etudiant'].classe_id == classe.id]
-        if moys_classe:
-            par_classe.append({'classe': str(classe), 'moyenne': round(sum(moys_classe) / len(moys_classe), 2)})
-    # ---- Meilleurs apprenants ----
-    top_apprenants = sorted(moyennes_individuelles, key=lambda x: x['moyenne'], reverse=True)[:10]
-    top_apprenants_data = [{
-        'nom': f"{m['etudiant'].nom} {m['etudiant'].prenom}",
-        'classe': str(m['etudiant'].classe) if m['etudiant'].classe else '—',
-        'specialite': str(m['etudiant'].specialite) if m['etudiant'].specialite else '—',
-        'moyenne': m['moyenne'],
-    } for m in top_apprenants]
-    # ---- Apprenants en difficulté ----
-    difficulte = sorted([m for m in moyennes_individuelles if m['moyenne'] < 8], key=lambda x: x['moyenne'])[:15]
-    difficulte_data = [{
-        'nom': f"{m['etudiant'].nom} {m['etudiant'].prenom}",
-        'classe': str(m['etudiant'].classe) if m['etudiant'].classe else '—',
-        'moyenne': m['moyenne'],
-    } for m in difficulte]
-    # ---- Matières à fort taux d'échec ----
-    matieres_echec = []
+        dl_classe = deliberations.filter(etudiant__classe=classe)
+        s = _stats_deliberations(dl_classe)
+        if s['total'] > 0:
+            toutes_classes.append({'classe': str(classe), 'apprenants': s['total'], 'moyenne': s['moyenne_generale']})
+    toutes_classes.sort(key=lambda x: x['moyenne'], reverse=True)
+    # ---- Classement complet des apprenants ----
+    classement_complet = []
+    for dl in deliberations.exclude(moyenne_generale__isnull=True).order_by('-moyenne_generale'):
+        etu = dl.etudiant
+        classement_complet.append({
+            'nom': f"{etu.nom} {etu.prenom}", 'matricule': etu.matricule,
+            'classe': str(etu.classe) if etu.classe else '—',
+            'specialite': str(etu.specialite) if etu.specialite else '—',
+            'moyenne': float(dl.moyenne_generale), 'mention': mention(dl.moyenne_generale),
+            'decision': dl.decision,
+        })
+    # ---- Alertes ----
+    matieres_fort_echec = []
     for mat in matieres_concernees:
         notes_mat = notes_qs.filter(matiere=mat)
         if notes_mat.count() == 0:
             continue
-        nb_echec = notes_mat.filter(valeur__lt=10).count()
-        taux_echec_mat = round((nb_echec / notes_mat.count()) * 100, 1)
+        taux_echec_mat = round((notes_mat.filter(valeur__lt=10).count() / notes_mat.count()) * 100, 1)
         if taux_echec_mat > 30:
-            matieres_echec.append({'matiere': mat.nom, 'taux_echec': taux_echec_mat})
-    matieres_echec.sort(key=lambda x: x['taux_echec'], reverse=True)
+            matieres_fort_echec.append({'matiere': mat.nom, 'taux_echec': taux_echec_mat})
+    matieres_fort_echec.sort(key=lambda x: x['taux_echec'], reverse=True)
+    notes_manquantes = etudiants.count() * matieres_concernees.count() - notes_qs.values('etudiant', 'matiere').distinct().count()
+    deliberations_incompletes = deliberations.filter(decision='INCOMPLET').count()
     return Response({
-        'kpis': kpis,
-        'evolution_moyenne': evolution,
-        'taux_reussite_par_filiere': par_filiere,
+        'kpis': {
+            'apprenants_evalues': stats['total'],
+            'evaluations_realisees': evaluations_realisees,
+            'moyenne_generale': stats['moyenne_generale'],
+            'taux_reussite': stats['taux_reussite'],
+            'taux_echec': stats['taux_echec'],
+            'taux_rattrapage': stats['taux_rattrapage'],
+            'redoublants': stats['redoublants'],
+            'mentions': stats['mentions'],
+            'taux_mentions': stats['taux_mentions'],
+            'meilleure_moyenne': stats['meilleure'],
+            'plus_faible_moyenne': stats['plus_faible'],
+        },
+        'comparaisons': comparaisons,
+        'repartition_resultats': [
+            {'statut': 'Admis', 'nb': stats['admis']},
+            {'statut': 'Ajournés', 'nb': stats['ajournes']},
+            {'statut': 'Redoublants', 'nb': stats['redoublants']},
+        ],
         'repartition_tranches': repartition_tranches,
         'moyenne_par_matiere': par_matiere,
         'comparaison_sexe': comparaison_sexe,
-        'performance_par_classe': par_classe,
-        'top_apprenants': top_apprenants_data,
-        'apprenants_en_difficulte': difficulte_data,
-        'matieres_fort_taux_echec': matieres_echec[:10],
+        'top_filieres': toutes_filieres[:5],
+        'toutes_filieres': toutes_filieres,
+        'top_classes': toutes_classes[:5],
+        'toutes_classes': toutes_classes,
+        'top_apprenants': classement_complet[:10],
+        'classement_complet': classement_complet,
+        'alertes': {
+            'apprenants_en_difficulte': deliberations.filter(decision='REDOUBLANT').count(),
+            'matieres_fort_taux_echec': matieres_fort_echec[:10],
+            'notes_manquantes': max(notes_manquantes, 0),
+            'deliberations_incompletes': deliberations_incompletes,
+        },
     })
 
 
@@ -201,7 +323,6 @@ def dashboard_academique(request):
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_notes')
 def filtres_academique(request):
-    """Fournit les options de tous les selects de filtres."""
     return Response({
         'annees_academiques': list(AnneeAcademique.objects.values('id', 'libelle')),
         'filieres': list(Filiere.objects.filter(statut='actif').values('id', 'nom')),
@@ -218,8 +339,64 @@ def filtres_academique(request):
 
 
 
+# ---------------------------------------------------------------------------
+# Exports
+# ---------------------------------------------------------------------------
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@permission_requise('gerer_notes')
+def export_academique_pdf(request):
+    reponse_dashboard = dashboard_academique(request._request)
+    donnees = reponse_dashboard.data
+    html_string = render_to_string('statistiques/academique_pdf.html', {
+        'donnees': donnees,
+        'date_generation': timezone.now().strftime('%d/%m/%Y à %H:%M'),
+    })
+    pdf_file = HTML(string=html_string, base_url=request.build_absolute_uri('/')).write_pdf()
+    response = HttpResponse(pdf_file, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="dashboard_academique.pdf"'
+    return response
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@permission_requise('gerer_notes')
+def export_academique_excel(request):
+    reponse_dashboard = dashboard_academique(request._request)
+    donnees = reponse_dashboard.data
+    wb = openpyxl.Workbook()
+    entete_style = Font(bold=True, color='FFFFFF')
+    entete_fill = PatternFill(start_color='400C7C', end_color='400C7C', fill_type='solid')
+    ws1 = wb.active
+    ws1.title = 'KPI'
+    ws1.append(['Indicateur', 'Valeur'])
+    for cell in ws1[1]:
+        cell.font = entete_style
+        cell.fill = entete_fill
+    for cle, valeur in donnees['kpis'].items():
+        if isinstance(valeur, dict):
+            valeur = f"{valeur.get('nom', '')} ({valeur.get('moyenne', '')})" if valeur else '—'
+        ws1.append([cle, valeur])
+    ws2 = wb.create_sheet('Classement complet')
+    ws2.append(['Nom', 'Matricule', 'Classe', 'Spécialité', 'Moyenne', 'Mention', 'Décision'])
+    for cell in ws2[1]:
+        cell.font = entete_style
+        cell.fill = entete_fill
+    for e in donnees['classement_complet']:
+        ws2.append([e['nom'], e['matricule'], e['classe'], e['specialite'], e['moyenne'], e['mention'], e['decision']])
+    ws3 = wb.create_sheet('Filières')
+    ws3.append(['Filière', 'Apprenants', 'Moyenne', 'Taux de réussite'])
+    for cell in ws3[1]:
+        cell.font = entete_style
+        cell.fill = entete_fill
+    for f in donnees['toutes_filieres']:
+        ws3.append([f['filiere'], f['apprenants'], f['moyenne'], f['taux_reussite']])
+    buffer = io.BytesIO()
+    wb.save(buffer)
+    buffer.seek(0)
+    response = HttpResponse(buffer.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="dashboard_academique.xlsx"'
+    return response
 
 
 

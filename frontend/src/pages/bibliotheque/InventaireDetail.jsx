@@ -4,6 +4,9 @@ import { getInventaire, modifierLigneInventaire, cloturerInventaire } from '../.
 import { useAlert } from '../../context/AlertContext';
 import { STATUTS_CONSTATE, BADGE_STATUT_CONSTATE } from './bibliothequeConstantes';
 import '../../assets/css/crud.css';
+
+
+
 function InventaireDetail() {
   const { id } = useParams();
   const navigate = useNavigate();

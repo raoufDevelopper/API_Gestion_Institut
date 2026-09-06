@@ -23,16 +23,25 @@ function Classes() {
     const res = await getClasses();
     setClasses(res.data);
   };
+
   useEffect(() => {
     charger();
-    getSpecialites().then((res) => setSpecialites(res.data.resultats || res.data));
+    getSpecialites().then((res) => {
+      const toutes = res.data.resultats || res.data;
+      setSpecialites(toutes.filter((s) => s.statut === 'actif'));
+    });
     getNiveaux().then((res) => setNiveaux(res.data));
-    getFilieres().then((res) => setFilieres(res.data.resultats || res.data));
+    getFilieres().then((res) => {
+      const toutes = res.data.resultats || res.data;
+      setFilieres(toutes.filter((f) => f.statut === 'actif'));
+    });
   }, []);
+  
   const classesFiltrees = classes.filter((c) => {
     const texte = ((c.specialite_code || '') + ' ' + (c.niveau_nom || '') + ' ' + (c.filiere_nom || '')).toLowerCase();
     return texte.includes(recherche.toLowerCase());
   });
+  
   const ouvrirCreation = () => {
     setClasseEnEdition(null);
     reset({ specialite: '', niveau: '', filiere: '', effectif: 0 });

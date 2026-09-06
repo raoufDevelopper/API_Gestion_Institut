@@ -53,7 +53,7 @@ function DiplomeGenerer() {
               Retour à la liste 
             </button>
             <div>
-              <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>Générer un diplôme</h3>
+              <h3 style={{ fontSize: '20px' }}>Générer un diplôme</h3>
               <div className="sub">{etape === 1 ? 'Sélectionner la délibération' : 'Vérification des informations'}</div>
             </div>
           </div>
@@ -67,10 +67,12 @@ function DiplomeGenerer() {
             <span className="num">2</span> Vérification
           </div>
         </div>
-        <div className="department-card" style={{ padding: '20px' }}>
+
+
+        <div className="department-card document" style={{ padding: '20px' }}>
           {etape === 1 && (
             <>
-              <div className="search-box" style={{ marginBottom: '16px' }}>
+              <div className="search-box" style={{ marginBottom: '30px' }}>
                 <i className="fas fa-search"></i>
                 <input
                   type="text"
@@ -79,51 +81,115 @@ function DiplomeGenerer() {
                   onChange={(e) => setRecherche(e.target.value)}
                 />
               </div>
+
               {deliberations.map((d) => (
                 <div
                   key={d.id}
                   className={`doc-etudiant-card ${selection?.id === d.id ? 'selectionne' : ''}`}
                   onClick={() => setSelection(d)}
                 >
-                  <div>
-                    <div style={{ fontWeight: 700, fontSize: '14px' }}>{d.etudiant_str}</div>
-                    <div style={{ fontSize: '12px', color: '#9ca3af' }}>
-                      {d.etudiant_formation} — Année académique : {d.annee_academique_libelle} — Décision : {d.decision}
+                  <div className='doc-etudiant-cards'>
+                    <div className='doc-etudiant-name'>{d.etudiant_str}</div>
+                    <div className='doc-etudiant-spe'>
+                      {d.etudiant_formation} — Année académique : {d.annee_academique_libelle}
                     </div>
+                    <span className = {`badge-${d.decision ? 'success' : 'danger'}`} style={{ width: '120px' }}>
+                      <p className='bull'>&bull;</p>
+                      {d.decision}
+                    </span>
                   </div>
+
                   <div className="check">{selection?.id === d.id && <i className="fas fa-check" style={{ fontSize: '11px' }}></i>}</div>
+                
                 </div>
+              
               ))}
+              
+              
               {deliberations.length === 0 && (
                 <div className="empty">Aucune délibération éligible (année complète, décision ADMIS, sans diplôme déjà généré).</div>
               )}
-              <div className="modal-footer">
+              
+              <div>
                 <button className="btn-primary addInscr" onClick={continuer}>Continuer</button>
               </div>
+          
             </>
+          
           )}
+
+
+
+
+
+
+
           {etape === 2 && selection && (
             <>
               <div className="dl-group">
-                <div className="dl-row"><span className="dl-k">Étudiant</span><span className="dl-v">{selection.etudiant_str}</span></div>
-                <div className="dl-row"><span className="dl-k">Formation</span><span className="dl-v">{selection.etudiant_formation}</span></div>
-                <div className="dl-row"><span className="dl-k">Année académique</span><span className="dl-v">{selection.annee_academique_libelle}</span></div>
-                <div className="dl-row"><span className="dl-k">Période</span><span className="dl-v">{selection.periode}</span></div>
-                <div className="dl-row"><span className="dl-k">Décision</span><span className="dl-v"><span className="badge badge-success"><span className="dot"></span>{selection.decision}</span></span></div>
-                <div className="dl-row"><span className="dl-k">Mention</span><span className="dl-v">{selection.mention}</span></div>
-                <div className="dl-row"><span className="dl-k">Date d'obtention</span><span className="dl-v">{new Date().toLocaleDateString('fr-FR')}</span></div>
+                <div className="dl-row">
+                  <span className="dl-k">Étudiant</span>
+                  <span className="dl-v etu">{selection.etudiant_str}</span>
+                </div>
+                
+                <div className="dl-row">
+                  <span className="dl-k">Formation</span>
+                  <span className="dl-v">{selection.etudiant_formation}</span>
+                </div>
+                
+                <div className="dl-row">
+                  <span className="dl-k">Année académique</span>
+                  <span className="dl-v">{selection.annee_academique_libelle}</span>
+                </div>
+                
+                <div className="dl-row">
+                  <span className="dl-k">Période</span>
+                  <span className="dl-v">{selection.periode}</span>
+                </div>
+                
+                <div className="dl-row">
+                  <span className="dl-k">Décision</span>
+                  <span className="dl-v">
+                    <span className={`badge-${selection.decision ? 'success' : 'danger'}`}>
+                      <p className='bull'>&bull;</p> {selection.decision}
+                    </span>
+                  </span>
+                </div>
+                
+                <div className="dl-row">
+                  <span className="dl-k">Mention</span>
+                  <span className="badge badge-violet">
+                    <p className='bull'>&bull;</p> 
+                    {selection.mention}
+                  </span>
+                </div>
+                
+                <div className="dl-row">
+                  <span className="dl-k">Date d'obtention</span>
+                  <span className="dl-v">{new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                </div>
               </div>
-              <div className="modal-footer">
+
+              <div style={{ display: "flex", gap: "10px" }}>
                 <button className="btn-light" onClick={() => setEtape(1)}>Retour</button>
                 <button className="btn-primary addInscr" onClick={genererDiplome} disabled={enCours}>
                   {enCours ? 'Génération...' : 'Générer le diplôme'}
                 </button>
               </div>
+
             </>
           )}
         </div>
+
       </div>
+
     </div>
+
   );
+
 }
+
+
+
+
 export default DiplomeGenerer;

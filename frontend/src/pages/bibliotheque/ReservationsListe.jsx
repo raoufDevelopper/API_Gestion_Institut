@@ -1,10 +1,12 @@
-
+ 
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { getReservations, creerReservation, annulerReservation, getAdherents, getRessources } from '../../api/bibliotheque';
 import { useAlert } from '../../context/AlertContext';
 import { STATUTS_RESERVATION, BADGE_STATUT_RESERVATION } from './bibliothequeConstantes';
 import '../../assets/css/crud.css';
+
+
 function ReservationsListe() {
   const [reservations, setReservations] = useState([]);
   const [adherents, setAdherents] = useState([]);
@@ -19,7 +21,9 @@ function ReservationsListe() {
     getAdherents({ statut: 'ACTIF' }).then((res) => setAdherents(res.data));
     getRessources().then((res) => setRessources(res.data));
   }, []);
+
   const ouvrirCreation = () => { reset({ adherent: '', ressource: '' }); setModalOuvert(true); };
+
   const onSubmit = async (data) => {
     try {
       await creerReservation(data);
@@ -30,6 +34,7 @@ function ReservationsListe() {
       afficherErreur(err.response?.data?.detail || 'Erreur lors de la création.');
     }
   };
+
   const annuler = async (r) => {
     try {
       await annulerReservation(r.id);
@@ -39,9 +44,13 @@ function ReservationsListe() {
       afficherErreur("Erreur lors de l'annulation.");
     }
   };
+
+
+
   return (
     <div className="container-principal">
       <div className="department-page">
+
         <div className="panel-head">
           <div>
             <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>Liste des réservations</h3>
@@ -49,6 +58,7 @@ function ReservationsListe() {
           </div>
           <button className="btn-primary addInscr" onClick={ouvrirCreation}><i className="fas fa-plus"></i> Nouvelle réservation</button>
         </div>
+
         <div className="department-toolbar">
           <div className="toolbar-left">
             <div className="search-box"><i className="fas fa-search"></i>
@@ -56,11 +66,24 @@ function ReservationsListe() {
             </div>
           </div>
         </div>
+
         <div className="department-card table-card">
-          <div className="table-title"><h2>Réservations</h2><span>{reservations.length}</span></div>
+          <div className="table-title">
+            <h2>Réservations</h2>
+            <span>{reservations.length} réservations</span>
+          </div>
           <div className="table-scroll">
             <table>
-              <thead><tr><th>Ressource</th><th>Demandeur</th><th>Date</th><th>Position</th><th>Statut</th><th>Actions</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>Ressource</th>
+                  <th>Demandeur</th>
+                  <th>Date</th>
+                  <th>Position</th>
+                  <th>Statut</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
               <tbody>
                 {reservations.map((r) => (
                   <tr className="row-link" key={r.id}>
@@ -82,13 +105,21 @@ function ReservationsListe() {
           </div>
         </div>
       </div>
+
+
+
+
       <div className="department-modal" style={{ display: modalOuvert ? 'flex' : 'none' }}>
         <div className="modal-content">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #400c7c, #a14fff)' }}>
+          <div className="modal-header">
             <h2>Nouvelle réservation</h2>
-            <button className="addInscr" onClick={() => setModalOuvert(false)}><i className="fas fa-times"></i></button>
+            <button className="addInscr" onClick={() => setModalOuvert(false)}>
+              <i className="fas fa-times"></i>
+            </button>
           </div>
-          <form onSubmit={handleSubmit(onSubmit)} id="departmentForm">
+
+
+          <form onSubmit={handleSubmit(onSubmit)} id="departmentForm" style={{ height: '270px' }}>
             <div className="form-grid">
               <div className="form-group">
                 <div><label>Adhérent</label><span className="required" style={{ color: 'red' }}>*</span></div>
@@ -111,9 +142,23 @@ function ReservationsListe() {
               <button type="submit" className="btn-primary addInscr" disabled={isSubmitting}>{isSubmitting ? 'Création...' : 'Réserver'}</button>
             </div>
           </form>
+
+          <hr />
+                    
+          <p id="consigne">
+            Le remplissage des champs marqués avec (*) est obligatoire.
+            Soumettez le formulaire si consigne respectée !
+          </p>
+
         </div>
+
       </div>
+
     </div>
+
   );
+
 }
+
+
 export default ReservationsListe;

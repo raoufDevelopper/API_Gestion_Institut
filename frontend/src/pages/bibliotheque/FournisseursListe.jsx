@@ -5,6 +5,9 @@ import { getFournisseurs, creerFournisseur, modifierFournisseur, supprimerFourni
 import { useAlert } from '../../context/AlertContext';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import '../../assets/css/crud.css';
+
+
+
 function FournisseursListe() {
   const [fournisseurs, setFournisseurs] = useState([]);
   const [recherche, setRecherche] = useState('');
@@ -34,23 +37,46 @@ function FournisseursListe() {
     catch (err) { afficherErreur('Erreur lors de la suppression.'); }
     finally { setSuppressionEnCours(false); }
   };
+
+
+
+
+
   return (
     <div className="container-principal">
       <div className="department-page">
+
         <div className="panel-head">
-          <div><h3 style={{ fontSize: '20px', marginBottom: '8px' }}>Fournisseurs</h3><div className="sub">Suivre les fournisseurs de ressources</div></div>
+          <div>
+            <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>Fournisseurs</h3>
+            <div className="sub">Suivre les fournisseurs de ressources</div>
+          </div>
           <button className="btn-primary addInscr" onClick={ouvrirCreation}><i className="fas fa-plus"></i> Ajouter un fournisseur</button>
         </div>
+        
         <div className="department-toolbar">
           <div className="toolbar-left">
             <div className="search-box"><i className="fas fa-search"></i><input type="text" placeholder="Rechercher..." value={recherche} onChange={(e) => setRecherche(e.target.value)} /></div>
           </div>
         </div>
+        
+        
         <div className="department-card table-card">
-          <div className="table-title"><h2>Fournisseurs</h2><span>{filtres.length}</span></div>
+          <div className="table-title">
+            <h2>Fournisseurs</h2>
+            <span>{filtres.length} Fournisseurs</span>
+          </div>
           <div className="table-scroll">
             <table>
-              <thead><tr><th>Nom</th><th>Téléphone</th><th>Email</th><th>Acquisitions</th><th>Actions</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>Nom</th>
+                  <th>Téléphone</th>
+                  <th>Email</th>
+                  <th>Acquisitions</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
               <tbody>
                 {filtres.map((f) => (
                   <tr className="row-link" key={f.id}>
@@ -67,9 +93,14 @@ function FournisseursListe() {
           </div>
         </div>
       </div>
+
+
+
+
+
       <div className="department-modal" style={{ display: modalOuvert ? 'flex' : 'none' }}>
         <div className="modal-content">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #400c7c, #a14fff)' }}>
+          <div className="modal-header">
             <h2>{fournisseurEnEdition ? 'Modifier le fournisseur' : 'Nouveau fournisseur'}</h2>
             <button className="addInscr" onClick={() => setModalOuvert(false)}><i className="fas fa-times"></i></button>
           </div>
@@ -84,9 +115,21 @@ function FournisseursListe() {
             </div>
             <div className="modal-footer"><button type="submit" className="btn-primary addInscr" disabled={isSubmitting}>Enregistrer</button></div>
           </form>
+
+          <hr />
+                    
+          <p id="consigne">
+            Le remplissage des champs marqués avec (*) est obligatoire.
+            Soumettez le formulaire si consigne respectée !
+          </p>
+
         </div>
       </div>
+
+
+
       <ConfirmationModal ouvert={!!fournisseurASupprimer} titre="Supprimer le fournisseur" message={`Voulez-vous vraiment supprimer « ${fournisseurASupprimer?.nom} » ?`} onConfirmer={confirmerSuppression} onAnnuler={() => setFournisseurASupprimer(null)} chargement={suppressionEnCours} />
+    
     </div>
   );
 }

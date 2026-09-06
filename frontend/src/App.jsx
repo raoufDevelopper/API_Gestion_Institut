@@ -15,6 +15,8 @@ import NonAutorise from './pages/NonAutorise';
 
 import Notifications from './pages/parametres/Notifications';
 import ParametresInstitut from './pages/parametres/ParametresInstitut';
+import Sauvegardes from './pages/parametres/Sauvegardes';
+import Archives from './pages/parametres/Archives';
 
 import Permissions from './pages/authentification/Permissions';
 import LoginRegister from './pages/authentification/LoginRegister';
@@ -92,6 +94,7 @@ import FournisseursListe from './pages/bibliotheque/FournisseursListe';
 import AuteursListe from './pages/bibliotheque/AuteursListe';
 import EditeursListe from './pages/bibliotheque/EditeursListe';
 import CategoriesListe from './pages/bibliotheque/CategoriesListe';
+import LocalisationsListe from './pages/bibliotheque/LocalisationsListe';
 
 import DashboardAcademique from './pages/statistiques/DashboardAcademique';
 import DashboardBibliotheque from './pages/statistiques/DashboardBibliotheque'
@@ -146,6 +149,19 @@ function App() {
                       <ParametresInstitut />
                     </RouteProtegee>
                   } />
+
+                  <Route path="/parametres/sauvegardes" element={
+                    <RouteProtegee permission="gerer_sauvegardes">
+                      <Sauvegardes />
+                    </RouteProtegee>
+                  } />
+                  
+                  <Route path="/parametres/archives" element={
+                    <RouteProtegee permission="gerer_archives">
+                      <Archives />
+                    </RouteProtegee>
+                  } />
+
 
 
 
@@ -634,6 +650,11 @@ function App() {
                     </RouteProtegee>
                   } />
 
+                  <Route path="/bibliotheque/localisations" element={
+                    <RouteProtegee permission="gerer_bibliotheque_exemplaires">
+                      <LocalisationsListe />
+                    </RouteProtegee>
+                  } />
 
 
 

@@ -1,11 +1,10 @@
 from django.db import models
 
-from django.utils import timezone
-
-from apps.academique.models import Filiere, Specialite
 from apps.authentification.models import User
 
 from apps.parametres.models import generer_matricule
+
+from cloudinary_storage.storage import RawMediaCloudinaryStorage
 
 
 
@@ -58,11 +57,11 @@ class Etudiant(models.Model):
 
 
     # Documents / fichiers
-    cni = models.FileField(upload_to='etudiants/cni/', blank=True, null=True)
+    cni = models.FileField(upload_to='etudiants/cni/', storage=RawMediaCloudinaryStorage(), blank=True, null=True)
 
-    diplome = models.FileField(upload_to='etudiants/diplomes/', blank=True, null=True)
+    diplome = models.FileField(upload_to='etudiants/diplomes/', storage=RawMediaCloudinaryStorage(), blank=True, null=True)
 
-    acte_naissance = models.FileField(upload_to='etudiants/actes_naissance/', blank=True, null=True)
+    acte_naissance = models.FileField(upload_to='etudiants/actes_naissance/', storage=RawMediaCloudinaryStorage(), blank=True, null=True)
 
     photo = models.ImageField(upload_to='etudiants/photos/', blank=True, null=True)
 
@@ -143,13 +142,13 @@ class Personnel(models.Model):
 
 
     # Documents / fichiers
-    cni = models.FileField(upload_to='personnel/cni/', blank=True, null=True)
+    cni = models.FileField(upload_to='personnel/cni/', storage=RawMediaCloudinaryStorage(), blank=True, null=True)
 
-    diplome = models.FileField(upload_to='personnel/diplomes/', blank=True, null=True)
+    diplome = models.FileField(upload_to='personnel/diplomes/', storage=RawMediaCloudinaryStorage(), blank=True, null=True)
 
-    motivation = models.FileField(upload_to='personnel/motivations/', blank=True, null=True)
+    motivation = models.FileField(upload_to='personnel/motivations/', storage=RawMediaCloudinaryStorage(), blank=True, null=True)
 
-    recommandation = models.FileField(upload_to='personnel/recommandations/', blank=True, null=True)
+    recommandation = models.FileField(upload_to='personnel/recommandations/', storage=RawMediaCloudinaryStorage(), blank=True, null=True)
 
     photo = models.ImageField(upload_to='personnel/photos/', blank=True, null=True)
 

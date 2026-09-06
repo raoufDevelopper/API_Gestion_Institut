@@ -5,6 +5,8 @@ import { getEditeurs, creerEditeur, modifierEditeur, supprimerEditeur } from '..
 import { useAlert } from '../../context/AlertContext';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import '../../assets/css/crud.css';
+
+
 function EditeursListe() {
   const [editeurs, setEditeurs] = useState([]);
   const [recherche, setRecherche] = useState('');
@@ -32,18 +34,33 @@ function EditeursListe() {
     catch (err) { afficherErreur('Erreur.'); }
     finally { setSuppressionEnCours(false); }
   };
+
+
+
+
+
   return (
     <div className="container-principal">
       <div className="department-page">
+        
         <div className="panel-head">
-          <div><h3 style={{ fontSize: '20px', marginBottom: '8px' }}>Éditeurs</h3></div>
+          <div>
+            <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>Éditeurs</h3>
+            <div className="sub">Gérez les éditeurs ici ...</div>
+          </div>
           <button className="btn-primary addInscr" onClick={ouvrirCreation}><i className="fas fa-plus"></i> Ajouter un éditeur</button>
         </div>
+        
         <div className="department-toolbar">
           <div className="toolbar-left"><div className="search-box"><i className="fas fa-search"></i><input type="text" placeholder="Rechercher..." value={recherche} onChange={(e) => setRecherche(e.target.value)} /></div></div>
         </div>
+        
+        
         <div className="department-card table-card">
-          <div className="table-title"><h2>Éditeurs</h2><span>{filtres.length}</span></div>
+          <div className="table-title">
+            <h2>Éditeurs</h2>
+            <span>{filtres.length} Éditeurs</span>
+          </div>
           <div className="table-scroll">
             <table>
               <thead><tr><th>Nom</th><th>Téléphone</th><th>Email</th><th>Ressources</th><th>Actions</th></tr></thead>
@@ -63,12 +80,17 @@ function EditeursListe() {
           </div>
         </div>
       </div>
+      
+      
+      
+      
       <div className="department-modal" style={{ display: modalOuvert ? 'flex' : 'none' }}>
         <div className="modal-content">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #400c7c, #a14fff)' }}>
+          <div className="modal-header">
             <h2>{editeurEnEdition ? "Modifier l'éditeur" : 'Nouvel éditeur'}</h2>
             <button className="addInscr" onClick={() => setModalOuvert(false)}><i className="fas fa-times"></i></button>
           </div>
+
           <form onSubmit={handleSubmit(onSubmit)} id="departmentForm">
             <div className="form-grid">
               <div className="form-group"><div><label>Nom</label><span className="required" style={{ color: 'red' }}>*</span></div><input type="text" {...register('nom', { required: true })} />{errors.nom && <div className="form-errors">Champ requis</div>}</div>
@@ -80,10 +102,24 @@ function EditeursListe() {
             </div>
             <div className="modal-footer"><button type="submit" className="btn-primary addInscr" disabled={isSubmitting}>Enregistrer</button></div>
           </form>
+
+          <hr />
+                    
+          <p id="consigne">
+            Le remplissage des champs marqués avec (*) est obligatoire.
+            Soumettez le formulaire si consigne respectée !
+          </p>
+
         </div>
       </div>
+
       <ConfirmationModal ouvert={!!editeurASupprimer} titre="Supprimer l'éditeur" message={`Voulez-vous vraiment supprimer « ${editeurASupprimer?.nom} » ?`} onConfirmer={confirmerSuppression} onAnnuler={() => setEditeurASupprimer(null)} chargement={suppressionEnCours} />
+    
     </div>
+
   );
+
 }
+
+
 export default EditeursListe;

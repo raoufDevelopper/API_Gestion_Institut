@@ -113,7 +113,7 @@ function DiplomesListe() {
                   <th>Étudiant</th>
                   <th>Mention</th>
                   <th>Date d'obtention</th>
-                  <th>Signé par</th>
+                  {/*<th>Signé par</th>*/}
                   <th>Statut</th>
                   <th>Actions</th>
                 </tr>
@@ -124,11 +124,11 @@ function DiplomesListe() {
                     <td className="cell-strong mono">{d.numero_diplome}</td>
                     <td>{d.etudiant_str}</td>
                     <td>{d.mention || '—'}</td>
-                    <td>{new Date(d.date_obtention).toLocaleDateString('fr-FR')}</td>
-                    <td>{d.signe_par_str || '—'}</td>
+                    <td>{new Date(d.date_obtention).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
+                    {/*<td>{d.signe_par_str || '—'}</td>*/}
                     <td>
                       <span className={`badge ${BADGE_STATUT_DIPLOME[d.statut]}`}>
-                        <span className="dot"></span>
+                        <p className='bull'>&bull;</p>
                         {STATUTS_DIPLOME.find((s) => s.value === d.statut)?.label}
                       </span>
                     </td>
@@ -136,7 +136,7 @@ function DiplomesListe() {
                       <button className="table-btn view" onClick={() => navigate(`/documents/diplomes/${d.id}`)}>
                         <i className="fas fa-eye"></i>
                       </button>
-                      <button className="table-btn" onClick={() => telecharger(d)}>
+                      <button className="table-btn download" onClick={() => telecharger(d)}>
                         <i className="fas fa-download"></i>
                       </button>
                     </td>

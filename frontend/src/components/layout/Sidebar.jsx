@@ -124,6 +124,7 @@ const MENUS = [
       { label: 'Auteurs', to: '/bibliotheque/auteurs', icone: 'fa-feather', permission: 'gerer_bibliotheque_auteurs' },
       { label: 'Éditeurs', to: '/bibliotheque/editeurs', icone: 'fa-building', permission: 'gerer_bibliotheque_editeurs' },
       { label: 'Catégories', to: '/bibliotheque/categories', icone: 'fa-tags', permission: 'gerer_bibliotheque_categories' },
+      { label: 'Localisations', to: '/bibliotheque/localisations', icone: 'fa-map-marker-alt' },
     ],
   },
   
@@ -266,7 +267,7 @@ function Sidebar({ fermee, affichee })
               )}
             
               {groupe.items.map((item) => (
-                <NavLink key={item.to} to={item.to} className={({ isActive }) => (isActive ? 'active' : '')}>
+                <NavLink key={item.to} to={item.to} end className={({ isActive }) => (isActive ? 'active' : '')}>
                   <i className={`fa-solid ${item.icone}`}></i>
                   {item.label}
                 </NavLink>

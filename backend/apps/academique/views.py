@@ -115,6 +115,10 @@ def liste_creer_filieres(request):
             'suspendu': Filiere.objects.filter(statut='suspendu').count(),
         }
 
+        statut = request.GET.get('statut')
+        if statut:
+            filieres = filieres.filter(statut=statut)
+
         return Response({
             'resultats': FiliereSerializer(filieres, many=True, context={'request': request}).data,
             'kpis': kpis,
@@ -194,6 +198,11 @@ def liste_creer_specialites(request):
             'inactif': Specialite.objects.filter(statut='inactif').count(),
             'suspendu': Specialite.objects.filter(statut='suspendu').count(),
         }
+
+        statut = request.GET.get('statut')
+        if statut:
+            specialites = specialites.filter(statut=statut)
+        
 
         return Response({
             'resultats': SpecialiteSerializer(specialites, many=True, context={'request': request}).data,
@@ -346,6 +355,10 @@ def liste_creer_salles(request):
             'maintenance': Salle.objects.filter(statut='maintenance').count(),
         }
 
+        statut = request.GET.get('statut')
+        if statut:
+            salles = salles.filter(statut=statut)
+
         return Response({
             'resultats': SalleSerializer(salles, many=True, context={'request': request}).data,
             'kpis': kpis,
@@ -426,6 +439,11 @@ def liste_creer_matieres(request):
             'inactif': Matiere.objects.filter(statut='inactif').count(),
             'suspendu': Matiere.objects.filter(statut='suspendu').count(),
         }
+
+        statut = request.GET.get('statut')
+
+        if statut:
+            matieres = matieres.filter(statut=statut)
 
         return Response({
             'resultats': MatiereSerializer(matieres, many=True, context={'request': request}).data,
@@ -667,14 +685,17 @@ def liste_creer_emplois_du_temps(request):
             'kpis': kpis,
         })
 
+
     serializer = EmploiDuTempsSerializer(data=request.data, context={'request': request})
 
-
     if serializer.is_valid():
+        try:
+            emploi = serializer.save()
 
-        serializer.save()
+        except DjangoValidationError as e:
+            return Response({'detail': ' '.join(e.messages)}, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(EmploiDuTempsSerializer(emploi, context={'request': request}).data, status=status.HTTP_201_CREATED)
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -697,11 +718,14 @@ def detail_emploi_du_temps(request, pk):
 
     if request.method == 'PATCH':
 
-        serializer = EmploiDuTempsSerializer(emploi, data=request.data, partial=True)
+        serializer = EmploiDuTempsSerializer(emploi, data=request.data, partial=True, context={'request': request})
 
         if serializer.is_valid():
+            try:
+                serializer.save()
 
-            serializer.save()
+            except DjangoValidationError as e:
+                return Response({'detail': ' '.join(e.messages)}, status=status.HTTP_400_BAD_REQUEST)
 
             return Response(serializer.data)
 
@@ -710,6 +734,7 @@ def detail_emploi_du_temps(request, pk):
     emploi.delete()
 
     return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 
 

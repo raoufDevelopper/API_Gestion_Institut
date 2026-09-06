@@ -263,10 +263,17 @@ def detail_personnel(request, pk):
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_formateurs')
 def liste_creer_formateurs(request):
+
     if request.method == 'GET':
         formateurs = Formateur.objects.all()
+
+        statut = request.GET.get('statut')
+        if statut:
+            formateurs = formateurs.filter(personnel__statut=statut)
+
         return Response(FormateurSerializer(formateurs, many=True).data)
     serializer = FormateurSerializer(data=request.data)
+
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)

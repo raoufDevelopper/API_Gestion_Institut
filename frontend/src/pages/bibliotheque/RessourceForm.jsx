@@ -8,7 +8,11 @@ import { useAlert } from '../../context/AlertContext';
 import { TYPES_RESSOURCE, ETATS_PHYSIQUE } from './bibliothequeConstantes';
 import '../../assets/css/crud.css';
 import '../../assets/css/documents.css';
+
+
 const ETAPES = ['Informations', 'Classification', 'Exemplaires', 'Résumé'];
+
+
 function RessourceForm() {
   const { id } = useParams();
   const modeEdition = !!id;
@@ -26,14 +30,22 @@ function RessourceForm() {
   const [couverturePreview, setCouverturePreview] = useState(null);
   const { register, handleSubmit, watch, trigger, reset, formState: { errors, isSubmitting } } = useForm();
   const donnees = watch();
+
   useEffect(() => {
     getAuteurs().then((res) => setAuteurs(res.data));
     getEditeurs().then((res) => setEditeurs(res.data));
     getCategories().then((res) => setCategories(res.data));
-    getFilieres().then((res) => setFilieres(res.data.resultats || res.data));
-    getSpecialites().then((res) => setSpecialites(res.data.resultats || res.data));
+    getFilieres().then((res) => {
+      const toutes = res.data.resultats || res.data;
+      setFilieres(toutes.filter((f) => f.statut === 'actif'));
+    });
+    getSpecialites().then((res) => {
+      const toutes = res.data.resultats || res.data;
+      setSpecialites(toutes.filter((s) => s.statut === 'actif'));
+    });
     getLocalisations().then((res) => setLocalisations(res.data));
   }, []);
+  
   useEffect(() => {
     if (!modeEdition) return;
     getRessource(id).then((res) => {
@@ -44,20 +56,24 @@ function RessourceForm() {
       if (res.data.couverture) setCouverturePreview(res.data.couverture);
     });
   }, [id, modeEdition, reset]);
+  
   const champsParEtape = [
     ['type_ressource', 'titre'],
     [],
     [],
     [],
   ];
+  
   const suivant = async () => {
     const valide = await trigger(champsParEtape[etape - 1]);
     if (valide) setEtape((e) => e + 1);
   };
+  
   const handleCouvertureChange = (e) => {
     const file = e.target.files[0];
     if (file) setCouverturePreview(URL.createObjectURL(file));
   };
+  
   const onSubmit = async (data) => {
     const formData = new FormData();
     Object.entries(data).forEach(([cle, valeur]) => {
@@ -86,12 +102,17 @@ function RessourceForm() {
       afficherErreur("Erreur lors de l'enregistrement de la ressource.");
     }
   };
+  
+  
+  
   return (
     <div className="container-principal">
       <div className="department-page">
+  
         <div className="panel-head">
           <h3 style={{ fontSize: '20px' }}>{modeEdition ? 'Modifier la ressource' : 'Ajouter une ressource'}</h3>
         </div>
+  
         <div className="doc-wizard-steps">
           {ETAPES.map((label, i) => (
             <div key={i} className={`doc-wizard-step ${etape === i + 1 ? 'actif' : ''} ${etape > i + 1 ? 'complete' : ''}`}>
@@ -99,31 +120,76 @@ function RessourceForm() {
             </div>
           ))}
         </div>
+
+
+
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="department-card" style={{ padding: '20px' }}>
+
             {etape === 1 && (
-              <div className="form-grid">
-                <div className="form-group">
+            
+              <div className="fi-grid">
+              
+                <div className="fi-champ">
                   <div><label>Type de ressource</label><span className="required" style={{ color: 'red' }}>*</span></div>
                   <select {...register('type_ressource', { required: true })}>
                     {TYPES_RESSOURCE.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
                   </select>
                 </div>
-                <div className="form-group">
+              
+                <div className="fi-champ">
                   <div><label>Titre</label><span className="required" style={{ color: 'red' }}>*</span></div>
                   <input type="text" {...register('titre', { required: true })} />
                   {errors.titre && <div className="form-errors">Champ requis</div>}
                 </div>
-                <div className="form-group">
+              
+                <div className="fi-champ">
                   <label>Sous-titre</label>
                   <input type="text" {...register('sous_titre')} />
                 </div>
-                <div className="form-group">
+              
+                <div className="fi-champ">
                   <label>ISBN / ISSN</label>
                   <input type="text" {...register('isbn_issn')} />
                 </div>
-                <div className="form-group">
-                  <label>Auteur(s)</label>
+              
+                <div className="fi-champ">
+                  <label>Éditeur</label>
+                  <select {...register('editeur')}>
+                    <option value="">Aucun</option>
+                    {editeurs.map((e) => <option key={e.id} value={e.id}>{e.nom}</option>)}
+                  </select>
+                </div>
+              
+                <div className="fi-champ">
+                  <label>Année de publication</label>
+                  <input type="number" {...register('annee_publication')} />
+                </div>
+              
+                <div className="fi-champ">
+                  <label>Édition</label>
+                  <input type="text" {...register('edition')} />
+                </div>
+              
+                <div className="fi-champ">
+                  <label>Langue</label>
+                  <input type="text" {...register('langue')} />
+                </div>
+              
+                {donnees.type_ressource === 'NUMERIQUE' && (
+                  <div className="fi-champ">
+                    <label>Fichier numérique</label>
+                    <input type="file" {...register('fichier_numerique')} />
+                  </div>
+                )}
+              
+                <div className="fi-champ full">
+                  <label>Description / résumé</label>
+                  <textarea rows="3" {...register('description')}></textarea>
+                </div>
+              
+                <div className="fi-champ">
+                  <label>Auteurs</label>
                   <div className="permissions-select">
                     {auteurs.map((a) => (
                       <label key={a.id} className="permission-checkbox">
@@ -132,91 +198,83 @@ function RessourceForm() {
                     ))}
                   </div>
                 </div>
-                <div className="form-group">
-                  <label>Éditeur</label>
-                  <select {...register('editeur')}>
-                    <option value="">Aucun</option>
-                    {editeurs.map((e) => <option key={e.id} value={e.id}>{e.nom}</option>)}
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label>Année de publication</label>
-                  <input type="number" {...register('annee_publication')} />
-                </div>
-                <div className="form-group">
-                  <label>Édition</label>
-                  <input type="text" {...register('edition')} />
-                </div>
-                <div className="form-group">
-                  <label>Langue</label>
-                  <input type="text" {...register('langue')} />
-                </div>
-                <div className="form-group avatar-upload-group">
-                  <label>Couverture</label>
+
+                <div className="fi-champ avatar-upload-group">
+                   <label>Couverture</label>
+                  <input type="file" accept="image/*" {...register('couverture', { onChange: handleCouvertureChange })} />
+                  <div className='text-help' style={{ color: '#9ca3af' }}>
+                    ajoutez la photo de couverture de la resource
+                  </div>
                   <div className="avatar-upload-preview">
                     {couverturePreview ? <img src={couverturePreview} alt="Aperçu" /> : <i className="fas fa-image"></i>}
                   </div>
-                  <input type="file" accept="image/*" {...register('couverture', { onChange: handleCouvertureChange })} />
                 </div>
-                <div className="form-group full">
-                  <label>Description / résumé</label>
-                  <textarea rows="3" {...register('description')}></textarea>
-                </div>
-                {donnees.type_ressource === 'NUMERIQUE' && (
-                  <div className="form-group full">
-                    <label>Fichier numérique</label>
-                    <input type="file" {...register('fichier_numerique')} />
-                  </div>
-                )}
+              
               </div>
+            
             )}
+            
+            
+            
+            
+            
             {etape === 2 && (
-              <div className="form-grid">
-                <div className="form-group">
+              <div className="fi-grid">
+
+                <div className="fi-champ">
                   <label>Catégorie</label>
                   <select {...register('categorie')}>
                     <option value="">Aucune</option>
                     {categories.map((c) => <option key={c.id} value={c.id}>{c.nom}</option>)}
                   </select>
                 </div>
-                <div className="form-group">
+                
+                <div className="fi-champ">
                   <label>Mots-clés</label>
                   <input type="text" placeholder="Séparés par des virgules" {...register('mots_cles')} />
                 </div>
-                <div className="form-group">
+                
+                <div className="fi-champ">
                   <label>Filière</label>
                   <select {...register('filiere')}>
                     <option value="">Aucune</option>
                     {filieres.map((f) => <option key={f.id} value={f.id}>{f.nom}</option>)}
                   </select>
                 </div>
-                <div className="form-group">
+                
+                <div className="fi-champ">
                   <label>Spécialité</label>
                   <select {...register('specialite')}>
                     <option value="">Aucune</option>
                     {specialites.map((s) => <option key={s.id} value={s.id}>{s.nom}</option>)}
                   </select>
                 </div>
+              
               </div>
+            
             )}
-            {etape === 3 && !modeEdition && (
-              <div className="form-grid">
-                <div className="form-group">
+            
+            
+            {etape === 3 && (
+              <div className="fi-grid">
+               
+                <div className="fi-champ">
                   <label>Nombre d'exemplaires à créer</label>
                   <input type="number" min="0" max="100" value={nbExemplairesInitiaux} onChange={(e) => setNbExemplairesInitiaux(Number(e.target.value))} />
                 </div>
-                <div className="form-group">
+               
+                <div className="fi-champ">
                   <label>Localisation</label>
                   <select value={localisationEx} onChange={(e) => setLocalisationEx(e.target.value)}>
-                    <option value="">Non localisé</option>
+                    <option value="Non localisé">Non localisé</option>
                     {localisations.map((l) => <option key={l.id} value={l.id}>{[l.salle, l.rayon, l.etagere].filter(Boolean).join(' → ')}</option>)}
                   </select>
                 </div>
+
               </div>
             )}
-            {etape === 3 && modeEdition && (
-              <div className="empty">La gestion des exemplaires se fait depuis la fiche de la ressource.</div>
-            )}
+
+
             {etape === 4 && (
               <div className="dl-group">
                 <div className="dl-row"><span className="dl-k">Titre</span><span className="dl-v">{donnees.titre}</span></div>
@@ -225,6 +283,8 @@ function RessourceForm() {
                 {!modeEdition && <div className="dl-row"><span className="dl-k">Exemplaires à créer</span><span className="dl-v">{nbExemplairesInitiaux}</span></div>}
               </div>
             )}
+            
+            
             <div className="modal-footer" style={{ padding: '20px 0 0' }}>
               {etape > 1 && <button type="button" className="btn-light" onClick={() => setEtape((e) => e - 1)}>Précédent</button>}
               {etape < 4 ? (
@@ -235,10 +295,19 @@ function RessourceForm() {
                 </button>
               )}
             </div>
+
           </div>
+
         </form>
+
       </div>
+
     </div>
+
   );
+
 }
+
+
+
 export default RessourceForm;

@@ -65,6 +65,10 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
+
+    #cloudinary
+    'cloudinary_storage',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -191,3 +195,14 @@ SIMPLE_JWT = {
 #BREVO_API_KEY = 'ta_cle_api_brevo'  # à mettre idéalement dans .env
 #BREVO_SENDER_NAME = "IFP Perle d'Or"
 #BREVO_SENDER_EMAIL = "no-reply@ifp-perledor.com"
+
+
+
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': config('CLOUDINARY_API_KEY'),
+    'API_SECRET': config('CLOUDINARY_API_SECRET'),
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'

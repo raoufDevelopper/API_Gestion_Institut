@@ -31,7 +31,7 @@ function InscriptionsListe() {
   };
   useEffect(() => {
     charger();
-    getEtudiants().then((res) => setEtudiants(res.data));
+    getEtudiants().then((res) => setEtudiants(res.data.filter((e) => e.statut === 'ACTIF')));
     getClasses().then((res) => setClasses(res.data));
     getAnneesAcademiques().then((res) => setAnneesAcademiques(res.data.resultats || res.data));
   }, []);

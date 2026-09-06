@@ -33,7 +33,10 @@ function Tarifs() {
   useEffect(() => {
     charger();
     getTypesPaiement().then((res) => setTypesPaiement(res.data.resultats));
-    getSpecialites().then((res) => setSpecialites(res.data.resultats || res.data));
+    getSpecialites().then((res) => {
+      const toutes = res.data.resultats || res.data;
+      setSpecialites(toutes.filter((s) => s.statut === 'actif'));
+    });
     getNiveaux().then((res) => setNiveaux(res.data));
     getAnneesAcademiques().then((res) => setAnneesAcademiques(res.data.resultats || res.data));
   }, []);

@@ -9,6 +9,7 @@ import ConfirmationModal from '../../components/ConfirmationModal';
 import Pagination from '../../components/Pagination';
 import '../../assets/css/crud.css';
 
+
 const PAR_PAGE = 10;
 
 
@@ -28,16 +29,20 @@ function DocumentsListe() {
   const navigate = useNavigate();
   const { register, handleSubmit, reset, watch, formState: { isSubmitting, errors } } = useForm();
   const concerneType = watch('concerne_type');
+
   const charger = async () => {
     const res = await getDocuments();
     setDocuments(res.data);
   };
+
   useEffect(() => {
     charger();
-    getEtudiants().then((res) => setEtudiants(res.data));
-    getPersonnels().then((res) => setPersonnels(res.data));
+    getEtudiants().then((res) => setEtudiants(res.data.filter((e) => e.statut === 'ACTIF')));
+    getPersonnels().then((res) => setPersonnels(res.data.filter((p) => p.statut === 'ACTIF')));
   }, []);
+  
   const categories = Array.from(new Set(documents.map((d) => d.categorie).filter(Boolean)));
+  
   const filtres = documents.filter((d) => {
     const texte = (d.titre + ' ' + (d.categorie || '')).toLowerCase();
     const matchRecherche = texte.includes(recherche.toLowerCase());
@@ -47,13 +52,17 @@ function DocumentsListe() {
       || (filtreConcerne === 'personnel' && d.concerne_personnel);
     return matchRecherche && matchCategorie && matchConcerne;
   });
+  
   const totalPages = Math.max(1, Math.ceil(filtres.length / PAR_PAGE));
+  
   const pageActuelle = filtres.slice((page - 1) * PAR_PAGE, page * PAR_PAGE);
+  
   const ouvrirCreation = () => {
     setDocumentEnEdition(null);
     reset({ titre: '', categorie: '', concerne_type: '', concerne_etudiant: '', concerne_personnel: '' });
     setModalOuvert(true);
   };
+  
   const ouvrirEdition = (d) => {
     setDocumentEnEdition(d.id);
     reset({
@@ -64,6 +73,7 @@ function DocumentsListe() {
     });
     setModalOuvert(true);
   };
+  
   const onSubmit = async (data) => {
     const formData = new FormData();
     formData.append('titre', data.titre);
@@ -196,7 +206,7 @@ function DocumentsListe() {
 
       <div className="department-modal" style={{ display: modalOuvert ? 'flex' : 'none' }}>
         <div className="modal-content">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #7a5503,#d3b429)' }}>
+          <div className="modal-header">
             <h2>{documentEnEdition ? 'Modifier le document' : 'Ajouter un document'}</h2>
             <button className="btn-primary addInscr" onClick={() => setModalOuvert(false)}>
               <i className="fas fa-times"></i>

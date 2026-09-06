@@ -52,9 +52,9 @@ function AdherentsListe() {
   useEffect(() => { charger(); }, [recherche, filtreType, filtreStatut]);
   
   useEffect(() => {
-    getEtudiants().then((res) => setEtudiants(res.data));
-    getPersonnels().then((res) => setPersonnels(res.data));
-    getFormateurs().then((res) => setFormateurs(res.data));
+    getEtudiants().then((res) => setEtudiants(res.data.filter((e) => e.statut === 'ACTIF')));
+    getPersonnels().then((res) => setPersonnels(res.data.filter((p) => p.statut === 'ACTIF')));
+    getFormateurs({ statut: 'ACTIF' }).then((res) => setFormateurs(res.data));
   }, []);
   
   const ouvrirCreation = () => { reset({ type_personne: '', etudiant: '', personnel: '', formateur: '' }); setModalOuvert(true); };
@@ -106,14 +106,21 @@ function AdherentsListe() {
               <input type="text" placeholder="Rechercher un adhérent..." value={recherche} onChange={(e) => setRecherche(e.target.value)} />
             </div>
           </div>
-          <select className="filter-select" value={filtreType} onChange={(e) => setFiltreType(e.target.value)}>
-            <option value="">Type — tous</option>
-            {TYPES_ADHERENT.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
-          </select>
-          <select className="filter-select" value={filtreStatut} onChange={(e) => setFiltreStatut(e.target.value)}>
-            <option value="">Statut — tous</option>
-            {STATUTS_ADHERENT.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
-          </select>
+
+          <div className="toolbar-right">
+            <select className="filter-select" value={filtreType} onChange={(e) => setFiltreType(e.target.value)}>
+              <option value="">Type — tous</option>
+              {TYPES_ADHERENT.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
+            </select>
+          </div>
+
+          <div className="toolbar-right">
+            <select className="filter-select" value={filtreStatut} onChange={(e) => setFiltreStatut(e.target.value)}>
+              <option value="">Statut — tous</option>
+              {STATUTS_ADHERENT.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
+            </select>
+          </div>
+
         </div>
 
 
@@ -154,13 +161,18 @@ function AdherentsListe() {
           </div>
         </div>
       </div>
+
+
+
+
+
       <div className="department-modal" style={{ display: modalOuvert ? 'flex' : 'none' }}>
         <div className="modal-content">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #400c7c, #a14fff)' }}>
+          <div className="modal-header">
             <h2>{adherentEnEdition ? "Modifier l'adhérent" : 'Nouvel adhérent'}</h2>
             <button className="addInscr" onClick={() => setModalOuvert(false)}><i className="fas fa-times"></i></button>
           </div>
-          <form onSubmit={handleSubmit(onSubmit)} id="departmentForm">
+          <form onSubmit={handleSubmit(onSubmit)} id="departmentForm" style={{ height: '175px' }}>
             <div className="form-grid">
               {!adherentEnEdition && (
                 <>
@@ -215,6 +227,14 @@ function AdherentsListe() {
             </div>
             <div className="modal-footer"><button type="submit" className="btn-primary addInscr" disabled={isSubmitting}>Enregistrer</button></div>
           </form>
+
+          <hr />
+                    
+          <p id="consigne">
+            Le remplissage des champs marqués avec (*) est obligatoire.
+            Soumettez le formulaire si consigne respectée !
+          </p>
+
         </div>
       </div>
 

@@ -109,7 +109,7 @@ function Permissions() {
         
         <div className="modal-content model-detail">
           
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #1e3a8a, #2563eb)' }}>
+          <div className="modal-header">
             <h2>Détail de la permission</h2>
             <button onClick={() => setPermissionEnDetail(null)}>
               <i className="fas fa-times"></i>

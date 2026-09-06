@@ -44,7 +44,7 @@ export const supprimerTypeSalle = (id) => api.delete(`academique/types-salle/${i
 
 
 // Salle
-export const getSalles = () => api.get('academique/salles/');
+export const getSalles = (params) => api.get('academique/salles/', { params });
 
 export const creerSalle = (data) => api.post('academique/salles/', data);
 
@@ -54,7 +54,7 @@ export const supprimerSalle = (id) => api.delete(`academique/salles/${id}/`);
 
 
 // Matière
-export const getMatieres = () => api.get('academique/matieres/');
+export const getMatieres = (params) => api.get('academique/matieres/', { params });
 
 export const creerMatiere = (data) => api.post('academique/matieres/', data);
 

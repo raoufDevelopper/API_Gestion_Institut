@@ -8,10 +8,12 @@ import { useAlert } from '../../context/AlertContext';
 import { JOURS, TYPES_SEANCE, SEMESTRES, STATUTS_EMPLOI, detecterConflitsLocaux } from './emploiDuTempsConstantes';
 import '../../assets/css/crud.css';
 import '../../assets/css/emploiDuTemps.css';
+import Loader from '../../components/Loader';
 
 
 
 let compteurTemp = 0;
+
 const nouvelleSeanceVide = () => ({
   cle: `temp-${compteurTemp++}`,
   existingId: null,
@@ -19,7 +21,9 @@ const nouvelleSeanceVide = () => ({
   heure_debut: '08:00', heure_fin: '10:00',
 });
 
+
 const HEURE_MIN = 7;
+
 const HEURE_MAX = 20;
 
 
@@ -40,13 +44,14 @@ function EmploiDuTempsForm() {
   const [chargementInitial, setChargementInitial] = useState(modeEdition);
   const [vueCalendrier, setVueCalendrier] = useState(false);
   const [conflitsLocaux, setConflitsLocaux] = useState([]);
-  const { register, handleSubmit, reset, formState: { isSubmitting, errors } } = useForm();
+  const { register, handleSubmit, reset, watch, formState: { isSubmitting, errors } } = useForm();
+  const semaineDebut = watch('semaine_debut');
 
   useEffect(() => {
     getClasses().then((res) => setClasses(res.data));
-    getMatieres().then((res) => setMatieres(res.data.resultats || res.data));
-    getFormateurs().then((res) => setFormateurs(res.data));
-    getSalles().then((res) => setSalles(res.data.resultats || res.data));
+    getMatieres({ statut: 'actif' }).then((res) => setMatieres(res.data.resultats || res.data));
+    getFormateurs({ statut: 'ACTIF' }).then((res) => setFormateurs(res.data));
+    getSalles({ statut: 'disponible' }).then((res) => setSalles(res.data.resultats || res.data));
     getAnneesAcademiques().then((res) => setAnneesAcademiques(res.data.resultats || res.data));
   }, []);
 
@@ -162,7 +167,7 @@ function EmploiDuTempsForm() {
   };
 
   if (chargementInitial) {
-    return <div className="container-principal"><div className="empty">Chargement...</div></div>;
+    return <Loader label="Chargement..." />;
   }
   
   
@@ -251,7 +256,20 @@ function EmploiDuTempsForm() {
               
               <div className="fi-champ">
                 <label>Au</label>
-                <input type="date" {...register('semaine_fin')} />
+                <input
+                  type="date"
+                  {...register('semaine_fin', {
+                    validate: (value) => {
+                      if (!semaineDebut || !value) return true;
+                      const debut = new Date(semaineDebut);
+                      const fin = new Date(value);
+                      if (fin <= debut) return "La date de fin doit être postérieure à la date de début.";
+                      if ((fin - debut) / 86400000 < 6) return "L'écart doit être d'au moins une semaine.";
+                      return true;
+                    },
+                  })}
+                />
+                {errors.semaine_fin && <div className="form-errors">{errors.semaine_fin.message}</div>}
               </div>
               
               

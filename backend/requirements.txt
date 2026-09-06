@@ -3,13 +3,17 @@ brotli==1.2.0
 certifi==2026.7.22
 cffi==2.1.1
 charset-normalizer==3.4.9
+cloudinary==1.46.2
 cssselect2==0.9.0
 Django==5.2.17
+django-cloudinary-storage==0.3.0
 django-cors-headers==4.9.0
 djangorestframework==3.17.1
 djangorestframework_simplejwt==5.5.1
+et_xmlfile==2.0.0
 fonttools==4.63.0
 idna==3.18
+openpyxl==3.1.5
 pillow==12.3.0
 psycopg2-binary==2.9.12
 pycparser==3.0
@@ -19,6 +23,7 @@ pyphen==0.17.2
 python-decouple==3.8
 python-dotenv==1.2.2
 requests==2.34.2
+six==1.17.0
 sqlparse==0.5.5
 tinycss2==1.5.1
 tinyhtml5==2.1.0

@@ -31,7 +31,7 @@ function Filieres() {
 
   useEffect(() => {
     charger();
-    getPersonnels().then((res) => setPersonnels(res.data));
+    getPersonnels().then((res) => setPersonnels(res.data.filter((p) => p.statut === 'ACTIF')));
   }, []);
 
   const filieresFiltrees = donnees.resultats.filter((f) => {

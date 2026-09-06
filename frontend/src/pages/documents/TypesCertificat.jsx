@@ -5,6 +5,9 @@ import { getTypesCertificat, creerTypeCertificat, modifierTypeCertificat, suppri
 import { useAlert } from '../../context/AlertContext';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import '../../assets/css/crud.css';
+
+
+
 function TypesCertificat() {
   const [types, setTypes] = useState([]);
   const [recherche, setRecherche] = useState('');
@@ -60,6 +63,10 @@ function TypesCertificat() {
       setSuppressionEnCours(false);
     }
   };
+
+
+
+
   return (
     <div className="container-principal">
       <div className="department-page">
@@ -96,7 +103,7 @@ function TypesCertificat() {
                 <tr>
                   <th>Nom</th>
                   <th>Code</th>
-                  <th>Générable automatiquement</th>
+                  <th>Géné.auto</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -107,7 +114,7 @@ function TypesCertificat() {
                     <td className="mono">{t.code}</td>
                     <td>
                       <span className={`badge ${t.auto_generable ? 'badge-success' : 'badge-danger'}`}>
-                        <span className="dot"></span>
+                        <p className='bull'>&bull;</p>
                         {t.auto_generable ? 'Oui' : 'Non'}
                       </span>
                     </td>
@@ -134,13 +141,13 @@ function TypesCertificat() {
 
       <div className="department-modal" style={{ display: modalOuvert ? 'flex' : 'none' }}>
         <div className="modal-content">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #400c7c, #a14fff)' }}>
+          <div className="modal-header">
             <h2>{typeEnEdition ? 'Modifier le type de certificat' : 'Nouveau type de certificat'}</h2>
             <button className="btn-primary addInscr" onClick={() => setModalOuvert(false)}>
               <i className="fas fa-times"></i>
             </button>
           </div>
-          <form onSubmit={handleSubmit(onSubmit)} id="departmentForm">
+          <form onSubmit={handleSubmit(onSubmit)} id="departmentForm" style={{ height: '360px' }}>
             <div className="form-grid">
               <div className="form-group">
                 <div><label>Code</label><span className="required" style={{ color: 'red' }}>*</span></div>

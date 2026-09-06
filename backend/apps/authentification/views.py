@@ -25,14 +25,30 @@ from .decorators import permission_requise
 
 
 
+
+from django.core.cache import cache
+
+MAX_TENTATIVES = 3
+
+DUREE_BLOCAGE = 15 * 60  # secondes
+
+
 # ---------- AUTHENTIFICATION ----------
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_view(request):
 
-    email = request.data.get('email')
-
     password = request.data.get('password')
+
+    email = request.data.get('email', '').strip().lower()
+
+    ip = request.META.get('REMOTE_ADDR', 'inconnu')
+
+    if cache.get(f'login_bloque_compte:{email}') or cache.get(f'login_bloque_ip:{ip}'):
+        return Response(
+            {'detail': "Trop de tentatives échouées. Réessayez dans 15 minutes."},
+            status=status.HTTP_429_TOO_MANY_REQUESTS,
+        )
 
     try:
         user_obj = User.objects.get(email=email)
@@ -45,12 +61,37 @@ def login_view(request):
 
     user = authenticate(email=user_obj.email, password=password)
 
-    if user is None:
-        return Response({'detail': 'Echec de connexion.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+    if user is None:  # remplace par ta condition d'échec existante
+
+        nb_compte = cache.get(f'tentatives_compte:{email}', 0) + 1
+
+        nb_ip = cache.get(f'tentatives_ip:{ip}', 0) + 1
+
+        cache.set(f'tentatives_compte:{email}', nb_compte, DUREE_BLOCAGE)
+
+        cache.set(f'tentatives_ip:{ip}', nb_ip, DUREE_BLOCAGE)
+
+        if nb_compte >= MAX_TENTATIVES:
+            cache.set(f'login_bloque_compte:{email}', True, DUREE_BLOCAGE)
+
+        if nb_ip >= MAX_TENTATIVES:
+            cache.set(f'login_bloque_ip:{ip}', True, DUREE_BLOCAGE)
+
+        return Response({'detail': 'échec de connexion.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+    # authentification réussie : on réinitialise les compteurs
+    
+    cache.delete(f'tentatives_compte:{email}')
+
+    cache.delete(f'tentatives_ip:{ip}')
 
     refresh = RefreshToken.for_user(user)
 
     permissions = list(user.role.permissions.values_list('code', flat=True)) if user.role else []
+
 
     creer_notification(
         destinataire=user,

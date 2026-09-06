@@ -4,6 +4,9 @@ import { useForm } from 'react-hook-form';
 import { getInventaires, creerInventaire } from '../../api/bibliotheque';
 import { useAlert } from '../../context/AlertContext';
 import '../../assets/css/crud.css';
+
+
+
 function InventairesListe() {
   const [inventaires, setInventaires] = useState([]);
   const [modalOuvert, setModalOuvert] = useState(false);
@@ -12,6 +15,7 @@ function InventairesListe() {
   const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm();
   const charger = () => { getInventaires().then((res) => setInventaires(res.data)); };
   useEffect(() => { charger(); }, []);
+
   const onSubmit = async (data) => {
     try {
       const res = await creerInventaire(data);
@@ -22,17 +26,25 @@ function InventairesListe() {
       afficherErreur("Erreur lors du lancement de l'inventaire.");
     }
   };
+
+
+
   return (
     <div className="container-principal">
       <div className="department-page">
+
         <div className="panel-head">
           <div><h3 style={{ fontSize: '20px', marginBottom: '8px' }}>Inventaire</h3><div className="sub">Suivre les inventaires de la bibliothèque</div></div>
           <button className="btn-primary addInscr" onClick={() => { reset({ zone_concernee: '', observations: '' }); setModalOuvert(true); }}>
             <i className="fas fa-plus"></i> Nouvel inventaire
           </button>
         </div>
+
         <div className="department-card table-card">
-          <div className="table-title"><h2>Inventaires récents</h2><span>{inventaires.length}</span></div>
+          <div className="table-title">
+            <h2>Inventaires récents</h2>
+            <span>{inventaires.length} Inventaires</span>
+          </div>
           <div className="table-scroll">
             <table>
               <thead><tr><th>Date</th><th>Zone</th><th>Théoriques</th><th>Vérifiés</th><th>Anomalies</th><th>Statut</th><th>Actions</th></tr></thead>
@@ -54,13 +66,18 @@ function InventairesListe() {
           </div>
         </div>
       </div>
+
+
+
+
       <div className="department-modal" style={{ display: modalOuvert ? 'flex' : 'none' }}>
         <div className="modal-content">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #400c7c, #a14fff)' }}>
+          <div className="modal-header">
             <h2>Nouvel inventaire</h2>
             <button className="addInscr" onClick={() => setModalOuvert(false)}><i className="fas fa-times"></i></button>
           </div>
-          <form onSubmit={handleSubmit(onSubmit)} id="departmentForm">
+
+          <form onSubmit={handleSubmit(onSubmit)} id="departmentForm" style={{ height: '350px' }}>
             <div className="form-grid">
               <div className="form-group">
                 <label>Zone concernée</label>
@@ -73,6 +90,14 @@ function InventairesListe() {
             </div>
             <div className="modal-footer"><button type="submit" className="btn-primary addInscr" disabled={isSubmitting}>Lancer l'inventaire</button></div>
           </form>
+
+          <hr />
+                    
+          <p id="consigne">
+            Le remplissage des champs marqués avec (*) est obligatoire.
+            Soumettez le formulaire si consigne respectée !
+          </p>
+
         </div>
       </div>
     </div>

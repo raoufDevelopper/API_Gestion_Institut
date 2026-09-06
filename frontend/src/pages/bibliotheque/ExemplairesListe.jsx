@@ -94,25 +94,42 @@ function ExemplairesListe() {
           </div>
         </div>
 
+
         <div className="department-toolbar">
+
           <div className="toolbar-left">
             <div className="search-box">
               <i className="fas fa-search"></i>
               <input type="text" placeholder="Rechercher par code, ressource..." value={recherche} onChange={(e) => { setRecherche(e.target.value); setPage(1); }} />
             </div>
           </div>
-          <select className="filter-select" value={filtreStatut} onChange={(e) => { setFiltreStatut(e.target.value); setPage(1); }}>
-            <option value="">Statut — tous</option>
-            {STATUTS_EXEMPLAIRE.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
-          </select>
-          <select className="filter-select" value={filtreLocalisation} onChange={(e) => { setFiltreLocalisation(e.target.value); setPage(1); }}>
-            <option value="">Localisation — toutes</option>
-            {localisations.map((l) => <option key={l.id} value={l.id}>{[l.salle, l.rayon, l.etagere].filter(Boolean).join(' → ')}</option>)}
-          </select>
-          <select className="filter-select" value={filtreEtat} onChange={(e) => { setFiltreEtat(e.target.value); setPage(1); }}>
-            <option value="">État — tous</option>
-            {ETATS_PHYSIQUE.map((e) => <option key={e.value} value={e.value}>{e.label}</option>)}
-          </select>
+          
+        </div>
+
+
+        <div className="department-toolbar">
+
+          <div className="toolbar-left">
+            <select className="filter-select" value={filtreStatut} onChange={(e) => { setFiltreStatut(e.target.value); setPage(1); }}>
+              <option value="">Statut — tous</option>
+              {STATUTS_EXEMPLAIRE.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
+            </select>
+          </div>
+
+          <div className="toolbar-left">
+            <select className="filter-select" value={filtreLocalisation} onChange={(e) => { setFiltreLocalisation(e.target.value); setPage(1); }}>
+              <option value="">Localisation — toutes</option>
+              {localisations.map((l) => <option key={l.id} value={l.id}>{[l.salle, l.rayon, l.etagere].filter(Boolean).join(' → ')}</option>)}
+            </select>
+          </div>
+
+          <div className="toolbar-left">
+            <select className="filter-select" value={filtreEtat} onChange={(e) => { setFiltreEtat(e.target.value); setPage(1); }}>
+              <option value="">État — tous</option>
+              {ETATS_PHYSIQUE.map((e) => <option key={e.value} value={e.value}>{e.label}</option>)}
+            </select>
+          </div>
+          
         </div>
 
 
