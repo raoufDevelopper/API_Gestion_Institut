@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getRessource, creerExemplairesEnMasse, getLocalisations } from '../../api/bibliotheque';
 import { useAlert } from '../../context/AlertContext';
 import { TYPES_RESSOURCE, BADGE_STATUT_EXEMPLAIRE, STATUTS_EXEMPLAIRE, ETATS_PHYSIQUE } from './bibliothequeConstantes';
+import Loader from '../../components/Loader';
 import '../../assets/css/crud.css';
 import '../../assets/css/documents.css';
 
@@ -40,7 +41,7 @@ function RessourceDetail() {
   };
 
 
-  if (!ressource) return <div className="container-principal"><div className="empty">Chargement...</div></div>;
+  if (!ressource) return <Loader label="Chargement en cours..." />;
   
   
   
@@ -87,7 +88,7 @@ function RessourceDetail() {
             <div className="department-card table-card">
               
               <div className="table-title">
-                <h2>Exemplaires</h2><span>{ressource.exemplaires?.length || 0}</span>
+                <h2>Exemplaires</h2><span>{ressource.exemplaires?.length || 0} Exemplaires</span>
               </div>
               
               <div className="table-scroll">
@@ -98,8 +99,17 @@ function RessourceDetail() {
                       <tr key={ex.id}>
                         <td className="cell-strong mono">{ex.numero}</td>
                         <td>{ex.localisation_str || '—'}</td>
-                        <td>{ETATS_PHYSIQUE.find((e) => e.value === ex.etat)?.label}</td>
-                        <td><span className={`badge ${BADGE_STATUT_EXEMPLAIRE[ex.statut]}`}><span className="dot"></span>{STATUTS_EXEMPLAIRE.find((s) => s.value === ex.statut)?.label}</span></td>
+                        <td>
+                          <span className={`badge badge-${ETATS_PHYSIQUE.find((e) => e.value === ex.etat)?.label === "Bon" ? 'success' : 'orange'}`}>
+                            <p className='bull'>&bull;</p>
+                            {ETATS_PHYSIQUE.find((e) => e.value === ex.etat)?.label}
+                          </span>
+                        </td>
+                        <td>
+                          <span className={`badge ${BADGE_STATUT_EXEMPLAIRE[ex.statut]}`}>
+                            <p className='bull'>&bull;</p>
+                            {STATUTS_EXEMPLAIRE.find((s) => s.value === ex.statut)?.label}
+                          </span></td>
                         <td>
                           <button className="table-btn edit" onClick={() => navigate(`/bibliotheque/exemplaires?ressource=${id}`)}><i className="fas fa-pen"></i></button>
                         </td>

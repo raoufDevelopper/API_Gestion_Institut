@@ -6,6 +6,7 @@ app_name = 'statistiques'
 
 
 urlpatterns = [
+    path('accueil/', views.dashboard_accueil, name='dashboard_accueil'),
     path('academique/', views.dashboard_academique, name='dashboard_academique'),
     path('academique/filtres/', views.filtres_academique, name='filtres_academique'),
     path('academique/export/pdf/', views.export_academique_pdf, name='export_academique_pdf'),

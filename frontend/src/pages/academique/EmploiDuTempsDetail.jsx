@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getEmploiDuTemps, getSeances, telechargerEmploiDuTempsPdf, dupliquerEmploiDuTemps } from '../../api/emploisDuTemps';
 import { useAlert } from '../../context/AlertContext';
 import { JOURS, TYPES_SEANCE, STATUTS_EMPLOI, CLASSE_BADGE_STATUT, SEMESTRES } from './emploiDuTempsConstantes';
+import Loader from '../../components/Loader';
 import '../../assets/css/emploiDuTemps.css';
 
 
@@ -53,10 +54,10 @@ function EmploiDuTempsDetail() {
     }
   };
 
-  if (!emploi) {
-    return <div className="container-principal"><div className="empty">Chargement...</div></div>;
-  }
 
+  if (!emploi) {
+    return <Loader label="Chargement en cours..." />;
+  }
 
 
 

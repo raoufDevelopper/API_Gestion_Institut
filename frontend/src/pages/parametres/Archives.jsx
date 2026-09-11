@@ -3,20 +3,33 @@ import { getArchives, archiverAnneeAcademique } from '../../api/parametres';
 import { getAnneesAcademiques } from '../../api/academique';
 import { useAlert } from '../../context/AlertContext';
 import '../../assets/css/crud.css';
+
+
 function Archives() {
+
   const [archives, setArchives] = useState([]);
+
   const [anneesActives, setAnneesActives] = useState([]);
+
   const [modalOuvert, setModalOuvert] = useState(false);
+
   const [anneeChoisie, setAnneeChoisie] = useState(null);
+
   const [notes, setNotes] = useState('');
+
   const [enCours, setEnCours] = useState(false);
+
   const { afficherSucces, afficherErreur } = useAlert();
+
   const charger = () => {
     getArchives().then((res) => setArchives(res.data));
     getAnneesAcademiques().then((res) => setAnneesActives((res.data.resultats || res.data).filter((a) => a.statut)));
   };
+
   useEffect(() => { charger(); }, []);
+
   const ouvrirModal = (annee) => { setAnneeChoisie(annee); setNotes(''); setModalOuvert(true); };
+
   const confirmerArchivage = async () => {
     setEnCours(true);
     try {
@@ -30,26 +43,47 @@ function Archives() {
       setEnCours(false);
     }
   };
+
+
+
+
+
+
   return (
     <div className="container-principal">
       <div className="department-page">
+
         <div className="panel-head">
           <div>
             <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>Archives</h3>
             <div className="sub">Archiver les années académiques terminées</div>
           </div>
         </div>
+
+
         <div className="department-card table-card" style={{ marginBottom: '20px' }}>
-          <div className="table-title"><h2>Années académiques actives</h2><span>{anneesActives.length}</span></div>
+
+          <div className="table-title">
+            <h2>Années académiques actives</h2>
+            <span>{anneesActives.length} Années académiques</span>
+          </div>
+
           <div className="table-scroll">
             <table>
-              <thead><tr><th>Libellé</th><th>Date début</th><th>Date fin</th><th>Actions</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>Libellé</th>
+                  <th>Date début</th>
+                  <th>Date fin</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
               <tbody>
                 {anneesActives.map((a) => (
                   <tr key={a.id}>
                     <td className="cell-strong">{a.libelle}</td>
-                    <td>{new Date(a.date_debut).toLocaleDateString('fr-FR')}</td>
-                    <td>{new Date(a.date_fin).toLocaleDateString('fr-FR')}</td>
+                    <td>{new Date(a.date_debut).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
+                    <td>{new Date(a.date_fin).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
                     <td>
                       <button className="btn-light" onClick={() => ouvrirModal(a)}>
                         <i className="fas fa-box-archive"></i> Archiver
@@ -62,11 +96,28 @@ function Archives() {
             </table>
           </div>
         </div>
+
+
+
+
         <div className="department-card table-card">
-          <div className="table-title"><h2>Historique des archives</h2><span>{archives.length}</span></div>
+          <div className="table-title">
+            <h2>Historique des archives</h2>
+            <span>{archives.length} archives</span>
+          </div>
           <div className="table-scroll">
             <table>
-              <thead><tr><th>Année</th><th>Étudiants</th><th>Notes</th><th>Admis</th><th>Redoublants</th><th>Archivée par</th><th>Date</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>Année</th>
+                  <th>Étudiants</th>
+                  <th>Notes</th>
+                  <th>Admis</th>
+                  <th>Redoublants</th>
+                  <th>Archivée par</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
               <tbody>
                 {archives.map((arc) => (
                   <tr key={arc.id}>
@@ -76,7 +127,7 @@ function Archives() {
                     <td><span className="badge badge-success"><span className="dot"></span>{arc.nb_admis}</span></td>
                     <td><span className="badge badge-warning"><span className="dot"></span>{arc.nb_redoublants}</span></td>
                     <td>{arc.archivee_par_nom || '—'}</td>
-                    <td>{new Date(arc.date_archivage).toLocaleDateString('fr-FR')}</td>
+                    <td>{new Date(arc.date_archivage).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
                   </tr>
                 ))}
                 {archives.length === 0 && <tr><td colSpan="7"><div className="empty">Aucune archive.</div></td></tr>}
@@ -85,9 +136,13 @@ function Archives() {
           </div>
         </div>
       </div>
+
+
+
+
       <div className="department-modal" style={{ display: modalOuvert ? 'flex' : 'none' }}>
         <div className="modal-content">
-          <div className="modal-header" style={{ background: 'linear-gradient(135deg, #7a5503,#d3b429)' }}>
+          <div className="modal-header">
             <h2>Archiver « {anneeChoisie?.libelle} »</h2>
             <button className="addInscr" onClick={() => setModalOuvert(false)}><i className="fas fa-times"></i></button>
           </div>

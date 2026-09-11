@@ -21,4 +21,6 @@ export const exporterAcademiquePdf = (params) => api.get('statistiques/academiqu
 
 export const exporterAcademiqueExcel = (params) => api.get('statistiques/academique/export/excel/', { params, responseType: 'blob' });
 
+export const getDashboardAccueil = () => api.get('statistiques/accueil/');
+
 

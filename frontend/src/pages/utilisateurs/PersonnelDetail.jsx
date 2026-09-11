@@ -1,11 +1,13 @@
-
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getPersonnel } from '../../api/utilisateurs';
 import { telechargerFichePersonnel } from '../../api/utilisateurs';
 import { telechargerFichier } from '../finances/financesConstantes';
 import { STATUTS_PERSONNEL, BADGE_STATUT_PERSONNEL } from './utilisateursConstantes';
+import Loader from '../../components/Loader';
 import '../../assets/css/detailUtilisateur.css';
+
+
 
 
 
@@ -27,7 +29,7 @@ function PersonnelDetail() {
   }, [id]);
 
   if (!personnel) {
-    return <div className="ud-page"><div className="empty">Chargement...</div></div>;
+    return <Loader label="Chargement en cours..." />;
   }
 
 

@@ -250,8 +250,20 @@ def consultation_notes(request):
                 annee_academique=annee_academique, semestre=semestre,
             )
         }
+
+
         moyenne = calculer_moyenne_matiere(etudiant, matiere, annee_academique, semestre)
+
+        matieres_a_rattraper = []
+
+        deliberation = Deliberation.objects.filter(etudiant=etudiant, annee_academique=annee_academique, periode=semestre).first()
+
+        if deliberation and deliberation.decision in ('RATTRAPAGE', 'REDOUBLANT'):
+            matieres_a_rattraper = deliberation.matieres_non_validees or []
+
+
         lignes.append({
+            'matieres_a_rattraper': matieres_a_rattraper,
             'etudiant_id': etudiant.id,
             'matricule': etudiant.matricule,
             'nom': etudiant.nom,

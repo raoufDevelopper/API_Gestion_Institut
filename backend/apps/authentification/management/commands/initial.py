@@ -22,6 +22,7 @@ class Command(BaseCommand):
             {'code': 'gerer_etudiants', 'nom': 'Gérer les étudiants', 'description': 'Consulter et gérer les étudiants'},
             {'code': 'gerer_personnel', 'nom': 'Gérer le personnel', 'description': 'Consulter et gérer le personnel'},
             {'code': 'gerer_formateurs', 'nom': 'Gérer les formateurs', 'description': 'Consulter et gérer les formateurs'},
+            {'code': 'voir_espace_etudiant', 'nom': "Voir l'espace étudiant", 'description': "Accès à l'espace personnel étudiant"},
 
             # Académique
             {'code': 'gerer_niveaux', 'nom': 'Gérer les niveaux', 'description': 'Consulter et gérer les niveaux'},
@@ -137,7 +138,7 @@ class Command(BaseCommand):
             'Étudiant',
             'Accès limité à la consultation de ses propres informations',
             [
-                'gerer_emplois_du_temps',
+                'voir_espace_etudiant',
             ],
         )
 

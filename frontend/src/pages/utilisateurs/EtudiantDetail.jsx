@@ -5,7 +5,12 @@ import { getEtudiant } from '../../api/utilisateurs';
 import { telechargerFicheEtudiant } from '../../api/utilisateurs';
 import { telechargerFichier } from '../finances/financesConstantes'; // réutilise l'utilitaire déjà existant
 import { STATUTS_ETUDIANT, BADGE_STATUT_ETUDIANT } from './utilisateursConstantes';
+import Loader from '../../components/Loader';
 import '../../assets/css/detailUtilisateur.css';
+
+
+
+
 
 const ONGLETS = [
   { id: 'tous', label: 'Tous'},
@@ -24,8 +29,10 @@ function EtudiantDetail() {
   useEffect(() => {
     getEtudiant(id).then((res) => setEtudiant(res.data));
   }, [id]);
+
+
   if (!etudiant) {
-    return <div className="ud-page"><div className="empty">Chargement...</div></div>;
+    return <Loader label="Chargement en cours..." />;
   }
 
   const imprimerFiche = async () => {

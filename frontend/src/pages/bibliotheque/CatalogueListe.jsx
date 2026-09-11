@@ -160,7 +160,8 @@ function CatalogueListe() {
                     <td>{r.nb_exemplaires_total}</td>
                     <td>
                       <span className={`badge ${r.nb_exemplaires_disponibles > 0 ? 'badge-success' : 'badge-danger'}`}>
-                        <span className="dot"></span>{r.nb_exemplaires_disponibles}
+                        <p className='bull'>&bull;</p>
+                        {r.nb_exemplaires_disponibles}
                       </span>
                     </td>
                     <td>

@@ -5,7 +5,11 @@ import { getCaisseDetail, fermerCaisse, telechargerCaissePdf } from '../../api/f
 import { useAlert } from '../../context/AlertContext';
 import { BADGE_STATUT_CAISSE, telechargerFichier } from './financesConstantes';
 import { formatMontant } from '../../components/formatters';
+import Loader from '../../components/Loader';
 import '../../assets/css/crud.css';
+
+
+
 
 
 function CaisseDetail() {
@@ -43,10 +47,17 @@ function CaisseDetail() {
       afficherErreur('Erreur lors du téléchargement du PDF.');
     }
   };
+
+  
   if (!donnees) {
-    return <div className="personnel"><div className="empty">Chargement...</div></div>;
+    return <Loader label="Chargement en cours..." />;
   }
+  
   const { session, mouvements_paiements, mouvements_depenses, nb_mouvements } = donnees;
+  
+  
+  
+  
   return (
     <div className="container-principal">
 
@@ -111,7 +122,9 @@ function CaisseDetail() {
                     </div>
                   </div>
                 )}
-                {session.observation && <div className="observation-box">{session.observation}</div>}
+                {session.observation && 
+                  <div className={`observation-box ${parseFloat(session.ecart) === 0 ? 'green' : 'red'}`}>{session.observation}</div>
+                }
               </div>
               <div className="dl-group">
                 <div className="department-card table-card">
@@ -123,8 +136,8 @@ function CaisseDetail() {
                     <table>
                       <thead>
                         <tr>
-                          <th>Nature</th>
-                          <th>Détail</th>
+                          <th style={{ minWidth: '100px' }}>Nature</th>
+                          <th style={{ minWidth: '400px' }}>Détail</th>
                           <th className="num">Montant</th>
                         </tr>
                       </thead>
@@ -144,7 +157,7 @@ function CaisseDetail() {
                           </tr>
                         ))}
                         {mouvements_paiements.length === 0 && mouvements_depenses.length === 0 && (
-                          <tr><td colSpan="3" style={{ color: 'var(--text-400)' }}>Aucun mouvement en espèces pour cette session.</td></tr>
+                          <tr><td colSpan="3" style={{ color: 'var(--text)' }}>Aucun mouvement en espèces pour cette session.</td></tr>
                         )}
                       </tbody>
                     </table>

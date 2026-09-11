@@ -1,0 +1,202 @@
+
+.accueil-page {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.accueil-page .department-kpi .department-card .count-top span {
+    margin-bottom: 5px;
+}
+
+.accueil-page .department-kpi .department-card .count-top p {
+    margin-top: -3px !important;
+}
+
+.accueil-banniere {
+  color: var(--text);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+
+  border-bottom: solid 1px var(--input);
+  padding-bottom: 20px;
+}
+
+
+.accueil-banniere h1 { 
+    font-size: 35px; 
+    font-weight: 800; 
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 35px;
+    letter-spacing: 2px;
+
+    margin-bottom: 12px;
+}
+
+.accueil-banniere p { 
+    font-size: 13px; 
+    line-height: 22px;
+    letter-spacing: 2px;
+    opacity: 0.7;  
+}
+
+.accueil-banniere-date { 
+    font-size: 13px; 
+    line-height: 22px;
+    letter-spacing: 2px;
+    opacity: 0.7;  
+    text-align: right; 
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.accueil-grille-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.stat-barre-ligne {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+
+  border-bottom: solid 1px var(--input);
+  padding: 15px 0;
+}
+
+.stat-barre-label {
+  font-size: 12px;
+  color: #76797e;
+  width: 90px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stat-barre-track {
+  flex: 1;
+  height: 10px;
+  background: var(--bg);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.stat-barre-fill {
+  height: 100%;
+  border-radius: 999px;
+}
+
+.stat-barre-valeur {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text);
+  width: 30px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.stat-barre-lien {
+  background: none;
+  border: none;
+  color: #2563eb;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  margin-top: 4px;
+}
+
+.accueil-agenda-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.accueil-agenda-item:last-child { 
+    border-bottom: none; 
+}
+
+.accueil-agenda-icone {
+  width: 36px; 
+  height: 36px; 
+  border-radius: 10px;
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  font-size: 14px; 
+  flex-shrink: 0;
+}
+
+.accueil-agenda-corps { 
+    flex: 1; 
+}
+
+.accueil-agenda-titre { 
+    font-size: 13px; 
+    font-weight: 700; 
+    color: #1f2937; 
+}
+
+.accueil-agenda-sous { 
+    font-size: 11.5px; 
+    color: #9ca3af; 
+    margin-top: 1px; 
+}
+
+.modal-filiere {
+    padding: 20px;
+    height: 400px;
+    overflow: hidden;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.modal-filiere:hover {
+    scrollbar-width: thin;
+}
+
+.modal-filiere-bloc { 
+    margin-bottom: 25px; 
+}
+
+.modal-filiere-entete {
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between;
+  padding: 10px 14px; 
+  background: var(--card); 
+  border-radius: 5px; 
+  cursor: pointer;
+  font-size: 13px; 
+  font-weight: 700; 
+  font-family: Arial, Helvetica, sans-serif;
+  letter-spacing: 2px;
+  color: var(--text);
+}
+
+.modal-specialite-item {
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center;
+  padding: 15px;
+  font-size: 13px; 
+  color: #6b7280; 
+  border-bottom: 1px solid var(--input);
+}
+
+@media (max-width: 1100px) {
+  .accueil-grille-3 { grid-template-columns: 1fr; }
+}
+
+

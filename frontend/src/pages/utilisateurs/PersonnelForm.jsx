@@ -6,7 +6,12 @@ import { getPersonnel, modifierPersonnel, getUtilisateursDisponiblesPersonnel } 
 import { getRoles } from '../../api/roles';
 import { useAlert } from '../../context/AlertContext';
 import { STATUTS_PERSONNEL } from './utilisateursConstantes';
+import Loader from '../../components/Loader';
 import '../../assets/css/formulaireInline.css';
+
+
+
+
 
 
 function PersonnelForm() {
@@ -90,10 +95,13 @@ function PersonnelForm() {
       afficherErreur(Object.values(err.response?.data || {})[0]?.[0] || "Erreur lors de l'enregistrement.");
     }
   };
+
+
   
   if (chargementInitial) {
-    return <div className="fi-page"><div className="empty">Chargement...</div></div>;
+    return <Loader label="Chargement en cours..." />;
   }
+
   
   const indexInfosPerso = modeEdition ? 0 : 1;
   

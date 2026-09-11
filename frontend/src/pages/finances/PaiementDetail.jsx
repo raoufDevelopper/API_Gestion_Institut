@@ -3,8 +3,13 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getPaiement, telechargerPaiementPdf } from '../../api/finances';
 import { useAlert } from '../../context/AlertContext';
 import { MODES_PAIEMENT, STATUTS_PAIEMENT, BADGE_STATUT_PAIEMENT, telechargerFichier } from './financesConstantes';
+import Loader from '../../components/Loader';
 import '../../assets/css/crud.css';
 import { formatMontant } from '../../components/formatters';
+
+
+
+
 
 
 function PaiementDetail() {
@@ -24,8 +29,10 @@ function PaiementDetail() {
     }
   };
 
+
+
   if (!paiement) {
-    return <div className="personnel"><div className="empty">Chargement...</div></div>;
+    return <Loader label="Chargement en cours..." />;
   }
 
 

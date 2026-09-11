@@ -108,10 +108,26 @@ function RessourceForm() {
   return (
     <div className="container-principal">
       <div className="department-page">
-  
-        <div className="panel-head">
-          <h3 style={{ fontSize: '20px' }}>{modeEdition ? 'Modifier la ressource' : 'Ajouter une ressource'}</h3>
+
+
+        <div className="fi-header" style={{ marginBottom: "-20px" }}>
+          <div>
+            <button className="ud-retour" onClick={() => navigate('/bibliotheque/catalogue')}>
+              <i className="fas fa-arrow-left"></i> 
+              Retour à la liste 
+            </button>
+            <span>  {modeEdition ? ' - Modifier la ressource' : ' - Ajouter une ressource'}</span>
+          </div>
         </div>
+
+        <div className="panel-head">
+          <div>
+            <h3 style={{ fontSize: '20px' }}>{modeEdition ? 'Modifier la ressource' : 'Ajouter une ressource'}</h3>
+            <span className='sub'>{modeEdition ? 'Modifier une ressource ici...' : 'Ajouter une nouvelle ressource ici...'}</span>
+          </div>
+        </div>
+
+
   
         <div className="doc-wizard-steps">
           {ETAPES.map((label, i) => (

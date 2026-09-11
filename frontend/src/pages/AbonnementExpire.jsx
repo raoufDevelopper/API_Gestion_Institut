@@ -53,9 +53,6 @@ function AbonnementExpire() {
           <a href="/abonnement/" className="subscription-button">
             Renouveler mon abonnement
           </a>
-          <a href="/dashboard/" className="back-link">
-            ← Retour au tableau de bord
-          </a>
         </section>
       </div>
     </main>

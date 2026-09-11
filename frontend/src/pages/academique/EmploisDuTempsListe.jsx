@@ -91,7 +91,7 @@ function EmploisDuTempsListe() {
             <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>Gestion des emplois du temps</h3>
             <div className="sub">{total} emploi(s) du temps</div>
           </div>
-          <div style={{ display: 'flex', gap: '10px' }}>
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
             <button className="btn-light" onClick={() => navigate('/academique/emplois-du-temps/blocs')}>
               <i className="fas fa-calendar-days"></i> Aperçu
             </button>
@@ -157,7 +157,10 @@ function EmploisDuTempsListe() {
               <tbody>
                 {emploisFiltres.map((e) => (
                   <tr className="row-link" key={e.id}>
-                    <td>{e.classe_str}</td>
+                    <td>
+                      {e.classe_str} <br /> 
+                      <span className='mono'>{e.titre}</span>
+                    </td>
                     <td>{e.annee_academique_libelle}</td>
                     <td>{SEMESTRES.find(s => s.value === e.semestre)?.label}</td>
                     <td>{e.nb_seances} séances</td>

@@ -29,7 +29,7 @@ function NonAutorise() {
               veuillez contacter l’administrateur du système afin
               de vérifier vos droits d’accès.
           </p>
-          <a href="/dashboard/" className="dashboard-button">
+          <a href="/" className="dashboard-button">
               <span className="arrow">←</span>
               Retour au tableau de bord
           </a>

@@ -5,6 +5,8 @@ import { getCategories, creerCategorie, modifierCategorie, supprimerCategorie } 
 import { useAlert } from '../../context/AlertContext';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import '../../assets/css/crud.css';
+
+
 function CategoriesListe() {
   const [categories, setCategories] = useState([]);
   const [recherche, setRecherche] = useState('');
@@ -44,6 +46,7 @@ function CategoriesListe() {
       afficherErreur(err.response?.data?.nom?.[0] || "Erreur lors de l'enregistrement.");
     }
   };
+
   const confirmerSuppression = async () => {
     setSuppressionEnCours(true);
     try {
@@ -57,9 +60,13 @@ function CategoriesListe() {
       setSuppressionEnCours(false);
     }
   };
+
+
+
   return (
     <div className="container-principal">
       <div className="department-page">
+
         <div className="panel-head">
           <div>
             <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>Catégories</h3>
@@ -69,6 +76,7 @@ function CategoriesListe() {
             <i className="fas fa-plus"></i> Ajouter une catégorie
           </button>
         </div>
+
         <div className="department-toolbar">
           <div className="toolbar-left">
             <div className="search-box">
@@ -77,6 +85,7 @@ function CategoriesListe() {
             </div>
           </div>
         </div>
+
         <div className="department-card table-card">
           <div className="table-title">
             <h2>Liste des catégories</h2>

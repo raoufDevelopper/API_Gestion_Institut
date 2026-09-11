@@ -54,9 +54,15 @@ function Sauvegardes() {
   };
   const nbReussies = sauvegardes.filter((s) => s.statut === 'reussie').length;
   const nbEchouees = sauvegardes.filter((s) => s.statut === 'echouee').length;
+
+
+
+
+
   return (
     <div className="container-principal">
       <div className="department-page">
+  
         <div className="panel-head">
           <div>
             <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>Sauvegardes</h3>
@@ -66,6 +72,8 @@ function Sauvegardes() {
             <i className="fas fa-download"></i> {lancementEnCours ? 'Sauvegarde en cours...' : 'Lancer une sauvegarde'}
           </button>
         </div>
+  
+  
         <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))' }}>
           <div className="department-card">
             <div className="kpi-icon blue"><i className="fas fa-database"></i></div>
@@ -80,11 +88,28 @@ function Sauvegardes() {
             <div className="count-top"><h2>{nbEchouees}</h2><span>Échouées</span></div>
           </div>
         </div>
+  
+  
+  
         <div className="department-card table-card">
-          <div className="table-title"><h2>Historique des sauvegardes</h2><span>{sauvegardes.length}</span></div>
+          <div className="table-title">
+            <h2>Historique des sauvegardes</h2>
+            <span>{sauvegardes.length} sauvegardes</span>
+          </div>
+          
           <div className="table-scroll">
             <table>
-              <thead><tr><th>Fichier</th><th>Type</th><th>Taille</th><th>Déclenchée par</th><th>Date</th><th>Statut</th><th>Actions</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>Fichier</th>
+                  <th>Type</th>
+                  <th>Taille</th>
+                  <th>Déclenchée par</th>
+                  <th>Date</th>
+                  <th>Statut</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
               <tbody>
                 {sauvegardes.map((s) => (
                   <tr key={s.id}>
@@ -95,12 +120,13 @@ function Sauvegardes() {
                     <td>{new Date(s.date_creation).toLocaleString('fr-FR')}</td>
                     <td>
                       <span className={`badge ${s.statut === 'reussie' ? 'badge-success' : s.statut === 'echouee' ? 'badge-danger' : 'badge-warning'}`}>
-                        <span className="dot"></span>{s.statut}
+                        <p className='bull'>&bull;</p>
+                        {s.statut}
                       </span>
                     </td>
                     <td>
                       {s.fichier && (
-                        <button className="table-btn" onClick={() => telecharger(s)}><i className="fas fa-download"></i></button>
+                        <button className="table-btn download" onClick={() => telecharger(s)}><i className="fas fa-download"></i></button>
                       )}
                       <button className="table-btn delete" onClick={() => setSauvegardeASupprimer(s)}><i className="fas fa-trash"></i></button>
                     </td>

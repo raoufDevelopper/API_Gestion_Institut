@@ -156,8 +156,18 @@ function ExemplairesListe() {
                     <td className="cell-strong mono">{ex.numero}</td>
                     <td>{ex.ressource_titre}</td>
                     <td>{ex.localisation_str || '—'}</td>
-                    <td>{ETATS_PHYSIQUE.find((e) => e.value === ex.etat)?.label}</td>
-                    <td><span className={`badge ${BADGE_STATUT_EXEMPLAIRE[ex.statut]}`}><span className="dot"></span>{STATUTS_EXEMPLAIRE.find((s) => s.value === ex.statut)?.label}</span></td>
+                    <td>
+                      <span className={`badge badge-${ETATS_PHYSIQUE.find((e) => e.value === ex.etat)?.label === "Bon" ? 'success' : 'orange'}`}>
+                        <p className='bull'>&bull;</p>
+                        {ETATS_PHYSIQUE.find((e) => e.value === ex.etat)?.label}
+                      </span>
+                    </td>
+                    <td>
+                      <span className={`badge ${BADGE_STATUT_EXEMPLAIRE[ex.statut]}`}>
+                        <p className='bull'>&bull;</p>
+                        {STATUTS_EXEMPLAIRE.find((s) => s.value === ex.statut)?.label}
+                      </span>
+                    </td>
                     <td>
                       <button className="table-btn view" onClick={() => navigate(`/bibliotheque/catalogue/${ex.ressource}`)}><i className="fas fa-eye"></i></button>
                       <button className="table-btn edit" onClick={() => ouvrirEdition(ex)}><i className="fas fa-pen"></i></button>

@@ -119,14 +119,17 @@ function EmploisDuTempsBlocs() {
               <div className="edt-groupe-semestre" key={semestre}>
                 
                 <h3 className="badge badge-orange anneeAca">
-                  {semestre === 'S1' ? 'Semestre 1' : semestre === 'S2' ? 'Semestre 2' : semestre}
+                  Liste des emplois du temps du 
+                  {semestre === 'S1' ? ' Semestre 1' : semestre === 'S2' ? ' Semestre 2' : semestre}
                 </h3>
                 
 
                 {Object.entries(semaines).map(([semaine, listeEmplois]) => (
                   <div className="edt-groupe-semaine" key={semaine}>
                 
-                    <h4 className="badge badge-aqua anneeAca">{semaine}</h4>
+                    <h4 className="badge badge-aqua anneeAca">
+                      {semaine}
+                    </h4>
                 
                     <div className="edt-cartes-grid">
                       

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getDocumentsOverview } from '../../api/documents';
 import { ICONE_TYPE_RECENT } from './documentsConstantes';
+import Loader from '../../components/Loader';
 import '../../assets/css/crud.css';
 import '../../assets/css/documents.css';
 
@@ -15,7 +16,7 @@ function DocumentsOverview() {
     getDocumentsOverview().then((res) => setDonnees(res.data));
   }, []);
   
-  if (!donnees) return <div className="container-principal"><div className="empty">Chargement...</div></div>;
+  if (!donnees) return <Loader label="Chargement en cours..." />;
   
   
   
@@ -75,7 +76,7 @@ function DocumentsOverview() {
                 </div>
                 
                 <div>
-                  <span className="doc-recent-date">{new Date(r.date).toLocaleDateString('fr-FR')}</span>
+                  <span className="doc-recent-date">{new Date(r.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
                   {r.fichier && (
                     <a href={r.fichier} target="_blank" rel="noreferrer">
                       <button className="table-btn view">

@@ -5,7 +5,13 @@ import { getFormateur, getPersonnel } from '../../api/utilisateurs';
 import { telechargerFicheFormateur } from '../../api/utilisateurs';
 import { telechargerFichier } from '../finances/financesConstantes';
 import { TYPES_CONTRAT, STATUTS_PERSONNEL, BADGE_STATUT_PERSONNEL } from './utilisateursConstantes';
+import Loader from '../../components/Loader';
 import '../../assets/css/detailUtilisateur.css';
+
+
+
+
+
 
 const ONGLETS = [
   { id: 'tous', label: "Tous" },
@@ -27,8 +33,12 @@ function FormateurDetail() {
       getPersonnel(res.data.personnel).then((resP) => setPersonnel(resP.data));
     });
   }, [id]);
+
+
+
+
   if (!formateur || !personnel) {
-    return <div className="ud-page"><div className="empty">Chargement...</div></div>;
+    return <Loader label="Chargement en cours..." />;
   }
 
 

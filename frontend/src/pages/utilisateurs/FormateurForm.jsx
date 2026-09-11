@@ -6,6 +6,7 @@ import { getFormateur, modifierFormateur, getPersonnel, modifierPersonnel, getUt
 import { getFilieres, getSpecialites } from '../../api/academique';
 import { useAlert } from '../../context/AlertContext';
 import { STATUTS_PERSONNEL, TYPES_CONTRAT } from './utilisateursConstantes';
+import Loader from '../../components/Loader';
 import '../../assets/css/formulaireInline.css';
 import '../../assets/css/crud.css';
 
@@ -174,9 +175,12 @@ function FormateurForm() {
 
     };
 
+
+
+
   if (chargementInitial) {
 
-    return <div className="fi-page"><div className="empty">Chargement...</div></div>;
+    return <Loader label="Chargement en cours..." />;
 
   }
   

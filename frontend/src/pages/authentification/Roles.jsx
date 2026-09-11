@@ -146,7 +146,7 @@ function Roles() {
                   <tr className="row-link" key={r.id}>
                     <td><div className="cell-strong">{r.nom}</div></td>
                     <td>{r.permissions.length} permission{r.permissions.length > 1 ? 's' : ''}</td>
-                    <td>{new Date(r.date_ajout).toLocaleDateString('fr-FR')}</td>
+                    <td>{new Date(r.date_ajout).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
                     <td><div className="cell-sub description">{r.description || '—'}</div></td>
                     <td>
                       <button className="table-btn view" onClick={() => setRoleEnDetail(r)}>

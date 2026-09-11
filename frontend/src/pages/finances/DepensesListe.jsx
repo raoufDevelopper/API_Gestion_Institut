@@ -97,122 +97,122 @@ function DepensesListe() {
 
   return (
     <div className="container-principal">
-      <div className="personnel">
-        <div className="department-page">
 
-          <div className="panel-head">
-            <div>
-              <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>Journal des dépenses</h3>
-              <div className="sub">{total} dépense(s)</div>
-            </div>
-            <button className="btn-primary addInscr" onClick={ouvrirCreation}>
-              <i className="fas fa-plus"></i>
-              Nouvelle dépense
-            </button>
+      <div className="department-page">
+
+        <div className="panel-head">
+          <div>
+            <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>Journal des dépenses</h3>
+            <div className="sub">{total} dépense(s)</div>
           </div>
+          <button className="btn-primary addInscr" onClick={ouvrirCreation}>
+            <i className="fas fa-plus"></i>
+            Nouvelle dépense
+          </button>
+        </div>
 
 
-          <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))' }}>
-            <div className="department-card">
-              <div className="kpi-icon blue"><i className="fa-solid fa-money-bill-wave"></i></div>
-              <div className="count-top"><h2>{total}</h2><span>Dépenses</span></div>
-            </div>
-            <div className="department-card">
-              <div className="kpi-icon green"><i className="fas fa-check-circle"></i></div>
-              <div className="count-top"><h2>{payee}</h2><span>Payées</span></div>
-            </div>
-            <div className="department-card">
-              <div className="kpi-icon violet"><i className="fas fa-check-circle"></i></div>
-              <div className="count-top"><h2>{approuvee}</h2><span>Approuvées</span></div>
-            </div>
-            <div className="department-card">
-              <div className="kpi-icon aqua"><i className="fa-solid fa-pause-circle"></i></div>
-              <div className="count-top"><h2>{en_attente}</h2><span>En attente</span></div>
-            </div>
-            <div className="department-card">
-              <div className="kpi-icon red"><i className="fas fa-ban"></i></div>
-              <div className="count-top"><h2>{rejetee}</h2><span>Rejetées</span></div>
-            </div>
+        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))' }}>
+          <div className="department-card">
+            <div className="kpi-icon blue"><i className="fa-solid fa-money-bill-wave"></i></div>
+            <div className="count-top"><h2>{total}</h2><span>Dépenses</span></div>
           </div>
-
-
-          <div className="department-toolbar">
-
-            <div className="toolbar-left">
-              <div className="search-box">
-                <i className="fas fa-search"></i>
-                <input type="text" placeholder="Rechercher une dépense..." value={recherche} onChange={(e) => setRecherche(e.target.value)}/>
-              </div>
-            </div>
-
-            <div className="toolbar-right">
-              <select className="filter-select" value={filtreCategorie} onChange={(e) => setFiltreCategorie(e.target.value)}>
-                <option value="">Catégorie — toutes</option>
-                {categories.map((c) => <option key={c.id} value={c.id}>{c.nom}</option>)}
-              </select>
-            </div>
-
+          <div className="department-card">
+            <div className="kpi-icon green"><i className="fas fa-check-circle"></i></div>
+            <div className="count-top"><h2>{payee}</h2><span>Payées</span></div>
           </div>
-
-          
-          <div className="department-card table-card">
-            <div className="table-title">
-              <h2>Liste des dépenses</h2>
-              <span>{depensesFiltrees.length} dépense(s)</span>
-            </div>
-            <div className="table-scroll">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Catégorie</th>
-                    <th>Libellé</th>
-                    <th>Date</th>
-                    <th>Mode</th>
-                    <th className="num">Montant</th>
-                    <th>Statut</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {depensesFiltrees.map((d) => (
-                    <tr className="row-link" key={d.id}>
-                      <td>
-                        <span className={`badge ${d.categorie_est_tresorerie ? 'badge-success' : 'badge-danger'}`}>
-                          <p className='bull'>&bull;</p>
-                          {d.categorie_nom}
-                        </span>
-                      </td>
-                      <td className="cell-strong">{d.libelle}</td>
-                      <td className="mono" style={{ color: 'var(--text-600)', fontSize: '12.5px' }}>{new Date(d.date_depense).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
-                      <td>{MODES_DEPENSE.find((m) => m.value === d.mode_paiement)?.label}</td>
-                      <td className="cell-amount">{formatMontant(d.montant)}</td>
-                      <td>
-                        <span className={`badge ${BADGE_STATUT_DEPENSE[d.statut]}`}>
-                          <p className='bull'>&bull;</p>
-                          {STATUTS_DEPENSE.find((s) => s.value === d.statut)?.label}
-                        </span>
-                      </td>
-                      <td>
-                        <button className="table-btn view" onClick={() => navigate(`/finances/depenses/${d.id}`)}>
-                          <i className="fas fa-eye"></i>
-                        </button>
-                        <button className="table-btn edit" onClick={() => ouvrirEdition(d)}>
-                          <i className="fas fa-pen"></i>
-                        </button>
-                        <button className="table-btn delete" onClick={() => setDepenseASupprimer(d)}>
-                          <i className="fas fa-trash"></i>
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                  {depensesFiltrees.length === 0 && (
-                    <tr><td colSpan="7"><div className="empty">Aucune dépense trouvée.</div></td></tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+          <div className="department-card">
+            <div className="kpi-icon violet"><i className="fas fa-check-circle"></i></div>
+            <div className="count-top"><h2>{approuvee}</h2><span>Approuvées</span></div>
+          </div>
+          <div className="department-card">
+            <div className="kpi-icon aqua"><i className="fa-solid fa-pause-circle"></i></div>
+            <div className="count-top"><h2>{en_attente}</h2><span>En attente</span></div>
+          </div>
+          <div className="department-card">
+            <div className="kpi-icon red"><i className="fas fa-ban"></i></div>
+            <div className="count-top"><h2>{rejetee}</h2><span>Rejetées</span></div>
           </div>
         </div>
+
+
+        <div className="department-toolbar">
+
+          <div className="toolbar-left">
+            <div className="search-box">
+              <i className="fas fa-search"></i>
+              <input type="text" placeholder="Rechercher une dépense..." value={recherche} onChange={(e) => setRecherche(e.target.value)}/>
+            </div>
+          </div>
+
+          <div className="toolbar-right">
+            <select className="filter-select" value={filtreCategorie} onChange={(e) => setFiltreCategorie(e.target.value)}>
+              <option value="">Catégorie — toutes</option>
+              {categories.map((c) => <option key={c.id} value={c.id}>{c.nom}</option>)}
+            </select>
+          </div>
+
+        </div>
+
+        
+        <div className="department-card table-card">
+          <div className="table-title">
+            <h2>Liste des dépenses</h2>
+            <span>{depensesFiltrees.length} dépense(s)</span>
+          </div>
+          <div className="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Catégorie</th>
+                  <th>Libellé</th>
+                  <th>Date</th>
+                  <th>Mode</th>
+                  <th className="num">Montant</th>
+                  <th>Statut</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {depensesFiltrees.map((d) => (
+                  <tr className="row-link" key={d.id}>
+                    <td>
+                      <span className={`badge ${d.categorie_est_tresorerie ? 'badge-success' : 'badge-danger'}`}>
+                        <p className='bull'>&bull;</p>
+                        {d.categorie_nom}
+                      </span>
+                    </td>
+                    <td className="cell-strong">{d.libelle}</td>
+                    <td className="mono" style={{ color: 'var(--text-600)', fontSize: '12.5px' }}>{new Date(d.date_depense).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
+                    <td>{MODES_DEPENSE.find((m) => m.value === d.mode_paiement)?.label}</td>
+                    <td className="cell-amount">{formatMontant(d.montant)}</td>
+                    <td>
+                      <span className={`badge ${BADGE_STATUT_DEPENSE[d.statut]}`}>
+                        <p className='bull'>&bull;</p>
+                        {STATUTS_DEPENSE.find((s) => s.value === d.statut)?.label}
+                      </span>
+                    </td>
+                    <td>
+                      <button className="table-btn view" onClick={() => navigate(`/finances/depenses/${d.id}`)}>
+                        <i className="fas fa-eye"></i>
+                      </button>
+                      <button className="table-btn edit" onClick={() => ouvrirEdition(d)}>
+                        <i className="fas fa-pen"></i>
+                      </button>
+                      <button className="table-btn delete" onClick={() => setDepenseASupprimer(d)}>
+                        <i className="fas fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+                {depensesFiltrees.length === 0 && (
+                  <tr><td colSpan="7"><div className="empty">Aucune dépense trouvée.</div></td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
       </div>
 
 

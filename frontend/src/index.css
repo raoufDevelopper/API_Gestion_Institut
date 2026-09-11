@@ -104,10 +104,6 @@ img {
   STATUS
 =========================== */
 
-.academique .department-card .kpi-icon i {
-    color: #fff;
-}
-
 .badge .dot { 
   width: 6px; 
   height: 6px; 
@@ -117,19 +113,19 @@ img {
 
 
 .blue.dot, .blue-icone { 
-  background: #4441ff; 
+  background: #3532d6; 
 }
 
 .green.dot, .green-icone { 
-  background: #22c55e; 
+  background: #18aa4e; 
 }
 
 .aqua.dot, .aqua-icone { 
-  background: hsl(180, 23%, 46%); 
+  background: hsl(180, 32%, 37%); 
 }
 
 .danger.dot, .red-icone { 
-  background: #ef4444; 
+  background: #da2222; 
 }
 
 .orange.dot, .orange-icone { 
@@ -137,7 +133,7 @@ img {
 }
 
 .violet.dot, .violet-icone { 
-  background:#be5bf7 !important; 
+  background:#9634cf !important; 
 }
 
 
@@ -206,26 +202,32 @@ img {
 
 .department-card.blue {
     background: rgba(5, 5, 233, 0.15); 
+    border-left: solid 3px #4441ff;
 }
 
 .department-card.orange {
     background:rgba(249,115,22,.15);
+    border-left: solid 3px #f97316;
 }
 
 .department-card.green {
     background:rgba(34,197,94,.15);
+    border-left: solid 3px #22c55e;
 }
 
 .department-card.red {
     background:rgba(239,68,68,.15);
+    border-left: solid 3px #ef4444;
 }
 
 .department-card.aqua {
     background:rgba(51, 153, 144, 0.15);
+    border-left: solid 3px hsl(180, 23%, 46%);
 }
 
 .department-card.violet {
     background:rgba(188, 106, 255, 0.15);
+    border-left: solid 3px #be5bf7;
 }
 
 
@@ -261,7 +263,8 @@ img {
     --outline: rgb(218, 218, 218);
     --tableau-alterne: rgb(235, 235, 235);
     --opacity-bg: rgba(0,0,0,.5);
-
+    --bg-config: rgba(0, 0, 0, 0.08);
+    --bg-hover: #d3d0d0;
     --tarit: linear-gradient(
         to right, 
         transparent, 
@@ -281,6 +284,8 @@ body.dark{
     --outline: #242f3f;
     --tableau-alterne: #374151;
     --opacity-bg: rgba(0,0,0,.6);
+    --bg-config: rgba(255, 255, 255, 0.08);
+    --bg-hover: rgba(255,255,255,.3);
     
     --tarit: linear-gradient(
         to right, 
@@ -302,6 +307,13 @@ body{
     height:100vh;
     overflow:hidden;
 }
+
+
+
+
+
+
+/* =================================== SIDEBAR CSS ====================================== */
 
 .sidebar{
     width:230px;
@@ -438,7 +450,7 @@ body{
 /*========================================*/
 .menu-container{
     flex:1;
-    overflow: hidden;
+    overflow-x:visible;
     overflow-y:auto;
     scrollbar-width: none !important;
     padding: 0 10px 10px 10px;
@@ -668,6 +680,94 @@ button:hover,
         z-index:1000;
     }
 }
+
+
+
+
+.menu-item-parent {
+  position: relative;
+}
+
+.sous-menu-declencheur {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px;
+  cursor: pointer;
+  color: inherit;
+  border-radius: 5px;
+
+  font-size: 13px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 600;
+  letter-spacing: 1px;
+  background: var(--bg-config);
+  margin-top: 10px;
+}
+
+.fleche-sous-menu {
+  margin-left: auto;
+  font-size: 10px;
+  opacity: 0.6;
+}
+
+.flyout-panel {
+  position: absolute;
+  top: 45px;
+  left: 0;
+  min-width: 200px;
+  background: var(--bg);
+  border-radius: 5px;
+  padding: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  animation: notifPanelSlide 0.5s ease;
+}
+
+.flyout-titre {
+  font-size: 12px;
+  font-weight: 500;
+  font-family: Arial, Helvetica, sans-serif;
+  letter-spacing: 2px;
+  line-height: 23px;
+  text-transform: uppercase;
+  color: #a356fc;
+  border-left: solid 2px #a356fc;;
+  margin-bottom: 10px;
+  padding: 5px 10px;
+}
+
+.flyout-panel a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text);
+  font-size: 13px;
+  animation: notifItemDrop 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.flyout-panel a:hover,
+.flyout-panel a.active {
+  background: rgba(161, 79, 255, 0.15);
+}
+
+/* =================================== SIDEBAR CSS ====================================== */
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

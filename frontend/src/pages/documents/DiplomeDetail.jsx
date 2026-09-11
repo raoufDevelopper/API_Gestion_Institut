@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getDiplome, telechargerDiplome, revoquerDiplome } from '../../api/documents';
 import { useAlert } from '../../context/AlertContext';
 import { BADGE_STATUT_DIPLOME, STATUTS_DIPLOME, telechargerFichier } from './documentsConstantes';
+import Loader from '../../components/Loader';
 import '../../assets/css/crud.css';
 import '../../assets/css/documents.css';
 
@@ -55,7 +56,9 @@ function DiplomeDetail() {
     }
   };
 
-  if (!diplome) return <div className="container-principal"><div className="empty">Chargement...</div></div>;
+
+
+  if (!diplome) return <Loader label="Chargement en cours..." />;
 
 
 

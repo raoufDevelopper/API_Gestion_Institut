@@ -56,7 +56,7 @@ function EmpruntsRetards() {
         <div className="department-card table-card">
           <div className="table-title">
             <h2>Retards</h2>
-            <span>{retards.length}</span>
+            <span>{retards.length} emprunts en reatard</span>
           </div>
           <div className="table-scroll">
             <table>
@@ -74,8 +74,13 @@ function EmpruntsRetards() {
                   <tr className="row-link" key={r.id}>
                     <td className="cell-strong">{r.adherent_str}</td>
                     <td>{r.ressource_str}</td>
-                    <td>{new Date(r.date_retour_prevue).toLocaleDateString('fr-FR')}</td>
-                    <td><span className="badge badge-danger"><span className="dot"></span>{r.jours_de_retard} jours</span></td>
+                    <td>{new Date(r.date_retour_prevue).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
+                    <td>
+                      <span className="badge badge-danger">
+                        <p className='bull'>&bull;</p>
+                        {r.jours_de_retard} jours
+                      </span>
+                    </td>
                     <td>
                       <button className="table-btn" onClick={() => navigate(`/bibliotheque/emprunts/retours?exemplaire=${r.exemplaire}`)}><i className="fas fa-undo"></i></button>
                     </td>

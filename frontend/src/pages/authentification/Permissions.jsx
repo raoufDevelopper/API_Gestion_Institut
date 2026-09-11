@@ -68,11 +68,11 @@ function Permissions() {
             <table>
               <thead>
                 <tr>
-                  <th>Code</th>
+                  <th style={{ minWidth: '400px' }}>Code</th>
                   <th>Nom</th>
-                  <th>Ajoutée le</th>
+                  <th style={{ minWidth: '150px' }}>Ajoutée le</th>
                   <th>Description</th>
-                  <th style={{ textAlign: "right"}}>Action</th>
+                  <th style={{ minWidth: '50px' }}>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -80,9 +80,9 @@ function Permissions() {
                   <tr className="row-link" key={p.id}>
                     <td><div className="cell-strong mono">{p.code}</div></td>
                     <td>{p.nom}</td>
-                    <td>{new Date(p.date_ajout).toLocaleDateString('fr-FR')}</td>
+                    <td>{new Date(p.date_ajout).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
                     <td><div className="cell-sub description">{p.description || '—'}</div></td>
-                    <td style={{ textAlign: "right"}}>
+                    <td>
                       <button className="table-btn view" onClick={() => setPermissionEnDetail(p)}>
                         <i className="fas fa-eye"></i> 
                       </button>

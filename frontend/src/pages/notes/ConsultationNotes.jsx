@@ -194,6 +194,7 @@ function ConsultationNotes() {
                       <th onClick={toggleTri} style={{ cursor: 'pointer' }}>
                         Moyenne {triMoyenne === 'desc' ? '↓' : triMoyenne === 'asc' ? '↑' : ''}
                       </th>
+                      <th>À rattraper</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -216,6 +217,13 @@ function ConsultationNotes() {
                             </span>
                           ) : (
                             <span className="badge badge-orange"><p className='bull'>&bull;</p>Incomplet</span>
+                          )}
+                        </td>
+                        <td>
+                          {l.matieres_a_rattraper?.length > 0 ? (
+                            <span style={{ fontSize: '11px', color: '#dc2626' }}>{l.matieres_a_rattraper.join(', ')}</span>
+                          ) : (
+                            <span style={{ color: '#9ca3af' }}>—</span>
                           )}
                         </td>
                       </tr>

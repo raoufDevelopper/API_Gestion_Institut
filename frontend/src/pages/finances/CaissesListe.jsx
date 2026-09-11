@@ -5,7 +5,11 @@ import { getCaisses, ouvrirCaisse } from '../../api/finances';
 import { useAlert } from '../../context/AlertContext';
 import { BADGE_STATUT_CAISSE } from './financesConstantes';
 import { formatMontant } from '../../components/formatters';
+import Loader from '../../components/Loader';
 import '../../assets/css/crud.css';
+
+
+
 
 
 function CaissesListe() {
@@ -134,9 +138,11 @@ function CaissesListe() {
 
             ))}
 
-            {sessions.length === 0 && <div className="empty">
-              Aucune session de caisse enregistrée.
-            </div>}
+            {sessions.length === 0 && 
+              <div className="empty">
+                <Loader label="la liste est vide ..." />
+              </div>
+            }
           
           </div>
 
@@ -157,7 +163,7 @@ function CaissesListe() {
             </button>
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} id="departmentForm" style={{ height: '300px' }}>
+          <form onSubmit={handleSubmit(onSubmit)} id="departmentForm" style={{ height: '245px' }}>
             <div className="form-grid">
               <div className="form-group" style={{ gap: '15px' }}>
                 <label style={{ marginTop: '0', lineHeight: '20px' }}>Solde d'ouverture compté</label>

@@ -17,7 +17,7 @@
   display: flex; 
   align-items: center; 
   justify-content: space-between;
-  gap: 5px;
+  gap: 10px;
   flex-wrap: wrap;
   padding: 15px 0; 
   border-bottom: 1px solid var(--input);
@@ -47,17 +47,19 @@
 
 .doc-recent-titre { 
   font-size: 13px; 
-  font-weight: 700; 
-  color: #1f2937; 
+  font-weight: 600;
+  letter-spacing: 1px; 
+  color: var(--text); 
 }
 
 .doc-recent-sub { 
   font-size: 11.5px; 
   color: #9ca3af; 
+  margin-top: 5px;
 }
 
 .doc-recent-date { 
-  font-size: 11px; 
+  font-size: 12px; 
   color: #9ca3af; 
   margin-right: 10px; 
 }

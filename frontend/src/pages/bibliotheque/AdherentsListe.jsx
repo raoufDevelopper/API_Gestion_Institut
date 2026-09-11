@@ -127,7 +127,7 @@ function AdherentsListe() {
         <div className="department-card table-card">
           <div className="table-title">
             <h2>Adhérents</h2>
-            <span>{adherents.length}</span>
+            <span>{adherents.length} Adhérents</span>
           </div>
           <div className="table-scroll">
             <table>
@@ -147,8 +147,17 @@ function AdherentsListe() {
                     <td className="cell-strong mono">{a.numero}</td>
                     <td>{a.personne_str}</td>
                     <td>{TYPES_ADHERENT.find((t) => t.value === a.type_adherent)?.label}</td>
-                    <td>{a.nb_emprunts_en_cours}</td>
-                    <td><span className={`badge ${BADGE_STATUT_ADHERENT[a.statut]}`}><span className="dot"></span>{STATUTS_ADHERENT.find((s) => s.value === a.statut)?.label}</span></td>
+                    <td>
+                      <span className='badge badge-danger'>
+                        {a.nb_emprunts_en_cours}
+                      </span>
+                    </td>
+                    <td>
+                      <span className={`badge ${BADGE_STATUT_ADHERENT[a.statut]}`}>
+                        <p className='bull'>&bull;</p>
+                        {STATUTS_ADHERENT.find((s) => s.value === a.statut)?.label}
+                      </span>
+                    </td>
                     <td>
                       <button className="table-btn edit" onClick={() => ouvrirEdition(a)}><i className="fas fa-pen"></i></button>
                       <button className="table-btn delete" onClick={() => setExemplaireASupprimer(a)}><i className="fas fa-trash"></i></button>

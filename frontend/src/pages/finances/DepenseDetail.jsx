@@ -3,8 +3,11 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getDepense, telechargerDepensePdf } from '../../api/finances';
 import { useAlert } from '../../context/AlertContext';
 import { MODES_DEPENSE, STATUTS_DEPENSE, BADGE_STATUT_DEPENSE, telechargerFichier } from './financesConstantes';
+import Loader from '../../components/Loader';
 import '../../assets/css/crud.css';
 import { formatMontant } from '../../components/formatters';
+
+
 
 
 
@@ -25,8 +28,11 @@ function DepenseDetail() {
       afficherErreur('Erreur lors du téléchargement du PDF.');
     }
   };
+
+
+
   if (!depense) {
-    return <div className="personnel"><div className="empty">Chargement...</div></div>;
+    return <Loader label="Chargement en cours..." />;
   }
 
 
@@ -73,7 +79,7 @@ function DepenseDetail() {
                 <div className="dl-row">
                   <span className="dl-k">Justificatif</span>
                   <span className="dl-v">
-                    <a href={depense.justificatif} target="_blank" rel="noreferrer" className="voir-fichier">
+                    <a href={depense.justificatif} target="_blank" rel="noreferrer" className="btn btn-brass">
                       <i className="fas fa-eye"></i> Voir le fichier
                     </a>
                   </span>

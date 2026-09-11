@@ -8,6 +8,7 @@ import { getSpecialites, getNiveaux, getClasses } from '../../api/academique';
 import { useAlert } from '../../context/AlertContext';
 import { STATUTS_ETUDIANT } from './utilisateursConstantes';
 import { getUtilisateursDisponiblesEtudiant } from '../../api/utilisateurs';
+import Loader from '../../components/Loader';
 import '../../assets/css/formulaireInline.css';
 
 
@@ -110,8 +111,10 @@ function EtudiantForm() {
     }
   };
   
+
+  
   if (chargementInitial) {
-    return <div className="fi-page"><div className="empty">Chargement...</div></div>;
+    return <Loader label="Chargement en cours..." />;
   }
   
   const indexInfosPerso = modeEdition ? 0 : 1;

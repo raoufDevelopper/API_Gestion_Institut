@@ -38,6 +38,166 @@ import openpyxl
 
 from openpyxl.styles import Font, PatternFill
 
+from datetime import timedelta
+from apps.utilisateurs.models import Personnel, Formateur
+from apps.academique.models import EmploiDuTemps, Seance
+from apps.finances.models import Inscription as InscriptionFinance
+from apps.bibliotheque.models import Emprunt as EmpruntBiblio
+
+
+
+
+
+
+
+
+
+
+
+
+
+JOURS_CODE = ['LUN', 'MAR', 'MER', 'JEU', 'VEN', 'SAM', 'DIM']
+
+def _delta_pct(actuel, precedent):
+    if not precedent:
+        return None
+    return round(((actuel - precedent) / precedent) * 100, 1)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def dashboard_accueil(request):
+    aujourdhui = timezone.localdate()
+    debut_mois = aujourdhui.replace(day=1)
+
+
+    # ---- KPI avec comparaison au mois dernier ----
+    nb_apprenants = Etudiant.objects.filter(statut='ACTIF').count()
+    nb_apprenants_avant = Etudiant.objects.filter(statut='ACTIF', date_inscription__lt=debut_mois).count()
+    nb_formateurs = Formateur.objects.count()
+    nb_formateurs_avant = Formateur.objects.filter(personnel__date_embauche__lt=debut_mois).count()
+    nb_personnel_total = Personnel.objects.count()
+    nb_formateurs_total = Formateur.objects.count()
+    nb_personnel = nb_personnel_total - nb_formateurs_total
+    nb_personnel_avant = Personnel.objects.filter(date_embauche__lt=debut_mois).exclude(id__in=Formateur.objects.values_list('personnel_id', flat=True)).count()
+    nb_filieres = Filiere.objects.filter(statut='actif').count()
+    nb_filieres_avant = Filiere.objects.filter(statut='actif', date_creation__lt=debut_mois).count()
+    nb_specialites = Specialite.objects.filter(statut='actif').count()
+    nb_specialites_avant = Specialite.objects.filter(statut='actif', date_creation__lt=debut_mois).count()
+    nb_matieres = Matiere.objects.filter(statut='actif').count()
+    nb_matieres_avant = Matiere.objects.filter(statut='actif', date_creation__lt=debut_mois).count()
+    nb_classes = Classe.objects.count()  # pas de date_creation fiable → pas de delta
+    inscriptions = InscriptionFinance.objects.exclude(statut='ANNULEE')
+    nb_inscriptions = inscriptions.count()
+    nb_inscriptions_avant = inscriptions.filter(date_inscription__lt=debut_mois).count()
+    nb_edt_actifs = EmploiDuTemps.objects.filter(statut='publie').count()
+    kpis = {
+        'apprenants': {'valeur': nb_apprenants, 'delta': _delta_pct(nb_apprenants, nb_apprenants_avant)},
+        'formateurs': {'valeur': nb_formateurs, 'delta': _delta_pct(nb_formateurs, nb_formateurs_avant)},
+        'personnel': {'valeur': nb_personnel, 'delta': _delta_pct(nb_personnel, nb_personnel_avant)},
+        'filieres': {'valeur': nb_filieres, 'delta': _delta_pct(nb_filieres, nb_filieres_avant)},
+        'specialites': {'valeur': nb_specialites, 'delta': _delta_pct(nb_specialites, nb_specialites_avant)},
+        'matieres': {'valeur': nb_matieres, 'delta': _delta_pct(nb_matieres, nb_matieres_avant)},
+        'classes': {'valeur': nb_classes, 'delta': None},
+        'inscriptions': {'valeur': nb_inscriptions, 'delta': _delta_pct(nb_inscriptions, nb_inscriptions_avant)},
+        'emplois_du_temps_actifs': {'valeur': nb_edt_actifs, 'delta': None},
+    }
+
+   
+
+
+    # ---- Évolution des inscriptions (9 derniers mois) ----
+    from django.db.models.functions import TruncMonth
+    evolution = (
+        inscriptions.annotate(mois=TruncMonth('date_inscription'))
+        .values('mois').annotate(nb=Count('id')).order_by('mois')
+    )
+    evolution_data = [{'mois': e['mois'].strftime('%b'), 'nb': e['nb']} for e in evolution][-9:]
+
+
+
+    # ---- Répartition sexe ----
+    garcons = Etudiant.objects.filter(statut='ACTIF', sexe='M').count()
+    filles = Etudiant.objects.filter(statut='ACTIF', sexe='F').count()
+
+
+
+    # ---- Apprenants par filière ----
+    par_filiere = []
+    for f in Filiere.objects.filter(statut='actif'):
+        nb = Etudiant.objects.filter(statut='ACTIF', specialite__filiere=f).count()
+        if nb > 0:
+            par_filiere.append({'label': f.nom, 'nb': nb})
+    par_filiere.sort(key=lambda x: x['nb'], reverse=True)
+
+
+
+
+    # ---- Apprenants par spécialité ----
+    par_specialite = []
+    for s in Specialite.objects.filter(statut='actif'):
+        nb = Etudiant.objects.filter(statut='ACTIF', specialite=s).count()
+        if nb > 0:
+            par_specialite.append({'label': s.nom, 'nb': nb})
+    par_specialite.sort(key=lambda x: x['nb'], reverse=True)
+
+   
+
+    # ---- Apprenants par classe ----
+    par_classe = []
+    for c in Classe.objects.all():
+        nb = Etudiant.objects.filter(statut='ACTIF', classe=c).count()
+        if nb > 0:
+            par_classe.append({'label': str(c), 'nb': nb})
+    par_classe.sort(key=lambda x: x['nb'], reverse=True)
+   
+
+
+    # ---- Aujourd'hui ----
+    code_jour = JOURS_CODE[aujourdhui.weekday()]
+    seances_jour = Seance.objects.filter(jour=code_jour, emploi_du_temps__statut='publie')
+    plage_cours = None
+    if seances_jour.exists():
+        debut = min(s.heure_debut for s in seances_jour)
+        fin = max(s.heure_fin for s in seances_jour)
+        plage_cours = f"{debut.strftime('%H:%M')} - {fin.strftime('%H:%M')}"
+    emprunts_a_rendre = EmpruntBiblio.objects.filter(date_retour_prevue=aujourdhui, statut__in=['EN_COURS', 'EN_RETARD']).count()
+    nb_paiements_attente = sum(1 for i in inscriptions if i.statut_paiement != 'PAYE')
+    aujourdhui_data = {
+        'cours': {'nb': seances_jour.count(), 'plage': plage_cours},
+        'emprunts_a_rendre': {'nb': emprunts_a_rendre},
+        'paiements_en_attente': {'nb': nb_paiements_attente},
+    }
+
+
+
+    # ---- Filières + spécialités (pour le modal) ----
+    filieres_specialites = []
+    for f in Filiere.objects.filter(statut='actif'):
+        specs = list(Specialite.objects.filter(statut='actif', filiere=f).values('id', 'nom', 'code'))
+        filieres_specialites.append({'id': f.id, 'nom': f.nom, 'specialites': specs})
+    return Response({
+        'kpis': kpis,
+        'evolution_inscriptions': evolution_data,
+        'repartition_sexe': {'garcons': garcons, 'filles': filles, 'total': garcons + filles},
+        'apprenants_par_filiere': par_filiere,
+        'apprenants_par_specialite': par_specialite,
+        'apprenants_par_classe': par_classe,
+        'aujourdhui': aujourdhui_data,
+        'filieres_specialites': filieres_specialites,
+    })
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -49,6 +209,8 @@ from openpyxl.styles import Font, PatternFill
 # ---------------------------------------------------------------------------
 # Helpers communs
 # ---------------------------------------------------------------------------
+
+
 def _deliberations_filtrees(params, annee_override=None, periode_override=None):
     qs = Deliberation.objects.select_related(
         'etudiant', 'etudiant__specialite__filiere', 'etudiant__specialite',
@@ -57,9 +219,9 @@ def _deliberations_filtrees(params, annee_override=None, periode_override=None):
     annee_id = annee_override if annee_override is not None else params.get('annee_academique')
     if annee_id:
         qs = qs.filter(annee_academique_id=annee_id)
-    periode = periode_override if periode_override is not None else params.get('semestre')
-    if periode:
-        qs = qs.filter(periode=periode)
+    # periode n'est JAMAIS optionnelle ici : 'S1', 'S2' ou 'ANNEE' — jamais "tout mélanger"
+    periode = periode_override if periode_override is not None else (params.get('semestre') or 'ANNEE')
+    qs = qs.filter(periode=periode)
     if params.get('filiere'):
         qs = qs.filter(etudiant__specialite__filiere_id=params['filiere'])
     if params.get('specialite'):
@@ -74,7 +236,8 @@ def _deliberations_filtrees(params, annee_override=None, periode_override=None):
 
 
 
-def _notes_filtrees(params):
+
+def _notes_filtrees(params, periode_effectif):
     etudiants = Etudiant.objects.filter(statut='ACTIF')
     if params.get('filiere'):
         etudiants = etudiants.filter(specialite__filiere_id=params['filiere'])
@@ -89,11 +252,35 @@ def _notes_filtrees(params):
     notes = Note.objects.filter(etudiant__in=etudiants)
     if params.get('annee_academique'):
         notes = notes.filter(annee_academique_id=params['annee_academique'])
-    if params.get('semestre'):
-        notes = notes.filter(semestre=params['semestre'])
+    # 'ANNEE' = toutes les notes de l'année (S1+S2 combinés), un vrai semestre = filtré précisément
+    if periode_effectif in ('S1', 'S2'):
+        notes = notes.filter(semestre=periode_effectif)
     if params.get('matiere'):
         notes = notes.filter(matiere_id=params['matiere'])
     return etudiants, notes
+
+
+
+
+def _periode_precedente(annee_id, periode_effectif):
+    """Détermine (annee_id, periode) de la période précédente pour la comparaison."""
+    if not annee_id:
+        return None, None
+    try:
+        annee = AnneeAcademique.objects.get(pk=annee_id)
+    except AnneeAcademique.DoesNotExist:
+        return None, None
+    if periode_effectif == 'S2':
+        return annee_id, 'S1'
+    precedente = AnneeAcademique.objects.filter(date_debut__lt=annee.date_debut).order_by('-date_debut').first()
+    if not precedente:
+        return None, None
+    if periode_effectif == 'S1':
+        return precedente.id, 'S2'
+    if periode_effectif == 'ANNEE':
+        return precedente.id, 'ANNEE'
+    return None, None
+
 
 
 
@@ -140,24 +327,6 @@ def _stats_deliberations(qs):
 
 
 
-def _periode_precedente(annee_id, semestre):
-    """Détermine (annee_id, periode) du semestre précédent pour la comparaison."""
-    if not semestre or not annee_id:
-        return None, None
-    try:
-        annee = AnneeAcademique.objects.get(pk=annee_id)
-    except AnneeAcademique.DoesNotExist:
-        return None, None
-    if semestre == 'S2':
-        return annee_id, 'S1'
-    if semestre == 'S1':
-        precedente = AnneeAcademique.objects.filter(date_debut__lt=annee.date_debut).order_by('-date_debut').first()
-        if precedente:
-            return precedente.id, 'S2'
-    return None, None
-
-
-
 
 def _delta(actuel, precedent, relatif=False):
     """Renvoie {valeur, sens} ou None si comparaison impossible."""
@@ -181,23 +350,41 @@ def _delta(actuel, precedent, relatif=False):
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_notes')
 def dashboard_academique(request):
+
     params = request.GET
+
     annee_id = params.get('annee_academique')
+
     if not annee_id:
         annee_active = AnneeAcademique.objects.filter(statut=True).first()
         annee_id = annee_active.id if annee_active else None
+
+    periode_effectif = params.get('semestre') or 'ANNEE'
+
     params_effectifs = params.copy()
+    
     params_effectifs['annee_academique'] = annee_id
-    # ---- Stats principales (basées sur les délibérations déjà calculées) ----
-    deliberations = _deliberations_filtrees(params_effectifs)
+    
+
+    # ---- Stats principales : UNE seule période, jamais de mélange ----
+    deliberations = _deliberations_filtrees(params_effectifs, periode_override=periode_effectif)
+
     stats = _stats_deliberations(deliberations)
-    # ---- Stats de la période précédente (pour comparaison) ----
-    annee_prec_id, semestre_prec = _periode_precedente(annee_id, params.get('semestre'))
+    
+
+    # ---- Comparaison avec la période précédente ----
+    annee_prec_id, periode_prec = _periode_precedente(annee_id, periode_effectif)
+
     stats_prec = None
-    if annee_prec_id and semestre_prec:
-        deliberations_prec = _deliberations_filtrees(params_effectifs, annee_override=annee_prec_id, periode_override=semestre_prec)
+
+
+    if annee_prec_id and periode_prec:
+        deliberations_prec = _deliberations_filtrees(params_effectifs, annee_override=annee_prec_id, periode_override=periode_prec)
         stats_prec = _stats_deliberations(deliberations_prec)
+
     comparaisons = {}
+
+
     if stats_prec:
         comparaisons = {
             'apprenants_evalues': _delta(stats['total'], stats_prec['total'], relatif=True),
@@ -205,17 +392,24 @@ def dashboard_academique(request):
             'taux_echec': _delta(stats['taux_echec'], stats_prec['taux_echec']),
             'moyenne_generale': _delta(stats['moyenne_generale'], stats_prec['moyenne_generale']),
         }
-    # ---- Notes brutes (évaluations, tranches, matières) ----
-    etudiants, notes_qs = _notes_filtrees(params_effectifs)
+
+
+    # ---- Notes brutes (cohérentes avec la période choisie) ----
+    etudiants, notes_qs = _notes_filtrees(params_effectifs, periode_effectif)
+
     evaluations_realisees = notes_qs.count()
+
     comparaisons['evaluations_realisees'] = None
+
     if stats_prec:
         params_prec = params_effectifs.copy()
         params_prec['annee_academique'] = annee_prec_id
-        params_prec['semestre'] = semestre_prec
-        _, notes_prec_qs = _notes_filtrees(params_prec)
+        _, notes_prec_qs = _notes_filtrees(params_prec, periode_prec)
         comparaisons['evaluations_realisees'] = _delta(evaluations_realisees, notes_prec_qs.count(), relatif=True)
+
     moyennes_deliberations = deliberations.exclude(moyenne_generale__isnull=True).values_list('moyenne_generale', flat=True)
+
+
     tranches = {'0-8': 0, '8-10': 0, '10-12': 0, '12-14': 0, '14-16': 0, '16-20': 0}
 
     for v in moyennes_deliberations:
@@ -226,29 +420,33 @@ def dashboard_academique(request):
         elif v < 14: tranches['12-14'] += 1
         elif v < 16: tranches['14-16'] += 1
         else: tranches['16-20'] += 1
+
     repartition_tranches = [{'tranche': k, 'nombre': v} for k, v in tranches.items()]
+
     matieres_concernees = Matiere.objects.filter(id__in=notes_qs.values_list('matiere', flat=True).distinct())
+
     par_matiere = []
 
     for mat in matieres_concernees:
         moy = notes_qs.filter(matiere=mat).aggregate(m=Avg('valeur'))['m']
         if moy is not None:
             par_matiere.append({'matiere': mat.nom, 'moyenne': round(float(moy), 2)})
-    # ---- Comparaison sexe (sur délibérations) ----
+
     comparaison_sexe = []
+
     for code, label in [('M', 'Masculin'), ('F', 'Féminin')]:
         dl_sexe = deliberations.filter(etudiant__sexe=code).exclude(moyenne_generale__isnull=True)
         if dl_sexe.exists():
             comparaison_sexe.append({'sexe': label, 'moyenne': round(float(dl_sexe.aggregate(m=Avg('moyenne_generale'))['m']), 2)})
-    # ---- Performance par filière (top 5 + total pour "voir tout") ----
+
     toutes_filieres = []
+
     for filiere in Filiere.objects.filter(statut='actif'):
         dl_filiere = deliberations.filter(etudiant__specialite__filiere=filiere)
         s = _stats_deliberations(dl_filiere)
         if s['total'] > 0:
             toutes_filieres.append({'filiere': filiere.nom, 'apprenants': s['total'], 'moyenne': s['moyenne_generale'], 'taux_reussite': s['taux_reussite']})
     toutes_filieres.sort(key=lambda x: x['taux_reussite'], reverse=True)
-    # ---- Performance par classe ----
     toutes_classes = []
     for classe in Classe.objects.all():
         dl_classe = deliberations.filter(etudiant__classe=classe)
@@ -256,8 +454,10 @@ def dashboard_academique(request):
         if s['total'] > 0:
             toutes_classes.append({'classe': str(classe), 'apprenants': s['total'], 'moyenne': s['moyenne_generale']})
     toutes_classes.sort(key=lambda x: x['moyenne'], reverse=True)
-    # ---- Classement complet des apprenants ----
+
+
     classement_complet = []
+
     for dl in deliberations.exclude(moyenne_generale__isnull=True).order_by('-moyenne_generale'):
         etu = dl.etudiant
         classement_complet.append({
@@ -266,9 +466,11 @@ def dashboard_academique(request):
             'specialite': str(etu.specialite) if etu.specialite else '—',
             'moyenne': float(dl.moyenne_generale), 'mention': mention(dl.moyenne_generale),
             'decision': dl.decision,
+            'photo': request.build_absolute_uri(etu.photo.url) if etu.photo else None,
         })
-    # ---- Alertes ----
+
     matieres_fort_echec = []
+
     for mat in matieres_concernees:
         notes_mat = notes_qs.filter(matiere=mat)
         if notes_mat.count() == 0:
@@ -280,6 +482,7 @@ def dashboard_academique(request):
     notes_manquantes = etudiants.count() * matieres_concernees.count() - notes_qs.values('etudiant', 'matiere').distinct().count()
     deliberations_incompletes = deliberations.filter(decision='INCOMPLET').count()
     return Response({
+        'periode_effective': periode_effectif,
         'kpis': {
             'apprenants_evalues': stats['total'],
             'evaluations_realisees': evaluations_realisees,
@@ -315,7 +518,6 @@ def dashboard_academique(request):
             'deliberations_incompletes': deliberations_incompletes,
         },
     })
-
 
 
 

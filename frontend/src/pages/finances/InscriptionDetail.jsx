@@ -6,8 +6,13 @@ import { getTypesPaiement } from '../../api/finances';
 import { useAlert } from '../../context/AlertContext';
 import { BADGE_STATUT_INSCRIPTION, STATUTS_INSCRIPTION, BADGE_STATUT_FINANCIER, LABEL_STATUT_FINANCIER, telechargerFichier } from './financesConstantes';
 import { formatMontant } from '../../components/formatters';
+import Loader from '../../components/Loader';
 import '../../assets/css/crud.css';
 import '../../assets/css/finance.css';
+
+
+
+
 
 
 function InscriptionDetail() {
@@ -58,9 +63,14 @@ function InscriptionDetail() {
       afficherErreur('Erreur lors du téléchargement du PDF.');
     }
   };
+
+
+
+
   if (!inscription) {
-    return <div className="personnel"><div className="empty">Chargement...</div></div>;
+    return <Loader label="Chargement en cours..." />;
   }
+
 
 
 

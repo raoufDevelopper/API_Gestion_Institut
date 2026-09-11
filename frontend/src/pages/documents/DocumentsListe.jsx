@@ -261,6 +261,13 @@ function DocumentsListe() {
               </button>
             </div>
           </form>
+
+          <hr />
+                    
+          <p id="consigne">
+            Le remplissage des champs marqués avec (*) est obligatoire.
+            Soumettez le formulaire si consigne respectée !
+          </p>
         </div>
       </div>
 

@@ -89,9 +89,14 @@ function ReservationsListe() {
                   <tr className="row-link" key={r.id}>
                     <td className="cell-strong">{r.ressource_str}</td>
                     <td>{r.adherent_str}</td>
-                    <td>{new Date(r.date_reservation).toLocaleDateString('fr-FR')}</td>
+                    <td>{new Date(r.date_reservation).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
                     <td>{r.position_file || '—'}</td>
-                    <td><span className={`badge ${BADGE_STATUT_RESERVATION[r.statut]}`}><span className="dot"></span>{STATUTS_RESERVATION.find((s) => s.value === r.statut)?.label}</span></td>
+                    <td>
+                      <span className={`badge ${BADGE_STATUT_RESERVATION[r.statut]}`}>
+                        <p className='bull'>&bull;</p>
+                        {STATUTS_RESERVATION.find((s) => s.value === r.statut)?.label}
+                      </span>
+                    </td>
                     <td>
                       {['EN_ATTENTE', 'DISPONIBLE'].includes(r.statut) && (
                         <button className="table-btn delete" onClick={() => annuler(r)}><i className="fas fa-times"></i></button>

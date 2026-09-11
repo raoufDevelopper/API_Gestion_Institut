@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getDocument, supprimerDocument } from '../../api/documents';
 import { useAlert } from '../../context/AlertContext';
 import ConfirmationModal from '../../components/ConfirmationModal';
+import Loader from '../../components/Loader';
 import '../../assets/css/crud.css';
 import '../../assets/css/documents.css';
 
@@ -33,7 +34,7 @@ function DocumentDetail() {
     }
   };
 
-  if (!document) return <div className="container-principal"><div className="empty">Chargement...</div></div>;
+  if (!document) return <Loader label="Chargement en cours..." />;
   
 
   
