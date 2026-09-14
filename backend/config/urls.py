@@ -29,6 +29,8 @@ urlpatterns = [
     path('api/bibliotheque/', include('apps.bibliotheque.urls')),
 
     path('api/parametres/', include('apps.parametres.urls')), 
+
+    path('api/espace-etudiant/', include('apps.espace_etudiant.urls')),
 ]
 
 

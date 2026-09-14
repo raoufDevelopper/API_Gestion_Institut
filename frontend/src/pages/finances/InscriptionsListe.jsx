@@ -110,7 +110,7 @@ function InscriptionsListe() {
 
 
 
-          <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(350px,1fr))' }}>
+          <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
             <div className="department-card">
               <div className="kpi-icon blue"><i className="fa-solid fa-user-plus"></i></div>
               <div className="count-top"><h2>{total}</h2><span>Inscriptions</span></div>
@@ -119,6 +119,10 @@ function InscriptionsListe() {
               <div className="kpi-icon green"><i className="fas fa-check-circle"></i></div>
               <div className="count-top"><h2>{validee}</h2><span>Validées</span></div>
             </div>
+          </div>
+
+
+          <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
             <div className="department-card">
               <div className="kpi-icon aqua"><i className="fa-solid fa-pause-circle"></i></div>
               <div className="count-top"><h2>{en_attente}</h2><span>En attente</span></div>

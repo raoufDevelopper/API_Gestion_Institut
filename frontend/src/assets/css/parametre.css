@@ -76,7 +76,6 @@ body.dark{
 }
 
 #parametresForm .btn-primary {
-    width: 350px !important;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -569,7 +568,7 @@ display: block;
 @media (max-width: 980px) 
 {
     .content-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
     }
 
     .side-panel {
@@ -602,7 +601,7 @@ display: block;
     }
 
     .form-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
     }
 
     .panel {

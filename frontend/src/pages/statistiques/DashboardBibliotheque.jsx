@@ -127,7 +127,7 @@ function DashboardBibliotheque() {
 
 
 
-        <div className="department-kpi academique" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(320px,1fr))' }}>
+        <div className="department-kpi academique" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
           
           <div className="department-card blue border">
             <div className="kpi-icon blue-icone">
@@ -162,7 +162,11 @@ function DashboardBibliotheque() {
             </div>
           </div>
 
+        </div>
 
+
+        <div className="department-kpi academique" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
+          
           <div className="department-card orange border">
             <div className="kpi-icon orange-icone">
               <i className="fas fa-bookmark"></i>
@@ -197,7 +201,6 @@ function DashboardBibliotheque() {
               <p>exemplaires empruntés</p>
             </div>
           </div>
-
 
         </div>
         
@@ -458,7 +461,7 @@ function DashboardBibliotheque() {
 
 
 
-        <div className="department-kpi academique-2" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(320px,1fr))' }}>
+        <div className="department-kpi academique-2" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
 
           <div className="department-card">
             <div className="count-top">
@@ -485,13 +488,13 @@ function DashboardBibliotheque() {
         </div>
 
 
-        <div className="department-kpi academique-2" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(320px,1fr))' }}>
+        <div className="department-kpi academique-2" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
 
           <div className="department-card">
             <div className="count-top">
               <span>Pénalités</span>
               <h2 className='f-m'>{kpis.penalites_generees}</h2>
-              <p className='f-e'>nobre de pénalités</p>
+              <p className='f-e'>nombre de pénalités</p>
             </div>
             <div className="kpi-icon red">
               <i className="fas fa-gavel"></i>
@@ -502,7 +505,7 @@ function DashboardBibliotheque() {
             <div className="count-top">
               <span>Emprunts période</span>
               <h2 className='n-m'>{kpis.emprunts_periode}</h2>
-              <p className='t-m'>nombre de périodes d'emprunt</p>
+              <p className='t-m'>périodes d'emprunt</p>
             </div>
             <div className="kpi-icon violet">
               <i className="fas fa-calendar"></i>

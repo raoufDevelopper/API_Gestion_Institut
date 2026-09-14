@@ -138,7 +138,7 @@ function DashboardFinance() {
 
 
 
-        <div className="department-kpi academique" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(320px,1fr))' }}>
+        <div className="department-kpi academique" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
           
           <div className="department-card green border">
             <div className="kpi-icon green-icone">
@@ -176,7 +176,7 @@ function DashboardFinance() {
         </div>
 
 
-        <div className="department-kpi academique" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(320px,1fr))' }}>
+        <div className="department-kpi academique" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
         
           <div className="department-card orange border">
             <div className="kpi-icon orange-icone">
@@ -570,7 +570,7 @@ function DashboardFinance() {
 
 
 
-        <div className="department-kpi academique-2" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(320px,1fr))' }}>
+        <div className="department-kpi academique-2" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
 
           <div className="department-card">
             <div className="count-top">
@@ -597,7 +597,7 @@ function DashboardFinance() {
         </div>
 
 
-        <div className="department-kpi academique-2" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(320px,1fr))' }}>
+        <div className="department-kpi academique-2" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
 
           <div className="department-card">
             <div className="count-top">

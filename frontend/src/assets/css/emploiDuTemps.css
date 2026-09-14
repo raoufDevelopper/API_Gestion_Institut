@@ -465,6 +465,9 @@
 
 
 @media (max-width: 900px) {
+  .edt-jours-conteneur { 
+    padding: 0px; 
+  }
   .edt-seance-ligne { grid-template-columns: 1fr 1fr; }
   .edt-calendrier { grid-template-columns: 50px repeat(6, minmax(80px, 1fr)); overflow-x: auto; }
 }

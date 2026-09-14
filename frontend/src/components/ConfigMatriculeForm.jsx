@@ -1,10 +1,16 @@
 import { useState, useEffect } from 'react';
 import { getConfigurationsMatricule, updateConfigurationMatricule, creerConfigurationMatricule } from '../api/parametres';
 import { useAlert } from '../context/AlertContext';
+
+
+
 const TYPES = [
   { code: 'ETUDIANT', label: 'Étudiants' },
   { code: 'PERSONNEL', label: 'Personnel' },
 ];
+
+
+
 function ConfigMatriculeForm() {
   const [configs, setConfigs] = useState({});
   const { afficherSucces, afficherErreur } = useAlert();
@@ -54,8 +60,9 @@ function ConfigMatriculeForm() {
           const config = configs[code] || {};
           
           
+
           return (
-            <div className="matricule-config-bloc" key={code}>
+            <div className="matricule-config-blo" key={code}>
           
               <h4 className='badge badge-violet' style={{ marginBottom: '15px', margintop: '25px' }}>{label}</h4>
           
@@ -126,7 +133,10 @@ function ConfigMatriculeForm() {
 
               </div>
 
-              <button style={{ marginBottom: '50px' }} type="button" className="btn btn-primary" onClick={() => handleEnregistrer(code)}>
+              <button style={{ marginBottom: '50px', background: 'rgba(141, 31, 231, 0.9)', color: '#fdfdfd' }} 
+                type="button" className="btn" 
+                onClick={() => handleEnregistrer(code)} 
+              >
                 <i className="fas fa-save"></i> Enregistrer ce format
               </button>
           

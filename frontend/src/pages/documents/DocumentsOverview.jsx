@@ -33,18 +33,10 @@ function DocumentsOverview() {
         </div>
 
 
-        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(320px,1fr))' }}>
+        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
           <div className="department-card" style={{ cursor: 'pointer' }} onClick={() => navigate('/documents/diplomes')}>
             <div className="kpi-icon blue"><i className="fas fa-graduation-cap"></i></div>
             <div className="count-top"><h2>{donnees.diplomes_total}</h2><span>Diplômes</span></div>
-          </div>
-          <div className="department-card" style={{ cursor: 'pointer' }} onClick={() => navigate('/documents/certificats')}>
-            <div className="kpi-icon aqua"><i className="fas fa-certificate"></i></div>
-            <div className="count-top"><h2>{donnees.certificats_total}</h2><span>Certificats</span></div>
-          </div>
-          <div className="department-card" style={{ cursor: 'pointer' }} onClick={() => navigate('/documents/documents')}>
-            <div className="kpi-icon violet"><i className="fas fa-folder"></i></div>
-            <div className="count-top"><h2>{donnees.documents_total}</h2><span>Documents</span></div>
           </div>
           <div className="department-card">
             <div className="kpi-icon green"><i className="fas fa-check-circle"></i></div>
@@ -53,6 +45,18 @@ function DocumentsOverview() {
           <div className="department-card">
             <div className="kpi-icon red"><i className="fas fa-ban"></i></div>
             <div className="count-top"><h2>{donnees.diplomes_revoques}</h2><span>Diplômes révoqués</span></div>
+          </div>
+        </div>
+
+
+        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
+          <div className="department-card" style={{ cursor: 'pointer' }} onClick={() => navigate('/documents/certificats')}>
+            <div className="kpi-icon aqua"><i className="fas fa-certificate"></i></div>
+            <div className="count-top"><h2>{donnees.certificats_total}</h2><span>Certificats</span></div>
+          </div>
+          <div className="department-card" style={{ cursor: 'pointer' }} onClick={() => navigate('/documents/documents')}>
+            <div className="kpi-icon violet"><i className="fas fa-folder"></i></div>
+            <div className="count-top"><h2>{donnees.documents_total}</h2><span>Documents</span></div>
           </div>
         </div>
 
@@ -75,7 +79,7 @@ function DocumentsOverview() {
                   </div>
                 </div>
                 
-                <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                   <span className="doc-recent-date">{new Date(r.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
                   {r.fichier && (
                     <a href={r.fichier} target="_blank" rel="noreferrer">
@@ -85,6 +89,7 @@ function DocumentsOverview() {
                     </a>
                   )}
                 </div>
+
               </div>
             ))}
 

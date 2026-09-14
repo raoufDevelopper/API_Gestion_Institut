@@ -151,7 +151,7 @@ function Matieres() {
 
 
         {/* KPI */}
-        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(320px,1fr))' }}>
+        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
           <div className="department-card">
             <div className="kpi-icon blue"><i className="fas fa-book-open"></i></div>
             <div className="count-top"><h2>{total}</h2><span>Total</span></div>

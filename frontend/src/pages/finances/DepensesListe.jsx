@@ -112,7 +112,7 @@ function DepensesListe() {
         </div>
 
 
-        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))' }}>
+        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
           <div className="department-card">
             <div className="kpi-icon blue"><i className="fa-solid fa-money-bill-wave"></i></div>
             <div className="count-top"><h2>{total}</h2><span>Dépenses</span></div>
@@ -121,6 +121,11 @@ function DepensesListe() {
             <div className="kpi-icon green"><i className="fas fa-check-circle"></i></div>
             <div className="count-top"><h2>{payee}</h2><span>Payées</span></div>
           </div>
+        </div>
+
+
+
+        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
           <div className="department-card">
             <div className="kpi-icon violet"><i className="fas fa-check-circle"></i></div>
             <div className="count-top"><h2>{approuvee}</h2><span>Approuvées</span></div>

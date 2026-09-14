@@ -19,7 +19,7 @@ const ONGLETS = ['Vue générale', 'Analyses', 'Classements & Alertes'];
 const COULEURS_DONUT = { Admis: '#16a34a', Ajournés: '#fb923c', Redoublants: '#dc2626' };
 
 
-
+ 
 function DashboardAcademique() {
   const [donnees, setDonnees] = useState(null);
   const [filtresOptions, setFiltresOptions] = useState({ annees_academiques: [], filieres: [], specialites: [], classes: [], niveaux: [], matieres: [] });
@@ -28,9 +28,13 @@ function DashboardAcademique() {
   const [filtresAvancesOuverts, setFiltresAvancesOuverts] = useState(false);
   const [modalOuvert, setModalOuvert] = useState(null); // 'filieres' | 'matieres' | 'classement' | null
   const { afficherErreur } = useAlert();
+  
   useEffect(() => { getFiltresAcademique().then((res) => setFiltresOptions(res.data)); }, []);
+  
   useEffect(() => { getDashboardAcademique(filtres).then((res) => setDonnees(res.data)); }, [filtres]);
+  
   const maj = (champ, valeur) => setFiltres((prev) => ({ ...prev, [champ]: valeur || undefined }));
+  
   const exporterPdf = async () => {
     try {
       const res = await exporterAcademiquePdf(filtres);
@@ -209,7 +213,7 @@ function DashboardAcademique() {
 
 
 
-        <div className="department-kpi academique" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(320px,1fr))' }}>
+        <div className="department-kpi academique" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
           
           <div className="department-card blue">
             <div className="kpi-icon blue-icone">
@@ -246,7 +250,7 @@ function DashboardAcademique() {
           
         </div>
 
-        <div className="department-kpi academique" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(320px,1fr))' }}>
+        <div className="department-kpi academique" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
           
           <div className="department-card orange">
             <div className="kpi-icon orange-icone">
@@ -305,7 +309,7 @@ function DashboardAcademique() {
                     <PieChart>
                       <Pie
                         data={donnees.repartition_resultats} dataKey="nb" nameKey="statut"
-                        cx="50%" cy="50%" innerRadius={98} outerRadius={120} paddingAngle={3} cornerRadius={6}
+                        cx="50%" cy="50%" innerRadius={95} outerRadius={110} paddingAngle={3} cornerRadius={6}
                       >
                         {donnees.repartition_resultats.map((entry, i) => <Cell key={i} fill={COULEURS_DONUT[entry.statut]}/>)}
                         <Label
@@ -660,7 +664,7 @@ function DashboardAcademique() {
 
 
 
-        <div className="department-kpi academique-2" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(320px,1fr))' }}>
+        <div className="department-kpi academique-2" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
 
           <div className="department-card" style={{ border: 'dashed 1px #22c55e' }}>
             <div className="count-top">
@@ -668,7 +672,7 @@ function DashboardAcademique() {
               <h2 className='m-m'>{kpis.meilleure_moyenne ? `${kpis.meilleure_moyenne.moyenne}/20` : '—'}</h2>
               <p className='m-e'>{kpis.meilleure_moyenne ? `${kpis.meilleure_moyenne.nom} · ${kpis.meilleure_moyenne.matricule}` : 'Aucune donnée'}</p>
             </div>
-             <div className="kpi-icon green">
+            <div className="kpi-icon green">
               <i className="fas fa-trophy"></i>
             </div>
           </div>

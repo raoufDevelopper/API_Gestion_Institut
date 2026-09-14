@@ -88,7 +88,7 @@ function ParametresInstitut() {
                     </div>
                     <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
                         <i className="fas fa-save"></i>
-                        <span>{isSubmitting ? 'Enregistrement...' : 'Enregistrer les modifications'}</span>
+                        <span>{isSubmitting ? 'Enregistrement...' : 'Enregistrer'}</span>
                     </button>
                 </header>
         
@@ -296,79 +296,87 @@ function ParametresInstitut() {
 
                 {/* ---- TAB 5 : Paramètres Académiques ---- */}
                 <section className={`tab-panel ${ongletActif === 'academique' ? 'active' : ''}`}>
+                    
                     <div className="content-grid no-side">
-                    <div className="panel">
-                        <div className="panel-header">
-                        <div className="panel-icon"><i className="fas fa-graduation-cap"></i></div>
-                        <div>
-                            <h2>Paramètres Académiques</h2>
-                            <p>Configurez les règles académiques de votre institut.</p>
-                        </div>
-                        </div>
-                        <div className="form-grid">
-                        <div className="field">
-                            <label>Note d'admission minimale</label>
-                            <input type="number" step="0.01" {...register('note_admission_minimale')} />
-                        </div>
-                        <div className="field">
-                            <label>Crédits requis par semestre</label>
-                            <input type="number" {...register('credits_requis_semestre')} />
-                        </div>
-                        <div className="field">
-                            <label>Crédits requis par an</label>
-                            <input type="number" {...register('credits_requis_annee')} />
+                        
+                        <div className="panel">
+
+                            <div className="panel-header">
+                                <div className="panel-icon"><i className="fas fa-graduation-cap"></i></div>
+                                <div>
+                                    <h2>Paramètres Académiques</h2>
+                                    <p>Configurez les règles académiques de votre institut.</p>
+                                </div>
+                            </div>
+
+                            <ConfigMatriculeForm />
+
+                            <div className="form-grid">
+                                <div className="field">
+                                    <label>Note d'admission minimale</label>
+                                    <input type="number" step="0.01" {...register('note_admission_minimale')} />
+                                </div>
+                                <div className="field">
+                                    <label>Crédits requis par semestre</label>
+                                    <input type="number" {...register('credits_requis_semestre')} />
+                                </div>
+                                <div className="field">
+                                    <label>Crédits requis par an</label>
+                                    <input type="number" {...register('credits_requis_annee')} />
+                                </div>
+
+                                <div className="field full">
+                                    <label>Options</label>
+                                    <div className="toggle-list">
+                                    <div className="toggle-row">
+                                        <div className="toggle-row-text">
+                                        <strong>Inscriptions en ligne</strong>
+                                        <span>Permettre aux étudiants de s'inscrire directement depuis le portail.</span>
+                                        </div>
+                                        <label className="switch">
+                                        <input type="checkbox" {...register('inscriptions_en_ligne')} />
+                                        <span className="slider"></span>
+                                        </label>
+                                    </div>
+                                    <div className="toggle-row">
+                                        <div className="toggle-row-text">
+                                        <strong>Notation par les enseignants en ligne</strong>
+                                        <span>Autoriser la saisie des notes directement sur la plateforme.</span>
+                                        </div>
+                                        <label className="switch">
+                                        <input type="checkbox" {...register('notation_enseignants_en_ligne')} />
+                                        <span className="slider"></span>
+                                        </label>
+                                    </div>
+                                    <div className="toggle-row">
+                                        <div className="toggle-row-text">
+                                        <strong>Redoublement automatique</strong>
+                                        <span>Appliquer automatiquement le redoublement en cas de note insuffisante.</span>
+                                        </div>
+                                        <label className="switch">
+                                        <input type="checkbox" {...register('redoublement_automatique')} />
+                                        <span className="slider"></span>
+                                        </label>
+                                    </div>
+                                    <div className="toggle-row">
+                                        <div className="toggle-row-text">
+                                        <strong>Notifications aux parents</strong>
+                                        <span>Envoyer un e-mail aux tuteurs après la publication des résultats.</span>
+                                        </div>
+                                        <label className="switch">
+                                        <input type="checkbox" {...register('notifications_parents')} />
+                                        <span className="slider"></span>
+                                        </label>
+                                    </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
                         </div>
 
-                        <ConfigMatriculeForm />
+                    </div>
 
-                        <div className="field full">
-                            <label>Options</label>
-                            <div className="toggle-list">
-                            <div className="toggle-row">
-                                <div className="toggle-row-text">
-                                <strong>Inscriptions en ligne</strong>
-                                <span>Permettre aux étudiants de s'inscrire directement depuis le portail.</span>
-                                </div>
-                                <label className="switch">
-                                <input type="checkbox" {...register('inscriptions_en_ligne')} />
-                                <span className="slider"></span>
-                                </label>
-                            </div>
-                            <div className="toggle-row">
-                                <div className="toggle-row-text">
-                                <strong>Notation par les enseignants en ligne</strong>
-                                <span>Autoriser la saisie des notes directement sur la plateforme.</span>
-                                </div>
-                                <label className="switch">
-                                <input type="checkbox" {...register('notation_enseignants_en_ligne')} />
-                                <span className="slider"></span>
-                                </label>
-                            </div>
-                            <div className="toggle-row">
-                                <div className="toggle-row-text">
-                                <strong>Redoublement automatique</strong>
-                                <span>Appliquer automatiquement le redoublement en cas de note insuffisante.</span>
-                                </div>
-                                <label className="switch">
-                                <input type="checkbox" {...register('redoublement_automatique')} />
-                                <span className="slider"></span>
-                                </label>
-                            </div>
-                            <div className="toggle-row">
-                                <div className="toggle-row-text">
-                                <strong>Notifications aux parents</strong>
-                                <span>Envoyer un e-mail aux tuteurs après la publication des résultats.</span>
-                                </div>
-                                <label className="switch">
-                                <input type="checkbox" {...register('notifications_parents')} />
-                                <span className="slider"></span>
-                                </label>
-                            </div>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                    </div>
                 </section>
 
 

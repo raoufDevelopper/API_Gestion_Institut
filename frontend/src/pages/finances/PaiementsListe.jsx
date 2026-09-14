@@ -104,7 +104,7 @@ function PaiementsListe() {
           </div>
 
 
-          <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(350px,1fr))' }}>
+          <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
             <div className="department-card">
               <div className="kpi-icon blue"><i className="fa-solid fa-credit-card"></i></div>
               <div className="count-top"><h2>{total}</h2><span>Paiements</span></div>
@@ -113,6 +113,9 @@ function PaiementsListe() {
               <div className="kpi-icon green"><i className="fas fa-check-circle"></i></div>
               <div className="count-top"><h2>{valide}</h2><span>Validés</span></div>
             </div>
+          </div>
+
+          <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
             <div className="department-card">
               <div className="kpi-icon orange"><i className="fa-solid fa-money-bill-transfer"></i></div>
               <div className="count-top"><h2>{rembourse}</h2><span>Remboursés</span></div>

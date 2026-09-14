@@ -387,7 +387,8 @@
 
 .dash-donut-legende { 
   display: flex; 
-  gap: 18px; 
+  flex-wrap: wrap;
+  gap: 10px; 
   justify-content: center; 
 }
 

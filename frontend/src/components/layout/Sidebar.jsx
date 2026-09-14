@@ -24,6 +24,8 @@ const MENUS = [
       { label: 'Ma formation', to: '/espace-etudiant/formation', icone: 'fa-graduation-cap', permission: 'voir_espace_etudiant' },
       { label: 'Mes finances', to: '/espace-etudiant/finances', icone: 'fa-sack-dollar', permission: 'voir_espace_etudiant' },
       { label: 'Mes documents', to: '/espace-etudiant/documents', icone: 'fa-folder', permission: 'voir_espace_etudiant' },
+      { label: 'Mon dossier', to: '/espace-etudiant/dossier', icone: 'fa-id-card', permission: 'voir_espace_etudiant' },
+      { label: 'Mon compte', to: '/espace-etudiant/compte', icone: 'fa-user-gear', permission: 'voir_espace_etudiant' },
     ],
   },
 
@@ -249,7 +251,7 @@ function Sidebar({ fermee, affichee })
       <div className="sidebar-top">
         <div className="app-brand">
           {parametre?.logo && <img src={parametre.logo} alt="" />}
-          <h2>{parametre?.sigle || parametre?.nom || 'Institute Name'}</h2>
+          <h2>{parametre?.sigle || parametre?.nom || 'Nom de l Institut'}</h2>
         </div>
       </div>
  

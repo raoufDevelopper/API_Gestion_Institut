@@ -99,7 +99,7 @@ function DashboardDocuments() {
 
 
 
-        <div className="department-kpi academique" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(320px,1fr))' }}>
+        <div className="department-kpi academique" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
           
           <div className="department-card blue border">
             <div className="kpi-icon blue-icone">
@@ -136,6 +136,11 @@ function DashboardDocuments() {
             </div>
           </div>
 
+        </div>
+
+
+
+        <div className="department-kpi academique" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
 
           <div className="department-card violet border">
             <div className="kpi-icon violet-icone">
@@ -156,7 +161,7 @@ function DashboardDocuments() {
             <div className="count-top">
               <span>Liés étudiants</span>
               <h2>{kpis.documents_lies_etudiants}</h2>
-              <p>ceux liés aux étudiants</p>
+              <p>liés aux étudiants</p>
             </div>
           </div>
 
@@ -168,7 +173,7 @@ function DashboardDocuments() {
             <div className="count-top">
               <span>Liés personnel</span>
               <h2>{kpis.documents_lies_personnel}</h2>
-              <p>ceux liés au personnel</p>
+              <p>liés au personnel</p>
             </div>
           </div>
 
@@ -460,7 +465,7 @@ function DashboardDocuments() {
 
 
 
-        <div className="department-kpi academique-2" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(320px,1fr))' }}>
+        <div className="department-kpi academique-2" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
 
           <div className="department-card">
             <div className="count-top">

@@ -29,7 +29,7 @@ function VueEnsemble() {
         </div>
 
 
-        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(320px,1fr))' }}>
+        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
           <div className="department-card" style={{ cursor: 'pointer' }} onClick={() => navigate('/bibliotheque/catalogue')}>
             <div className="kpi-icon blue"><i className="fas fa-book"></i></div>
             <div className="count-top"><h2>{kpis.ressources}</h2><span>Ressources</span></div>
@@ -45,19 +45,32 @@ function VueEnsemble() {
             <div className="count-top"><h2>{kpis.emprunts_en_cours}</h2><span>Emprunts en cours</span></div>
           </div>
 
+        </div>
+
+
+
+        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
+
           <div className="department-card" style={{ cursor: 'pointer' }} onClick={() => navigate('/bibliotheque/emprunts/retards')}>
             <div className="kpi-icon red"><i className="fas fa-triangle-exclamation"></i></div>
             <div className="count-top"><h2>{kpis.retards}</h2><span>Retards</span></div>
           </div>
 
-          <div className="department-card" style={{ cursor: 'pointer' }} onClick={() => navigate('/bibliotheque/adherents')}>
-            <div className="kpi-icon green"><i className="fas fa-users"></i></div>
-            <div className="count-top"><h2>{kpis.adherents}</h2><span>Adhérents</span></div>
-          </div>
-
           <div className="department-card" style={{ cursor: 'pointer' }} onClick={() => navigate('/bibliotheque/reservations')}>
             <div className="kpi-icon orange"><i className="fas fa-bookmark"></i></div>
             <div className="count-top"><h2>{kpis.reservations}</h2><span>Réservations</span></div>
+          </div>
+
+        </div>
+
+
+
+
+
+        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
+          <div className="department-card" style={{ cursor: 'pointer' }} onClick={() => navigate('/bibliotheque/adherents')}>
+            <div className="kpi-icon green"><i className="fas fa-users"></i></div>
+            <div className="count-top"><h2>{kpis.adherents}</h2><span>Adhérents</span></div>
           </div>
 
           <div className="department-card" style={{ cursor: 'pointer' }} onClick={() => navigate('/bibliotheque/acquisitions')}>
@@ -128,3 +141,4 @@ function VueEnsemble() {
 
 
 export default VueEnsemble;
+

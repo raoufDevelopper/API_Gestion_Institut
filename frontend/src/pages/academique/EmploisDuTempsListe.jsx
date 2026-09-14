@@ -103,7 +103,7 @@ function EmploisDuTempsListe() {
         </div>
 
 
-        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(350px,1fr))' }}>
+        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
           <div className="department-card">
             <div className="kpi-icon blue"><i className="fas fa-calendar-days"></i></div>
             <div className="count-top"><h2>{total}</h2><span>Total</span></div>
@@ -112,6 +112,9 @@ function EmploisDuTempsListe() {
             <div className="kpi-icon green"><i className="fas fa-check-circle"></i></div>
             <div className="count-top"><h2>{publie}</h2><span>Publiés</span></div>
           </div>
+        </div>
+
+        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
           <div className="department-card">
             <div className="kpi-icon red"><i className="fas fa-pen"></i></div>
             <div className="count-top"><h2>{brouillon}</h2><span>Brouillons</span></div>

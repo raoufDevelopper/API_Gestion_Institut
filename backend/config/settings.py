@@ -36,7 +36,7 @@ INSTITUT_LICENCE_CODE = config('INSTITUT_LICENCE_CODE')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default = False, cast = bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'apps.documents',
     'apps.bibliotheque',
     'apps.parametres',
+    'apps.espace_etudiant',
 
     #applications API REST
     'rest_framework',
@@ -91,6 +92,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
     'http://127.0.0.1:5173',
+    'http://10.17.180.142:5173',
 ]
 
 #ajouté

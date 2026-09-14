@@ -89,7 +89,7 @@ function Dashboard() {
 
 
 
-        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(320px,1fr))' }}>
+        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
 
           <div className="department-card">
             <div className="kpi-icon blue"><i className="fas fa-user-graduate"></i></div>
@@ -103,7 +103,7 @@ function Dashboard() {
 
         </div>
 
-        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(320px,1fr))' }}>
+        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
 
           <div className="department-card">
             <div className="kpi-icon orange"><i className="fas fa-sitemap"></i></div>
@@ -178,7 +178,7 @@ function Dashboard() {
 
 
 
-        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(320px,1fr))' }}>
+        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
 
           <div className="department-card">
             <div className="kpi-icon green"><i className="fas fa-chalkboard-teacher"></i></div>
@@ -193,7 +193,7 @@ function Dashboard() {
         </div>
 
 
-        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(320px,1fr))' }}>
+        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
 
           <div className="department-card">
             <div className="kpi-icon orange"><i className="fas fa-users-rectangle"></i></div>
@@ -223,7 +223,7 @@ function Dashboard() {
       
       {/* MODAL — filières & spécialités */}
       <div className="department-modal" style={{ display: modalFilieresOuvert ? 'flex' : 'none' }}>
-        <div className="modal-content model-detail" style={{ minWidth: '600px' }}>
+        <div className="modal-content model-detail" style={{ maxWidth: '600px' }}>
           
           <div className="modal-header">
             <h2>Filières & spécialités</h2>
@@ -237,13 +237,21 @@ function Dashboard() {
             {donnees.filieres_specialites.map((f) => (
               <div className="modal-filiere-bloc" key={f.id}>
                 <div className="modal-filiere-entete" onClick={() => setFiliereOuverte(filiereOuverte === f.id ? null : f.id)}>
-                  <span>{f.nom} ({f.specialites.length})</span>
+                  <span id='list-fil'>
+                    {f.nom}
+                    <p id='nbr-spe-fil'>{f.specialites.length}</p>
+                  </span>
                   <i className={`fas fa-chevron-${filiereOuverte === f.id ? 'up' : 'down'}`}></i>
                 </div>
                 {filiereOuverte === f.id && (
                   <div>
                     {f.specialites.map((s) => (
-                      <div className="modal-specialite-item" key={s.id}><span>{s.nom}</span><span className="badge-violet"><p className='bull'>&bull;</p> {s.code}</span></div>
+                      <div className="modal-specialite-item" key={s.id}>
+                        <span>{s.nom}</span>
+                        <span className="badge-violet">
+                          <p className='bull'>&bull;</p> {s.code}
+                        </span>
+                      </div>
                     ))}
                     {f.specialites.length === 0 && 
                       <div className="modal-specialite-item" style={{ color: '#9ca3af' }}>

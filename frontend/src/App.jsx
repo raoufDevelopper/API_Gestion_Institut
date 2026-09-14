@@ -101,6 +101,16 @@ import DashboardBibliotheque from './pages/statistiques/DashboardBibliotheque'
 import DashboardFinance from './pages/statistiques/DashboardFinance';
 import DashboardDocuments from './pages/statistiques/DashboardDocuments';
 
+import AccueilEtudiant from './pages/espace-etudiant/AccueilEtudiant';
+import PlanningEtudiant from './pages/espace-etudiant/PlanningEtudiant';
+import FormationEtudiant from './pages/espace-etudiant/FormationEtudiant';
+import FinancesEtudiant from './pages/espace-etudiant/FinancesEtudiant';
+import DocumentsEtudiant from './pages/espace-etudiant/DocumentsEtudiant';
+import DossierEtudiant from './pages/espace-etudiant/DossierEtudiant';
+import CompteEtudiant from './pages/espace-etudiant/CompteEtudiant';
+import ResultatsEtudiant from './pages/espace-etudiant/ResultatsEtudiant';
+import MonReleve from './pages/espace-etudiant/MonReleve';
+
 
 function App() {
 
@@ -661,6 +671,7 @@ function App() {
 
 
 
+
                   {/* ================ statistiques ================ */}
                   <Route path="/statistiques/academique" element={
                     <RouteProtegee permission="gerer_notes">
@@ -685,6 +696,59 @@ function App() {
                       <DashboardFinance />
                     </RouteProtegee>
                   } />
+
+
+
+
+
+
+
+                  {/* ================ espace étudiant ================ */}
+                  <Route path="/espace-etudiant" element={
+                    <RouteProtegee permission="voir_espace_etudiant">
+                      <AccueilEtudiant />
+                    </RouteProtegee>
+                  } />
+                  
+                  <Route path="/espace-etudiant/planning" element={
+                    <RouteProtegee permission="voir_espace_etudiant">
+                      <PlanningEtudiant />
+                    </RouteProtegee>
+                  } />
+                  
+                  <Route path="/espace-etudiant/formation" element={
+                    <RouteProtegee permission="voir_espace_etudiant">
+                      <FormationEtudiant />
+                    </RouteProtegee>
+                  } />
+                  
+                  <Route path="/espace-etudiant/finances" element={
+                    <RouteProtegee permission="voir_espace_etudiant">
+                      <FinancesEtudiant />
+                    </RouteProtegee>
+                  } />
+                  
+                  <Route path="/espace-etudiant/documents" element={
+                    <RouteProtegee permission="voir_espace_etudiant">
+                      <DocumentsEtudiant />
+                    </RouteProtegee>
+                  } />
+                  
+                  <Route path="/espace-etudiant/dossier" element={
+                    <RouteProtegee permission="voir_espace_etudiant">
+                      <DossierEtudiant />
+                    </RouteProtegee>
+                  } />
+                  
+                  <Route path="/espace-etudiant/compte" element={
+                    <RouteProtegee permission="voir_espace_etudiant">
+                      <CompteEtudiant />
+                    </RouteProtegee>
+                  } />
+
+                  <Route path="/espace-etudiant/resultats" element={<RouteProtegee permission="voir_espace_etudiant"><ResultatsEtudiant /></RouteProtegee>} />
+                  
+                  <Route path="/espace-etudiant/releve" element={<RouteProtegee permission="voir_espace_etudiant"><MonReleve /></RouteProtegee>} />
 
                 </Route>
                 
