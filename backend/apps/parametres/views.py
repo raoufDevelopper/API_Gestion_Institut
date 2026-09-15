@@ -1,4 +1,8 @@
+
+
 from django.contrib.auth import update_session_auth_hash
+
+from django.utils import timezone
 
 from rest_framework.decorators import api_view, permission_classes, parser_classes
 
@@ -48,6 +52,15 @@ def parametre_institut(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+
+
+
+
+
+
+
+
+    
 
 
 

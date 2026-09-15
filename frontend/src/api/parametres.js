@@ -22,3 +22,5 @@ export const getArchives = () => api.get('parametres/archives/');
 
 export const archiverAnneeAcademique = (id, data) => api.post(`parametres/archives/annees-academiques/${id}/archiver/`, data);
 
+export const getTempsRestantAbonnement = () => api.get('parametres/abonnement/temps-restant/');
+

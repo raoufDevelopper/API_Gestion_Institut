@@ -173,6 +173,7 @@ const MENUS = [
     classe: 'ps',
     items: [
       { label: 'Institut', to: '/parametres/institut', icone: 'fa-school', permission: 'gerer_parametres' },
+      { label: 'Mon réabonnement', to: '/abonnement/compte-a-rebours', icone: 'fa-school', permission: 'gerer_parametres' },
       { label: 'Notifications', to: '/parametres/notifications', icone: 'fa-bell', permission: 'gerer_parametres' },
       { label: 'Archive', to: '/parametres/archives', icone: 'fa-box-archive', permission: 'gerer_archives' },
       { label: 'Sauvegarde', to: '/parametres/sauvegardes', icone: 'fa-floppy-disk', permission: 'gerer_sauvegardes' },

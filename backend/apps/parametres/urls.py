@@ -33,4 +33,5 @@ urlpatterns = [
     # Abonnement
     path('abonnement/statut/', views.statut_abonnement, name='statut_abonnement'),
     path('abonnement/activer/', views.activer_abonnement, name='activer_abonnement'),
+    path('abonnement/temps-restant/', views.temps_restant_abonnement, name='temps_restant_abonnement'),
 ]

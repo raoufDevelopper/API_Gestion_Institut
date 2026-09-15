@@ -1,0 +1,80 @@
+.ca-page {
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(rgba(2,5,25,.76), rgba(2,5,25,.86)), #10172d;
+  font-family: Arial, Helvetica, sans-serif;
+  position: relative;
+}
+.ca-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  opacity: .45;
+  background:
+    repeating-linear-gradient(0deg, transparent 0px, transparent 47px, #030714 48px, #030714 53px),
+    repeating-linear-gradient(90deg, transparent 0px, transparent 145px, #030714 146px, #030714 151px);
+}
+.ca-container { position: relative; z-index: 2; width: 94%; max-width: 1450px; text-align: center; padding: 40px 10px; }
+.ca-title {
+  margin-bottom: 60px;
+  color: #55d9ff;
+  font-size: clamp(24px, 3.5vw, 44px);
+  font-weight: 300;
+  letter-spacing: 5px;
+  text-shadow: 0 0 5px #4fdcff, 0 0 15px #159bc9, 0 0 30px #08729d;
+}
+.ca-timer { display: flex; justify-content: space-between; align-items: flex-start; gap: 25px; flex-wrap: wrap; }
+.ca-unit { flex: 1; min-width: 90px; }
+.ca-number { display: flex; justify-content: center; align-items: center; gap: 12px; }
+.ca-digit {
+  position: relative; width: 68px; height: 113px;
+  filter: drop-shadow(0 0 5px #69dcff) drop-shadow(0 0 13px #168ebc);
+}
+.ca-segment {
+  position: absolute;
+  background: linear-gradient(135deg, #f4ffff 0%, #bdefff 35%, #63c7e9 65%, #315d78 100%);
+  box-shadow: inset 2px 2px 3px rgba(255,255,255,.8), inset -3px -3px 5px rgba(0,35,55,.5);
+  transition: opacity 0.3s ease;
+}
+.ca-a, .ca-g, .ca-d {
+  width: 49px; height: 15px; left: 10px;
+  clip-path: polygon(6px 0, 43px 0, 49px 7px, 43px 15px, 6px 15px, 0 7px);
+}
+.ca-a { top: 0; }
+.ca-g { top: 49px; }
+.ca-d { bottom: 0; }
+.ca-b, .ca-c, .ca-e, .ca-f {
+  width: 15px; height: 48px;
+  clip-path: polygon(0 6px, 7px 0, 15px 6px, 15px 42px, 7px 48px, 0 42px);
+}
+.ca-b { right: 0; top: 5px; }
+.ca-c { right: 0; bottom: 5px; }
+.ca-e { left: 0; bottom: 5px; }
+.ca-f { left: 0; top: 5px; }
+.ca-off {
+  opacity: .08;
+  background: linear-gradient(135deg, #86a7b6, #152839);
+  box-shadow: none;
+}
+.ca-label {
+  margin-top: 20px; color: #60dcff; font-size: clamp(12px, 1.4vw, 18px);
+  font-weight: 300; letter-spacing: 1px;
+  text-shadow: 0 0 6px #39cdf4, 0 0 18px #087aa7;
+}
+.ca-bottom { margin-top: 50px; }
+.ca-bottom-texte { color: #f3fbff; font-family: "Courier New", monospace; font-size: clamp(12px, 1.6vw, 18px); letter-spacing: 2px; text-shadow: 0 0 5px #fff, 0 0 15px #9eefff; }
+.ca-expire-message {
+  color: #ff6b6b; font-size: clamp(18px, 2.5vw, 28px); font-weight: 300; letter-spacing: 2px;
+  text-shadow: 0 0 10px #ff4d4d, 0 0 20px #a30000;
+}
+@media (max-width: 900px) {
+  .ca-page { overflow: auto; }
+  .ca-timer { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 35px 10px; }
+  .ca-digit { transform: scale(.8); }
+}
+@media (max-width: 500px) {
+  .ca-timer { grid-template-columns: 1fr 1fr; }
+}

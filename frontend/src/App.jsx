@@ -17,6 +17,7 @@ import Notifications from './pages/parametres/Notifications';
 import ParametresInstitut from './pages/parametres/ParametresInstitut';
 import Sauvegardes from './pages/parametres/Sauvegardes';
 import Archives from './pages/parametres/Archives';
+import CompteurAbonnement from './pages/CompteurAbonnement';
 
 import Permissions from './pages/authentification/Permissions';
 import LoginRegister from './pages/authentification/LoginRegister';
@@ -135,10 +136,18 @@ function App() {
                 <Route path="/abonnement-expire" element={<AbonnementExpire />} />
                 
                 <Route path="/non-autorise" element={<NonAutorise />} />
+
+                
     
               
                 <Route element={ <RouteProtegee> <Layout /> </RouteProtegee> }>
                   
+                  <Route path="/abonnement/compte-a-rebours" element={
+                    <RouteProtegee>
+                      <CompteurAbonnement />
+                    </RouteProtegee>
+                  } />
+
 
                   {/* ================ Page d'accueil ================ */}
                   <Route path="/" element={<Dashboard />} />
@@ -171,6 +180,8 @@ function App() {
                       <Archives />
                     </RouteProtegee>
                   } />
+
+                  
 
 
 
