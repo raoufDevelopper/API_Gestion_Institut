@@ -158,6 +158,7 @@ function EmploiDuTempsDetail() {
             
               <div className="edt-jour-entete">
                 <span>{jour.label}</span>
+                
               </div>
             
               <div className="ud-grid-2">

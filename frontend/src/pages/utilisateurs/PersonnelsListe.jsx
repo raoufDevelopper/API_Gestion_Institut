@@ -89,7 +89,7 @@ function PersonnelsListe() {
       
       
       
-        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))' }}>
+        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
       
           <div className="department-card">
             <div className="kpi-icon blue"><i className="fas fa-users"></i></div>
@@ -105,6 +105,13 @@ function PersonnelsListe() {
             <div className="kpi-icon aqua"><i className="fas fa-umbrella-beach"></i></div>
             <div className="count-top"><h2>{kpis.ENCONGE || 0}</h2><span>En congé</span></div>
           </div>
+
+        </div>
+
+
+
+
+        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
       
           <div className="department-card">
             <div className="kpi-icon red"><i className="fas fa-ban"></i></div>
@@ -123,6 +130,8 @@ function PersonnelsListe() {
       
         </div>
       
+
+
       
       
         <div className="department-toolbar">

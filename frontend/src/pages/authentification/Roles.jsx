@@ -6,6 +6,8 @@ import { useAlert } from '../../context/AlertContext';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import '../../assets/css/crud.css';
 
+import { useAffichage } from '../../context/AffichageContext';
+
 
 
 function Roles() {
@@ -87,6 +89,9 @@ function Roles() {
       setSuppressionEnCours(false);
     }
   };
+
+
+  const { modeAffichage: vue } = useAffichage();
   
   
 
@@ -124,54 +129,64 @@ function Roles() {
         </div>
         
         
-        {/* TABLE */}
-        <div className="department-card table-card">
-          <div className="table-title">
-            <h2>Liste des rôles</h2>
-            <span>{rolesFiltres.length} rôles</span>
-          </div>
-          <div className="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th>Nom</th>
-                  <th>Permissions</th>
-                  <th>Ajouté le</th>
-                  <th>Description</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rolesFiltres.map((r) => (
-                  <tr className="row-link" key={r.id}>
-                    <td><div className="cell-strong">{r.nom}</div></td>
-                    <td>{r.permissions.length} permission{r.permissions.length > 1 ? 's' : ''}</td>
-                    <td>{new Date(r.date_ajout).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
-                    <td><div className="cell-sub description">{r.description || '—'}</div></td>
-                    <td>
-                      <button className="table-btn view" onClick={() => setRoleEnDetail(r)}>
-                        <i className="fas fa-eye"></i>
-                      </button>
-                      <button className="table-btn edit" onClick={() => ouvrirEdition(r)}>
-                        <i className="fas fa-pen"></i>
-                      </button>
-                      <button className="table-btn delete" onClick={() => setRoleASupprimer(r)}>
-                        <i className="fas fa-trash"></i>
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-                {rolesFiltres.length === 0 && (
+
+        {vue === 'tableau' ? (        
+
+          <div className="department-card table-card">
+            <div className="table-title">
+              <h2>Liste des rôles</h2>
+              <span>{rolesFiltres.length} rôles</span>
+            </div>
+            <div className="table-scroll">
+              <table>
+                <thead>
                   <tr>
-                    <td colSpan="5">
-                      <div className="empty">Aucun rôle ne correspond à cette recherche.</div>
-                    </td>
+                    <th>Nom</th>
+                    <th>Permissions</th>
+                    <th>Ajouté le</th>
+                    <th>Description</th>
+                    <th>Action</th>
                   </tr>
-                )}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {rolesFiltres.map((r) => (
+                    <tr className="row-link" key={r.id}>
+                      <td><div className="cell-strong">{r.nom}</div></td>
+                      <td>{r.permissions.length} permission{r.permissions.length > 1 ? 's' : ''}</td>
+                      <td>{new Date(r.date_ajout).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
+                      <td><div className="cell-sub description">{r.description || '—'}</div></td>
+                      <td>
+                        <button className="table-btn view" onClick={() => setRoleEnDetail(r)}>
+                          <i className="fas fa-eye"></i>
+                        </button>
+                        <button className="table-btn edit" onClick={() => ouvrirEdition(r)}>
+                          <i className="fas fa-pen"></i>
+                        </button>
+                        <button className="table-btn delete" onClick={() => setRoleASupprimer(r)}>
+                          <i className="fas fa-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                  {rolesFiltres.length === 0 && (
+                    <tr>
+                      <td colSpan="5">
+                        <div className="empty">Aucun rôle ne correspond à cette recherche.</div>
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+
+        ) : (
+
+          <div>fadil</div>
+
+        )}
+
+
       </div>
 
 

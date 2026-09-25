@@ -991,7 +991,6 @@ def detail_sanction(request, pk):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-@permission_requise('gerer_emplois_du_temps')
 def export_emploi_du_temps_pdf(request, pk):
 
     try:

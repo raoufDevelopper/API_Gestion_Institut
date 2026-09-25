@@ -25,7 +25,21 @@ const MENUS = [
       { label: 'Mes finances', to: '/espace-etudiant/finances', icone: 'fa-sack-dollar', permission: 'voir_espace_etudiant' },
       { label: 'Mes documents', to: '/espace-etudiant/documents', icone: 'fa-folder', permission: 'voir_espace_etudiant' },
       { label: 'Mon dossier', to: '/espace-etudiant/dossier', icone: 'fa-id-card', permission: 'voir_espace_etudiant' },
-      { label: 'Mon compte', to: '/espace-etudiant/compte', icone: 'fa-user-gear', permission: 'voir_espace_etudiant' },
+      { label: 'Mon compte', to: '/mon-compte', icone: 'fa-user-gear', permission: 'voir_espace_etudiant'},
+    ],
+  },
+
+  {
+    id: 'espace_enseignant', titre: 'Mon espace', classe: 'mee',
+    items: [
+      { label: 'Vue globale', to: '/espace-enseignant', icone: 'fa-chart-pie', permission: 'voir_espace_enseignant' },
+      { label: 'Mon planning', to: '/espace-enseignant/planning', icone: 'fa-calendar-week', permission: 'voir_espace_enseignant' },
+      { label: 'classes & matières', to: '/espace-enseignant/classes-matieres', icone: 'fa-layer-group', permission: 'voir_espace_enseignant' },
+      { label: 'Saisir des notes', to: '/espace-enseignant/saisie', icone: 'fa-pen-to-square', permission: 'voir_espace_enseignant' },
+      { label: 'Consultation', to: '/espace-enseignant/consultation', icone: 'fa-eye', permission: 'voir_espace_enseignant' },
+      { label: 'Mes étudiants', to: '/espace-enseignant/etudiants', icone: 'fa-users', permission: 'voir_espace_enseignant' },
+      { label: 'Mon dossier', to: '/espace-enseignant/dossier', icone: 'fa-id-card', permission: 'voir_espace_enseignant' },
+      { label: 'Mon compte', to: '/mon-compte', icone: 'fa-user-gear', permission: 'voir_espace_enseignant' },
     ],
   },
 
@@ -173,8 +187,9 @@ const MENUS = [
     classe: 'ps',
     items: [
       { label: 'Institut', to: '/parametres/institut', icone: 'fa-school', permission: 'gerer_parametres' },
-      { label: 'Mon réabonnement', to: '/abonnement/compte-a-rebours', icone: 'fa-school', permission: 'gerer_parametres' },
+      { label: 'Mon abonnement', to: '/abonnement/compte-a-rebours', icone: 'fa-clock-rotate-left', permission: 'gerer_parametres' },
       { label: 'Notifications', to: '/parametres/notifications', icone: 'fa-bell', permission: 'gerer_parametres' },
+      { label: 'Mon compte', to: '/mon-compte', icone: 'fa-user-gear', permission: 'gerer_parametres'},
       { label: 'Archive', to: '/parametres/archives', icone: 'fa-box-archive', permission: 'gerer_archives' },
       { label: 'Sauvegarde', to: '/parametres/sauvegardes', icone: 'fa-floppy-disk', permission: 'gerer_sauvegardes' },
     ],

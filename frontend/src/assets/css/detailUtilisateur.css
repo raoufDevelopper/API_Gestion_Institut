@@ -28,6 +28,8 @@
 .ud-header-row {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 15px;
   align-items: flex-start;
   margin-bottom: 22px;
 }
@@ -36,7 +38,7 @@
   font-size: 25px; 
   font-weight: 500; 
   color: var(--text);
-  line-height: 25px;
+  line-height: 32px;
   letter-spacing: 2px; 
   margin-bottom: 8px; 
 }
@@ -49,7 +51,11 @@
   color: #6b7280; 
 }
 
-.ud-header-actions { display: flex; gap: 10px; }
+.ud-header-actions { 
+  display: flex;
+  flex-wrap: wrap; 
+  gap: 10px; 
+}
 
 .ud-btn-outline {
   background: var(--card);

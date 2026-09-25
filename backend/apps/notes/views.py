@@ -227,21 +227,32 @@ def saisir_notes(request):
 @permission_classes([IsAuthenticated])
 @permission_requise('gerer_notes')
 def consultation_notes(request):
+
     classe_id = request.GET.get('classe')
+
     matiere_id = request.GET.get('matiere')
+
     annee_academique_id = request.GET.get('annee_academique')
+
     semestre = request.GET.get('semestre')
+
     if not all([classe_id, matiere_id, annee_academique_id, semestre]):
         return Response({'detail': 'Paramètres manquants.'}, status=status.HTTP_400_BAD_REQUEST)
+
     try:
         classe = Classe.objects.get(pk=classe_id)
         matiere = Matiere.objects.get(pk=matiere_id)
         annee_academique = AnneeAcademique.objects.get(pk=annee_academique_id)
+
     except (Classe.DoesNotExist, Matiere.DoesNotExist, AnneeAcademique.DoesNotExist):
         return Response({'detail': 'Contexte invalide.'}, status=status.HTTP_404_NOT_FOUND)
+
     etudiants = Etudiant.objects.filter(classe=classe, statut='ACTIF').order_by('nom', 'prenom')
+
     types_actifs = list(TypeEvaluation.objects.filter(actif=True))
+
     lignes = []
+
     for etudiant in etudiants:
         notes_par_type = {
             note.type_evaluation_id: str(note.valeur)

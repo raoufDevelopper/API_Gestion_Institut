@@ -14,11 +14,11 @@ const COULEURS = ['#6366f1', '#22c55e', '#f97316', '#06b6d4', '#ec4899', '#eab30
 
 const ICONES_MATIERE = ['fa-code', 'fa-database', 'fa-network-wired', 'fa-calculator', 'fa-language', 'fa-gears', 'fa-diagram-project', 'fa-comments'];
 
-const LABEL_STATUT = { valide: 'Semestre validé', attention: 'Rattrapage requis', refuse: 'Semestre non validé', attente: 'En attente de délibération' };
+const LABEL_STATUT = { valide: 'validé', attention: 'Rattrapage requis', refuse: 'non validé', attente: 'En attente de délibération' };
 
 const ICONE_STATUT = { valide: 'fa-circle-check', attention: 'fa-triangle-exclamation', refuse: 'fa-circle-xmark', attente: 'fa-hourglass-half' };
 
-const LABEL_DECISION = { ADMIS: 'SEMESTRE VALIDÉ', RATTRAPAGE: 'RATTRAPAGE', REDOUBLANT: 'NON VALIDÉ', EN_ATTENTE: 'EN ATTENTE' };
+const LABEL_DECISION = { ADMIS: 'VALIDÉ', RATTRAPAGE: 'RATTRAPAGE', REDOUBLANT: 'NON VALIDÉ', EN_ATTENTE: 'EN ATTENTE' };
 
 function ResultatsEtudiant() {
   const navigate = useNavigate();
@@ -431,10 +431,10 @@ function ResultatsEtudiant() {
                     <tr>
                       <th>Matière</th>
                       <th  style={{ minWidth: '100px' }}>Note / 20</th>
-                      {periode === 'ANNEE' && 
-                        <th>Semestre</th>
-                      }
                       <th>Évaluation</th>
+                      {periode === 'ANNEE' && 
+                        <th style={{ minWidth: '100px' }}>Semestre</th>
+                      }
                     </tr>
                   </thead>
                   <tbody>
@@ -448,7 +448,9 @@ function ResultatsEtudiant() {
                           </span>
                         </td>
                         <td>{e.evaluation}</td>
-                        {periode === 'ANNEE' && <td>{e.semestre}</td>}
+                        {periode === 'ANNEE' && 
+                          <td>{e.semestre === 'S1' ? 'Semestre 1' : 'Semestre 2'}</td>
+                        }
                       </tr>
                     ))}
                     {evaluationsPage.length === 0 && <tr><td colSpan={periode === 'ANNEE' ? 4 : 3} style={{ color: '#9ca3af', textAlign: 'center' }}>Aucune évaluation.</td></tr>}

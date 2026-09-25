@@ -1,3 +1,65 @@
+.toggle-vue-btn {
+  width: 36px; 
+  height: 36px; 
+  border-radius: 9px; 
+  border: 1px solid #e5e7eb;
+  background: #fff; 
+  color: #400c7c; 
+  cursor: pointer; 
+  font-size: 13px;
+}
+
+.toggle-vue-btn:hover { background: #f5f0ff; }
+
+.sn-bloc-grille {
+  display: grid; 
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); 
+  gap: 12px;
+}
+
+.sn-bloc-carte {
+  background: #fff; 
+  border: 1px solid #e5e7eb; 
+  border-radius: 12px; 
+  padding: 14px;
+}
+
+.sn-bloc-entete { 
+  display: flex; 
+  align-items: center; 
+  gap: 10px; 
+  margin-bottom: 10px; 
+}
+
+.sn-bloc-nom { 
+  font-size: 13px; 
+  font-weight: 700; 
+  color: #1f2937; 
+}
+
+.sn-bloc-matricule { 
+  font-size: 10.5px; 
+  color: #9ca3af; 
+}
+
+.sn-bloc-ligne { 
+  display: flex; 
+  justify-content: space-between; 
+  font-size: 12px; 
+  padding: 4px 0; 
+  border-bottom: 1px solid #f8fafc; 
+}
+
+.sn-bloc-ligne:last-child { border-bottom: none; }
+
+
+
+
+
+
+
+
+
 
 
 .sn-bandeau-contexte {

@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { AlertProvider } from './context/AlertContext';
 import { ParametreProvider } from './context/ParametreContext';
+import { AffichageProvider } from './context/AffichageContext';
 
 import RouteProtegee from './components/RouteProtegee';
 import AlertPopup from './components/AlertPopup';
@@ -112,671 +113,749 @@ import CompteEtudiant from './pages/espace-etudiant/CompteEtudiant';
 import ResultatsEtudiant from './pages/espace-etudiant/ResultatsEtudiant';
 import MonReleve from './pages/espace-etudiant/MonReleve';
 
+import AccueilEnseignant from './pages/espace-enseignant/AccueilEnseignant';
+import PlanningEnseignant from './pages/espace-enseignant/PlanningEnseignant';
+import MesClassesMatieres from './pages/espace-enseignant/MesClassesMatieres';
+import SaisieNotesEnseignant from './pages/espace-enseignant/SaisieNotesEnseignant';
+import ConsultationEnseignant from './pages/espace-enseignant/ConsultationEnseignant';
+import MesEtudiants from './pages/espace-enseignant/MesEtudiants';
+import DetailEtudiantEnseignant from './pages/espace-enseignant/DetailEtudiantEnseignant';
+import MonDossierEnseignant from './pages/espace-enseignant/MonDossierEnseignant';
+
 
 function App() {
 
   return (
 
-    <ThemeProvider>
-    
-      <AuthProvider>
-    
-        <ParametreProvider>
-    
-          <AlertProvider>
-    
-            <BrowserRouter>
+    <AffichageProvider>
 
-              <Routes>
-                  
-                {/* ================ Routes non Protégées ================ */}
-
-                <Route path="/login" element={<LoginRegister />} />
-
-                <Route path="/abonnement-expire" element={<AbonnementExpire />} />
-                
-                <Route path="/non-autorise" element={<NonAutorise />} />
-
-                
-    
-              
-                <Route element={ <RouteProtegee> <Layout /> </RouteProtegee> }>
-                  
-                  <Route path="/abonnement/compte-a-rebours" element={
-                    <RouteProtegee>
-                      <CompteurAbonnement />
-                    </RouteProtegee>
-                  } />
-
-
-                  {/* ================ Page d'accueil ================ */}
-                  <Route path="/" element={<Dashboard />} />
-                  
-
-
-
-
-                  {/* ================ Parametres ================ */}
-                  <Route path="/parametres/notifications" element={
-                    <RouteProtegee permission="gerer_parametres">
-                      <Notifications />
-                    </RouteProtegee>
-                  } />
-
-                  <Route path="/parametres/institut" element={
-                    <RouteProtegee permission="gerer_parametres">
-                      <ParametresInstitut />
-                    </RouteProtegee>
-                  } />
-
-                  <Route path="/parametres/sauvegardes" element={
-                    <RouteProtegee permission="gerer_sauvegardes">
-                      <Sauvegardes />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/parametres/archives" element={
-                    <RouteProtegee permission="gerer_archives">
-                      <Archives />
-                    </RouteProtegee>
-                  } />
-
-                  
-
-
-
-
-
-
-                  {/* ================ Authentification ================ */}
-                  <Route path="/utilisateurs/permissions" element={
-                    <RouteProtegee permission="gerer_permissions">
-                      <Permissions />
-                    </RouteProtegee>
-                  } />
-
-                  <Route path="/utilisateurs/roles" element={
-                    <RouteProtegee permission="gerer_roles">
-                      <Roles />
-                    </RouteProtegee>
-                  } />
-
-                  <Route path="/utilisateurs/comptes" element={
-                    <RouteProtegee permission="gerer_utilisateurs">
-                      <Utilisateurs />
-                    </RouteProtegee>
-                  } />
-
-
-
-
-
-                  {/* ================ Utilisateurs ================ */}
-                  <Route path="/utilisateurs/etudiants" element={
-                    <RouteProtegee permission="gerer_etudiants">
-                      <EtudiantsListe />
-                    </RouteProtegee>
-                  } />
-
-                  <Route path="/utilisateurs/etudiants/nouveau" element={
-                    <RouteProtegee permission="gerer_etudiants">
-                      <EtudiantForm />
-                    </RouteProtegee>
-                  } />
-
-                  <Route path="/utilisateurs/etudiants/:id/modifier" element={
-                    <RouteProtegee permission="gerer_etudiants">
-                      <EtudiantForm />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/utilisateurs/etudiants/:id" element={
-                    <RouteProtegee permission="gerer_etudiants">
-                      <EtudiantDetail />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/utilisateurs/personnel" element={
-                    <RouteProtegee permission="gerer_personnel">
-                      <PersonnelsListe />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/utilisateurs/personnel/nouveau" element={
-                    <RouteProtegee permission="gerer_personnel">
-                      <PersonnelForm />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/utilisateurs/personnel/:id/modifier" element={
-                    <RouteProtegee permission="gerer_personnel">
-                      <PersonnelForm />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/utilisateurs/personnel/:id" element={
-                    <RouteProtegee permission="gerer_personnel">
-                      <PersonnelDetail />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/utilisateurs/formateurs" element={
-                    <RouteProtegee permission="gerer_formateurs">
-                      <FormateursListe />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/utilisateurs/formateurs/nouveau" element={
-                    <RouteProtegee permission="gerer_formateurs">
-                      <FormateurForm />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/utilisateurs/formateurs/:id/modifier" element={
-                    <RouteProtegee permission="gerer_formateurs">
-                      <FormateurForm />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/utilisateurs/formateurs/:id" element={
-                    <RouteProtegee permission="gerer_formateurs">
-                      <FormateurDetail />
-                    </RouteProtegee>
-                  } />
-
-
-
-
-
-
-                  {/* ================ Academique ================ */}
-                  <Route path="/academique/niveaux" element={
-                    <RouteProtegee permission="gerer_niveaux">
-                      <Niveaux />
-                    </RouteProtegee>
-                  } />
-
-                  <Route path="/academique/filieres" element={
-                    <RouteProtegee permission="gerer_filieres">
-                      <Filieres />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/academique/specialites" element={
-                    <RouteProtegee permission="gerer_specialites">
-                      <Specialites />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/academique/types-salle" element={
-                    <RouteProtegee permission="gerer_salles">
-                      <TypesSalle />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/academique/salles" element={
-                    <RouteProtegee permission="gerer_salles">
-                      <Salles />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/academique/matieres" element={
-                    <RouteProtegee permission="gerer_matieres">
-                      <Matieres />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/academique/classes" element={
-                    <RouteProtegee permission="gerer_classes">
-                      <Classes />
-                    </RouteProtegee>
-                  } />
-
-                  <Route path="/academique/sanctions" element={
-                    <RouteProtegee permission="gerer_sanctions">
-                      <Sanctions />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/academique/annees-academiques" element={
-                    <RouteProtegee permission="gerer_annees_academiques">
-                      <AnneesAcademiques />
-                    </RouteProtegee>
-                  } />
-
-                  <Route path="/academique/emplois-du-temps" element={
-                    <RouteProtegee permission="gerer_emplois_du_temps">
-                      <EmploisDuTempsListe />
-                    </RouteProtegee>
-                  } />
-
-                  <Route path="/academique/emplois-du-temps/blocs" element={
-                    <RouteProtegee permission="gerer_emplois_du_temps">
-                      <EmploisDuTempsBlocs />
-                    </RouteProtegee>
-                  } />
-
-                  <Route path="/academique/emplois-du-temps/nouveau" element={
-                    <RouteProtegee permission="gerer_emplois_du_temps">
-                      <EmploiDuTempsForm />
-                    </RouteProtegee>
-                  } />
-
-                  <Route path="/academique/emplois-du-temps/:id/modifier" element={
-                    <RouteProtegee permission="gerer_emplois_du_temps">
-                      <EmploiDuTempsForm />
-                    </RouteProtegee>
-                  } />
-
-                  <Route path="/academique/emplois-du-temps/:id" element={
-                    <RouteProtegee permission="gerer_emplois_du_temps">
-                      <EmploiDuTempsDetail />
-                    </RouteProtegee>
-                  } />
-
-
-
-
-
-
-                  {/* ================ Notes ================ */}
-                  <Route path="/notes/types-evaluation" element={
-                    <RouteProtegee permission="gerer_notes">
-                      <TypesEvaluation />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/notes/saisie" element={
-                    <RouteProtegee permission="gerer_notes">
-                      <SaisieNotes />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/notes/consultation" element={
-                    <RouteProtegee permission="gerer_notes">
-                      <ConsultationNotes />
-                    </RouteProtegee>
-                  } />
-
-                  <Route path="/notes/releve" element={
-                    <RouteProtegee permission="gerer_notes">
-                      <ReleveNotes />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/notes/deliberation" element={
-                    <RouteProtegee permission="gerer_notes">
-                      <Deliberation />
-                    </RouteProtegee>
-                  } />
-
-
-
-
-
-
-
-                  {/* ================ Finance ================ */}
-                  <Route path="/finances/categories-depense" element={
-                    <RouteProtegee permission="gerer_depenses">
-                      <CategoriesDepense />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/finances/types-paiement" element={
-                    <RouteProtegee permission="gerer_tarifs">
-                      <TypesPaiement />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/finances/tarifs" element={
-                    <RouteProtegee permission="gerer_tarifs">
-                      <Tarifs />
-                    </RouteProtegee>
-                  } />
-
-                  <Route path="/finances/caisse" element={
-                    <RouteProtegee permission="gerer_caisse">
-                      <CaissesListe />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/finances/caisse/:id" element={
-                    <RouteProtegee permission="gerer_caisse">
-                      <CaisseDetail />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/finances/inscriptions" element={
-                    <RouteProtegee permission="gerer_inscriptions">
-                      <InscriptionsListe />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/finances/inscriptions/:id" element={
-                    <RouteProtegee permission="gerer_inscriptions">
-                      <InscriptionDetail />
-                    </RouteProtegee>
-                  } />
-
-                  <Route path="/finances/paiements" element={
-                    <RouteProtegee permission="gerer_paiements">
-                      <PaiementsListe />
-                    </RouteProtegee>
-                  } />
-
-                  <Route path="/finances/paiements/:id" element={
-                    <RouteProtegee permission="gerer_paiements">
-                      <PaiementDetail />
-                    </RouteProtegee>
-                  } />
-
-                  <Route path="/finances/depenses" element={
-                    <RouteProtegee permission="gerer_depenses">
-                      <DepensesListe />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/finances/depenses/:id" element={
-                    <RouteProtegee permission="gerer_depenses">
-                      <DepenseDetail />
-                    </RouteProtegee>
-                  } />
-
-
-
-
-
-
-
-                  {/* ================ documents ================ */}
-                  <Route path="/documents" element={
-                    <RouteProtegee permission="gerer_documents">
-                      <DocumentsOverview />
-                    </RouteProtegee>
-                  } />
-
-                  <Route path="/documents/diplomes" element={
-                    <RouteProtegee permission="gerer_documents">
-                      <DiplomesListe />
-                    </RouteProtegee>
-                  } />
-
-                  <Route path="/documents/diplomes/generer" element={
-                    <RouteProtegee permission="gerer_documents">
-                      <DiplomeGenerer />
-                    </RouteProtegee>
-                  } />
-
-                  <Route path="/documents/diplomes/:id" element={
-                    <RouteProtegee permission="gerer_documents">
-                      <DiplomeDetail />
-                    </RouteProtegee>
-                  } />
-
-                  <Route path="/documents/certificats" element={
-                    <RouteProtegee permission="gerer_documents">
-                      <CertificatsListe />
-                    </RouteProtegee>
-                  } />
-
-                  <Route path="/documents/certificats/generer" element={
-                    <RouteProtegee permission="gerer_documents">
-                      <CertificatGenerer />
-                    </RouteProtegee>
-                  } />
-
-                  <Route path="/documents/documents" element={
-                    <RouteProtegee permission="gerer_documents">
-                      <DocumentsListe />
-                    </RouteProtegee>
-                  } />
-
-                  <Route path="/documents/documents/:id" element={
-                    <RouteProtegee permission="gerer_documents">
-                      <DocumentDetail />
-                    </RouteProtegee>
-                  } />
-
-                  <Route path="/documents/types-certificat" element={
-                    <RouteProtegee permission="gerer_documents">
-                      <TypesCertificat />
-                    </RouteProtegee>
-                  } />
-
-
-
-
-
-
-
-                  {/* ================ Bibliotheque ================ */}
-                  <Route path="/bibliotheque" element={
-                    <RouteProtegee permission="gerer_bibliotheque_ressources">
-                      <VueEnsemble />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/bibliotheque/catalogue" element={
-                    <RouteProtegee permission="gerer_bibliotheque_ressources">
-                      <CatalogueListe />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/bibliotheque/catalogue/nouvelle" element={
-                    <RouteProtegee permission="gerer_bibliotheque_ressources">
-                      <RessourceForm />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/bibliotheque/catalogue/:id" element={
-                    <RouteProtegee permission="gerer_bibliotheque_ressources">
-                      <RessourceDetail />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/bibliotheque/catalogue/:id/modifier" element={
-                    <RouteProtegee permission="gerer_bibliotheque_ressources">
-                      <RessourceForm />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/bibliotheque/exemplaires" element={
-                    <RouteProtegee permission="gerer_bibliotheque_exemplaires">
-                      <ExemplairesListe />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/bibliotheque/emprunts" element={
-                    <RouteProtegee permission="gerer_bibliotheque_emprunts">
-                      <EmpruntsEnCours />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/bibliotheque/emprunts/enregistrer" element={
-                    <RouteProtegee permission="gerer_bibliotheque_emprunts">
-                      <EnregistrerEmprunt />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/bibliotheque/emprunts/retours" element={
-                    <RouteProtegee permission="gerer_bibliotheque_emprunts">
-                      <EnregistrerRetour />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/bibliotheque/emprunts/retards" element={
-                    <RouteProtegee permission="gerer_bibliotheque_emprunts">
-                      <EmpruntsRetards />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/bibliotheque/emprunts/historique" element={
-                    <RouteProtegee permission="gerer_bibliotheque_emprunts">
-                      <HistoriqueEmprunts />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/bibliotheque/reservations" element={
-                    <RouteProtegee permission="gerer_bibliotheque_reservations">
-                      <ReservationsListe />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/bibliotheque/adherents" element={
-                    <RouteProtegee permission="gerer_bibliotheque_adherents">
-                      <AdherentsListe />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/bibliotheque/inventaire" element={
-                    <RouteProtegee permission="gerer_bibliotheque_inventaire">
-                      <InventairesListe />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/bibliotheque/inventaire/:id" element={
-                    <RouteProtegee permission="gerer_bibliotheque_inventaire">
-                      <InventaireDetail />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/bibliotheque/acquisitions" element={
-                    <RouteProtegee permission="gerer_bibliotheque_acquisitions">
-                      <AcquisitionsListe />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/bibliotheque/fournisseurs" element={
-                    <RouteProtegee permission="gerer_bibliotheque_fournisseurs">
-                      <FournisseursListe />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/bibliotheque/auteurs" element={
-                    <RouteProtegee permission="gerer_bibliotheque_auteurs">
-                      <AuteursListe />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/bibliotheque/editeurs" element={
-                    <RouteProtegee permission="gerer_bibliotheque_editeurs">
-                      <EditeursListe />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/bibliotheque/categories" element={
-                    <RouteProtegee permission="gerer_bibliotheque_categories">
-                      <CategoriesListe />
-                    </RouteProtegee>
-                  } />
-
-                  <Route path="/bibliotheque/localisations" element={
-                    <RouteProtegee permission="gerer_bibliotheque_exemplaires">
-                      <LocalisationsListe />
-                    </RouteProtegee>
-                  } />
-
-
-
-
-
-
-
-                  {/* ================ statistiques ================ */}
-                  <Route path="/statistiques/academique" element={
-                    <RouteProtegee permission="gerer_notes">
-                      <DashboardAcademique />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/statistiques/bibliotheque" element={
-                    <RouteProtegee permission="gerer_bibliotheque_ressources">
-                      <DashboardBibliotheque />
-                    </RouteProtegee>
-                  } />
-
-                  <Route path="/statistiques/documents" element={
-                    <RouteProtegee permission="gerer_documents">
-                      <DashboardDocuments />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/statistiques/finance" element={
-                    <RouteProtegee permission="gerer_finances">
-                      <DashboardFinance />
-                    </RouteProtegee>
-                  } />
-
-
-
-
-
-
-
-                  {/* ================ espace étudiant ================ */}
-                  <Route path="/espace-etudiant" element={
-                    <RouteProtegee permission="voir_espace_etudiant">
-                      <AccueilEtudiant />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/espace-etudiant/planning" element={
-                    <RouteProtegee permission="voir_espace_etudiant">
-                      <PlanningEtudiant />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/espace-etudiant/formation" element={
-                    <RouteProtegee permission="voir_espace_etudiant">
-                      <FormationEtudiant />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/espace-etudiant/finances" element={
-                    <RouteProtegee permission="voir_espace_etudiant">
-                      <FinancesEtudiant />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/espace-etudiant/documents" element={
-                    <RouteProtegee permission="voir_espace_etudiant">
-                      <DocumentsEtudiant />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/espace-etudiant/dossier" element={
-                    <RouteProtegee permission="voir_espace_etudiant">
-                      <DossierEtudiant />
-                    </RouteProtegee>
-                  } />
-                  
-                  <Route path="/espace-etudiant/compte" element={
-                    <RouteProtegee permission="voir_espace_etudiant">
-                      <CompteEtudiant />
-                    </RouteProtegee>
-                  } />
-
-                  <Route path="/espace-etudiant/resultats" element={<RouteProtegee permission="voir_espace_etudiant"><ResultatsEtudiant /></RouteProtegee>} />
-                  
-                  <Route path="/espace-etudiant/releve" element={<RouteProtegee permission="voir_espace_etudiant"><MonReleve /></RouteProtegee>} />
-
-                </Route>
-                
-              </Routes>
-
-            </BrowserRouter>
-
-            <AlertPopup />
-          
-          </AlertProvider>
-
-        </ParametreProvider>
+      <ThemeProvider>
       
-      </AuthProvider>
-    
-    </ThemeProvider>
-  
+        <AuthProvider>
+      
+          <ParametreProvider>
+      
+            <AlertProvider>
+      
+              <BrowserRouter>
+
+                <Routes>
+                    
+                  {/* ================ Routes non Protégées ================ */}
+
+                  <Route path="/login" element={<LoginRegister />} />
+
+                  <Route path="/abonnement-expire" element={<AbonnementExpire />} />
+                  
+                  <Route path="/non-autorise" element={<NonAutorise />} />
+
+                  
+      
+                
+                  <Route element={ <RouteProtegee> <Layout /> </RouteProtegee> }>
+                    
+                    <Route path="/abonnement/compte-a-rebours" element={
+                      <RouteProtegee>
+                        <CompteurAbonnement />
+                      </RouteProtegee>
+                    } />
+
+
+                    {/* ================ Page d'accueil ================ */}
+                    <Route path="/" element={<Dashboard />} />
+                    
+
+
+
+
+                    {/* ================ Parametres ================ */}
+                    <Route path="/parametres/notifications" element={
+                      <RouteProtegee permission="gerer_parametres">
+                        <Notifications />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/parametres/institut" element={
+                      <RouteProtegee permission="gerer_parametres">
+                        <ParametresInstitut />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/parametres/sauvegardes" element={
+                      <RouteProtegee permission="gerer_sauvegardes">
+                        <Sauvegardes />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/parametres/archives" element={
+                      <RouteProtegee permission="gerer_archives">
+                        <Archives />
+                      </RouteProtegee>
+                    } />
+
+                    
+
+
+
+
+
+
+                    {/* ================ Authentification ================ */}
+                    <Route path="/utilisateurs/permissions" element={
+                      <RouteProtegee permission="gerer_permissions">
+                        <Permissions />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/utilisateurs/roles" element={
+                      <RouteProtegee permission="gerer_roles">
+                        <Roles />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/utilisateurs/comptes" element={
+                      <RouteProtegee permission="gerer_utilisateurs">
+                        <Utilisateurs />
+                      </RouteProtegee>
+                    } />
+
+
+
+
+
+                    {/* ================ Utilisateurs ================ */}
+                    <Route path="/utilisateurs/etudiants" element={
+                      <RouteProtegee permission="gerer_etudiants">
+                        <EtudiantsListe />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/utilisateurs/etudiants/nouveau" element={
+                      <RouteProtegee permission="gerer_etudiants">
+                        <EtudiantForm />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/utilisateurs/etudiants/:id/modifier" element={
+                      <RouteProtegee permission="gerer_etudiants">
+                        <EtudiantForm />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/utilisateurs/etudiants/:id" element={
+                      <RouteProtegee permission="gerer_etudiants">
+                        <EtudiantDetail />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/utilisateurs/personnel" element={
+                      <RouteProtegee permission="gerer_personnel">
+                        <PersonnelsListe />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/utilisateurs/personnel/nouveau" element={
+                      <RouteProtegee permission="gerer_personnel">
+                        <PersonnelForm />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/utilisateurs/personnel/:id/modifier" element={
+                      <RouteProtegee permission="gerer_personnel">
+                        <PersonnelForm />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/utilisateurs/personnel/:id" element={
+                      <RouteProtegee permission="gerer_personnel">
+                        <PersonnelDetail />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/utilisateurs/formateurs" element={
+                      <RouteProtegee permission="gerer_formateurs">
+                        <FormateursListe />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/utilisateurs/formateurs/nouveau" element={
+                      <RouteProtegee permission="gerer_formateurs">
+                        <FormateurForm />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/utilisateurs/formateurs/:id/modifier" element={
+                      <RouteProtegee permission="gerer_formateurs">
+                        <FormateurForm />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/utilisateurs/formateurs/:id" element={
+                      <RouteProtegee permission="gerer_formateurs">
+                        <FormateurDetail />
+                      </RouteProtegee>
+                    } />
+
+
+
+
+
+
+                    {/* ================ Academique ================ */}
+                    <Route path="/academique/niveaux" element={
+                      <RouteProtegee permission="gerer_niveaux">
+                        <Niveaux />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/academique/filieres" element={
+                      <RouteProtegee permission="gerer_filieres">
+                        <Filieres />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/academique/specialites" element={
+                      <RouteProtegee permission="gerer_specialites">
+                        <Specialites />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/academique/types-salle" element={
+                      <RouteProtegee permission="gerer_salles">
+                        <TypesSalle />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/academique/salles" element={
+                      <RouteProtegee permission="gerer_salles">
+                        <Salles />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/academique/matieres" element={
+                      <RouteProtegee permission="gerer_matieres">
+                        <Matieres />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/academique/classes" element={
+                      <RouteProtegee permission="gerer_classes">
+                        <Classes />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/academique/sanctions" element={
+                      <RouteProtegee permission="gerer_sanctions">
+                        <Sanctions />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/academique/annees-academiques" element={
+                      <RouteProtegee permission="gerer_annees_academiques">
+                        <AnneesAcademiques />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/academique/emplois-du-temps" element={
+                      <RouteProtegee permission="gerer_emplois_du_temps">
+                        <EmploisDuTempsListe />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/academique/emplois-du-temps/blocs" element={
+                      <RouteProtegee permission="gerer_emplois_du_temps">
+                        <EmploisDuTempsBlocs />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/academique/emplois-du-temps/nouveau" element={
+                      <RouteProtegee permission="gerer_emplois_du_temps">
+                        <EmploiDuTempsForm />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/academique/emplois-du-temps/:id/modifier" element={
+                      <RouteProtegee permission="gerer_emplois_du_temps">
+                        <EmploiDuTempsForm />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/academique/emplois-du-temps/:id" element={
+                      <RouteProtegee permission="gerer_emplois_du_temps">
+                        <EmploiDuTempsDetail />
+                      </RouteProtegee>
+                    } />
+
+
+
+
+
+
+                    {/* ================ Notes ================ */}
+                    <Route path="/notes/types-evaluation" element={
+                      <RouteProtegee permission="gerer_notes">
+                        <TypesEvaluation />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/notes/saisie" element={
+                      <RouteProtegee permission="gerer_notes">
+                        <SaisieNotes />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/notes/consultation" element={
+                      <RouteProtegee permission="gerer_notes">
+                        <ConsultationNotes />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/notes/releve" element={
+                      <RouteProtegee permission="gerer_notes">
+                        <ReleveNotes />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/notes/deliberation" element={
+                      <RouteProtegee permission="gerer_notes">
+                        <Deliberation />
+                      </RouteProtegee>
+                    } />
+
+
+
+
+
+
+
+                    {/* ================ Finance ================ */}
+                    <Route path="/finances/categories-depense" element={
+                      <RouteProtegee permission="gerer_depenses">
+                        <CategoriesDepense />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/finances/types-paiement" element={
+                      <RouteProtegee permission="gerer_tarifs">
+                        <TypesPaiement />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/finances/tarifs" element={
+                      <RouteProtegee permission="gerer_tarifs">
+                        <Tarifs />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/finances/caisse" element={
+                      <RouteProtegee permission="gerer_caisse">
+                        <CaissesListe />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/finances/caisse/:id" element={
+                      <RouteProtegee permission="gerer_caisse">
+                        <CaisseDetail />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/finances/inscriptions" element={
+                      <RouteProtegee permission="gerer_inscriptions">
+                        <InscriptionsListe />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/finances/inscriptions/:id" element={
+                      <RouteProtegee permission="gerer_inscriptions">
+                        <InscriptionDetail />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/finances/paiements" element={
+                      <RouteProtegee permission="gerer_paiements">
+                        <PaiementsListe />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/finances/paiements/:id" element={
+                      <RouteProtegee permission="gerer_paiements">
+                        <PaiementDetail />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/finances/depenses" element={
+                      <RouteProtegee permission="gerer_depenses">
+                        <DepensesListe />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/finances/depenses/:id" element={
+                      <RouteProtegee permission="gerer_depenses">
+                        <DepenseDetail />
+                      </RouteProtegee>
+                    } />
+
+
+
+
+
+
+
+                    {/* ================ documents ================ */}
+                    <Route path="/documents" element={
+                      <RouteProtegee permission="gerer_documents">
+                        <DocumentsOverview />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/documents/diplomes" element={
+                      <RouteProtegee permission="gerer_documents">
+                        <DiplomesListe />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/documents/diplomes/generer" element={
+                      <RouteProtegee permission="gerer_documents">
+                        <DiplomeGenerer />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/documents/diplomes/:id" element={
+                      <RouteProtegee permission="gerer_documents">
+                        <DiplomeDetail />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/documents/certificats" element={
+                      <RouteProtegee permission="gerer_documents">
+                        <CertificatsListe />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/documents/certificats/generer" element={
+                      <RouteProtegee permission="gerer_documents">
+                        <CertificatGenerer />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/documents/documents" element={
+                      <RouteProtegee permission="gerer_documents">
+                        <DocumentsListe />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/documents/documents/:id" element={
+                      <RouteProtegee permission="gerer_documents">
+                        <DocumentDetail />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/documents/types-certificat" element={
+                      <RouteProtegee permission="gerer_documents">
+                        <TypesCertificat />
+                      </RouteProtegee>
+                    } />
+
+
+
+
+
+
+
+                    {/* ================ Bibliotheque ================ */}
+                    <Route path="/bibliotheque" element={
+                      <RouteProtegee permission="gerer_bibliotheque_ressources">
+                        <VueEnsemble />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/bibliotheque/catalogue" element={
+                      <RouteProtegee permission="gerer_bibliotheque_ressources">
+                        <CatalogueListe />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/bibliotheque/catalogue/nouvelle" element={
+                      <RouteProtegee permission="gerer_bibliotheque_ressources">
+                        <RessourceForm />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/bibliotheque/catalogue/:id" element={
+                      <RouteProtegee permission="gerer_bibliotheque_ressources">
+                        <RessourceDetail />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/bibliotheque/catalogue/:id/modifier" element={
+                      <RouteProtegee permission="gerer_bibliotheque_ressources">
+                        <RessourceForm />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/bibliotheque/exemplaires" element={
+                      <RouteProtegee permission="gerer_bibliotheque_exemplaires">
+                        <ExemplairesListe />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/bibliotheque/emprunts" element={
+                      <RouteProtegee permission="gerer_bibliotheque_emprunts">
+                        <EmpruntsEnCours />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/bibliotheque/emprunts/enregistrer" element={
+                      <RouteProtegee permission="gerer_bibliotheque_emprunts">
+                        <EnregistrerEmprunt />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/bibliotheque/emprunts/retours" element={
+                      <RouteProtegee permission="gerer_bibliotheque_emprunts">
+                        <EnregistrerRetour />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/bibliotheque/emprunts/retards" element={
+                      <RouteProtegee permission="gerer_bibliotheque_emprunts">
+                        <EmpruntsRetards />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/bibliotheque/emprunts/historique" element={
+                      <RouteProtegee permission="gerer_bibliotheque_emprunts">
+                        <HistoriqueEmprunts />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/bibliotheque/reservations" element={
+                      <RouteProtegee permission="gerer_bibliotheque_reservations">
+                        <ReservationsListe />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/bibliotheque/adherents" element={
+                      <RouteProtegee permission="gerer_bibliotheque_adherents">
+                        <AdherentsListe />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/bibliotheque/inventaire" element={
+                      <RouteProtegee permission="gerer_bibliotheque_inventaire">
+                        <InventairesListe />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/bibliotheque/inventaire/:id" element={
+                      <RouteProtegee permission="gerer_bibliotheque_inventaire">
+                        <InventaireDetail />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/bibliotheque/acquisitions" element={
+                      <RouteProtegee permission="gerer_bibliotheque_acquisitions">
+                        <AcquisitionsListe />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/bibliotheque/fournisseurs" element={
+                      <RouteProtegee permission="gerer_bibliotheque_fournisseurs">
+                        <FournisseursListe />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/bibliotheque/auteurs" element={
+                      <RouteProtegee permission="gerer_bibliotheque_auteurs">
+                        <AuteursListe />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/bibliotheque/editeurs" element={
+                      <RouteProtegee permission="gerer_bibliotheque_editeurs">
+                        <EditeursListe />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/bibliotheque/categories" element={
+                      <RouteProtegee permission="gerer_bibliotheque_categories">
+                        <CategoriesListe />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/bibliotheque/localisations" element={
+                      <RouteProtegee permission="gerer_bibliotheque_exemplaires">
+                        <LocalisationsListe />
+                      </RouteProtegee>
+                    } />
+
+
+
+
+
+
+
+                    {/* ================ statistiques ================ */}
+                    <Route path="/statistiques/academique" element={
+                      <RouteProtegee permission="gerer_notes">
+                        <DashboardAcademique />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/statistiques/bibliotheque" element={
+                      <RouteProtegee permission="gerer_bibliotheque_ressources">
+                        <DashboardBibliotheque />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/statistiques/documents" element={
+                      <RouteProtegee permission="gerer_documents">
+                        <DashboardDocuments />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/statistiques/finance" element={
+                      <RouteProtegee permission="gerer_finances">
+                        <DashboardFinance />
+                      </RouteProtegee>
+                    } />
+
+
+
+
+
+
+
+                    {/* ================ espace étudiant ================ */}
+                    <Route path="/espace-etudiant" element={
+                      <RouteProtegee permission="voir_espace_etudiant">
+                        <AccueilEtudiant />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/espace-etudiant/planning" element={
+                      <RouteProtegee permission="voir_espace_etudiant">
+                        <PlanningEtudiant />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/espace-etudiant/formation" element={
+                      <RouteProtegee permission="voir_espace_etudiant">
+                        <FormationEtudiant />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/espace-etudiant/finances" element={
+                      <RouteProtegee permission="voir_espace_etudiant">
+                        <FinancesEtudiant />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/espace-etudiant/documents" element={
+                      <RouteProtegee permission="voir_espace_etudiant">
+                        <DocumentsEtudiant />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/espace-etudiant/dossier" element={
+                      <RouteProtegee permission="voir_espace_etudiant">
+                        <DossierEtudiant />
+                      </RouteProtegee>
+                    } />
+                    
+
+                    <Route path="/espace-etudiant/resultats" element={
+                      <RouteProtegee permission="voir_espace_etudiant">
+                        <ResultatsEtudiant />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/espace-etudiant/releve" element={
+                      <RouteProtegee permission="voir_espace_etudiant">
+                        <MonReleve />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/mon-compte" element={
+                      <RouteProtegee>
+                        <CompteEtudiant />
+                      </RouteProtegee>
+                    } />
+
+
+
+
+
+
+
+                    {/* ================ espace formateur ================ */}
+                    <Route path="/espace-enseignant" element={
+                      <RouteProtegee permission="voir_espace_enseignant">
+                        <AccueilEnseignant />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/espace-enseignant/planning" element={
+                      <RouteProtegee permission="voir_espace_enseignant">
+                        <PlanningEnseignant />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/espace-enseignant/classes-matieres" element={
+                      <RouteProtegee permission="voir_espace_enseignant">
+                        <MesClassesMatieres />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/espace-enseignant/saisie" element={
+                      <RouteProtegee permission="voir_espace_enseignant">
+                        <SaisieNotesEnseignant />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/espace-enseignant/consultation" element={
+                      <RouteProtegee permission="voir_espace_enseignant">
+                        <ConsultationEnseignant />
+                      </RouteProtegee>
+                    } />
+                    
+                    <Route path="/espace-enseignant/etudiants" element={
+                      <RouteProtegee permission="voir_espace_enseignant">
+                        <MesEtudiants />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/espace-enseignant/etudiants/:id" element={
+                      <RouteProtegee permission="voir_espace_enseignant">
+                        <DetailEtudiantEnseignant />
+                      </RouteProtegee>
+                    } />
+
+                    <Route path="/espace-enseignant/dossier" element={
+                      <RouteProtegee permission="voir_espace_enseignant">
+                        <MonDossierEnseignant />
+                      </RouteProtegee>
+                    } />
+                    
+
+                  </Route>
+                  
+                </Routes>
+
+              </BrowserRouter>
+
+              <AlertPopup />
+            
+            </AlertProvider>
+
+          </ParametreProvider>
+        
+        </AuthProvider>
+      
+      </ThemeProvider>
+
+    </AffichageProvider>
+
   );
 
 }

@@ -10,11 +10,30 @@
   font-size: 12.5px; 
   font-weight: 700; 
   cursor: pointer; 
-  margin-bottom: 16px; 
   display: flex; 
   align-items: center; 
   gap: 6px; 
 }
+
+
+.department-card.valide {
+  background: linear-gradient(rgb(113, 255, 85), rgb(5, 150, 12), rgb(1, 87, 15));
+}
+
+.department-card.nonvalide {
+  background: linear-gradient(rgb(255, 85, 85), rgb(150, 5, 5), rgb(87, 1, 1));
+}
+
+.department-card.attente {
+  background: linear-gradient(rgb(85, 244, 255), rgb(7, 168, 180), rgb(1, 81, 87));
+}
+
+.department-card.rattrapage {
+  background: linear-gradient(rgb(224, 255, 85), rgb(180, 168, 7), rgb(87, 74, 1));
+}
+
+
+
 
 .rel-grid { 
   display: grid; 
@@ -23,7 +42,7 @@
 }
 
 .rel-identite-card { 
-  background: #fff; 
+  background: var(--card); 
   border-radius: 16px; 
   box-shadow: 0 2px 14px rgba(0,0,0,.05); 
   padding: 22px; 
@@ -33,12 +52,19 @@
   flex-wrap: wrap; 
 }
 
+.info-perso {
+  display: flex;
+  flex-direction: column;
+}
+
 .rel-avatar { 
-  width: 78px; 
-  height: 78px; 
+  width: 105px; 
+  height: 105px;
+  border: solid 2px var(--input); 
   border-radius: 50%; 
+  padding: 5px;
   object-fit: cover; 
-  background: #f3f4f9; 
+  background: var(--bg); 
   flex-shrink: 0; 
 }
 
@@ -50,16 +76,41 @@
   font-size: 24px; 
 }
 
-.rel-identite-nom h2 { 
-  font-size: 17px; 
-  font-weight: 800; 
-  color: #1f2937; 
+.rel-identite-nom { 
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+  font-size: 12px; 
+  font-weight: 500; 
 }
 
-.rel-identite-nom span { 
-  font-size: 11px; 
-  color: #16a34a; 
-  font-weight: 700; 
+.rel-identite-nom h2 { 
+  font-size: 30px; 
+  font-weight: 500; 
+  letter-spacing: 2px;
+  line-height: 45px;
+  color: var(--rext); 
+  margin-bottom: 5px;
+}
+
+
+
+.rel-identite-nom span i,
+.dl-k i {
+  margin-right: 5px;
+}
+
+
+.info-perso .dl-group h3 {
+  margin: 0px 0 8px 0;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 15px;
+  border-radius: 5px;
+  border-left: solid 2px #be5bf7;
+  background:rgba(188, 106, 255, 0.15);
+  color:#be5bf7;
 }
 
 .rel-identite-champs { 
@@ -83,11 +134,11 @@
 }
 
 .rel-banniere { 
-  border-radius: 16px; 
+  background: linear-gradient(2deg, #370866 , #b272be, #fff, #fff, #fff);
+  border-radius: 10px; 
   overflow: hidden; 
   position: relative; 
   min-height: 160px; 
-  background: linear-gradient(135deg, rgba(30,64,175,.85), rgba(59,130,246,.85)), center/cover no-repeat; 
   display: flex; 
   align-items: flex-end; 
   padding: 20px; 
@@ -99,7 +150,7 @@
   inset: 0; 
   background-size: cover; 
   background-position: center; 
-  opacity: 0.35; 
+  opacity: 0.65; 
 }
 
 .rel-banniere-citation { 
@@ -111,8 +162,84 @@
   line-height: 1.5; 
 }
 
+
+
+
+/* CARD */
+
+.card-perso-mere {
+  display: flex;
+  justify-content: space-between;
+  gap: 25px;
+  padding: 20px 20px 0 20px;
+}
+
+.card-perso{
+  max-width:350px;
+  height:350px;
+  border-radius: 10px;
+  overflow:hidden;
+  position:relative;
+  background: transparent;
+  flex-shrink:0;
+  transition: .5s;
+}
+
+.card-perso:hover {
+  transform: scale(1.05);
+}
+
+.card-img {
+  width: 100%;
+  height: 450px;
+  overflow: hidden;
+}
+
+.card-img img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display: block;
+  filter:brightness(.6);
+}
+
+.card-content-perso{
+  position:absolute;
+  bottom: 0px;
+  left: 0px;
+  text-align: left;
+  line-height: 25px;
+  background: rgb(0, 0, 0, .87);
+  width: 100%;
+  padding: 15px;
+}
+
+.card-content-perso h3{
+  color: #fff;
+  font-size: 20px;
+  font-weight: 100;
+  letter-spacing: 1px;
+  line-height: 25px;
+  text-transform: uppercase;
+}
+
+.card-content-perso p {
+  color: #fff;
+  font-size: 12px;
+  font-weight: 100;
+  letter-spacing: 1px;
+  opacity: .9;
+  font-style: italic;
+}
+
+
+
+
+
+
+
 .rel-doc-card { 
-  background: #fff; 
+  background: var(--card); 
   border-radius: 16px; 
   box-shadow: 0 2px 14px rgba(0,0,0,.05); 
   padding: 24px; 
@@ -122,54 +249,67 @@
   display: flex; 
   justify-content: space-between; 
   align-items: flex-start; 
-  border-bottom: 2px solid #f1f5f9; 
-  padding-bottom: 16px; 
-  margin-bottom: 18px; 
+  background: var(--card);
+  border-radius: 10px;
+  padding: 20px;
   flex-wrap: wrap; 
   gap: 10px; 
 }
 
 .rel-doc-institut { 
   display: flex; 
-  align-items: center; 
+  flex-wrap: wrap;
+  align-items: center;
+  border-bottom: solid 2px var(--input); 
+  padding-bottom: 15px;
   gap: 10px; 
 }
 
 .rel-doc-institut img { 
-  width: 36px; 
-  height: 36px; 
+  width: 100px; 
+  height: 100px; 
+  margin-right: 15px;
   object-fit: contain; 
 }
 
 .rel-doc-institut h4 { 
-  font-size: 13.5px; 
-  font-weight: 800; 
-  color: #1f2937; 
+  font-size: 30px; 
+  font-weight: 500;
+  font-family: 'Times New Roman', Times, serif;
+  letter-spacing: 2px; 
+  line-height: 50px;
+  color: var(--text); 
 }
 
 .rel-doc-institut p { 
-  font-size: 10px; 
+  font-size: 13px;
+  letter-spacing: 2px;
+  line-height: 20px; 
   color: #9ca3af; 
 }
 
-.rel-doc-titre-centre { text-align: center; }
 
 .rel-doc-titre-centre h2 { 
-  font-size: 17px; 
+  font-size: 25px; 
   font-weight: 800; 
-  color: #1e40af; 
-  letter-spacing: 1px; 
+  color: var(--text); 
+  letter-spacing: 2px; 
 }
 
 .rel-doc-titre-centre p { 
-  font-size: 11.5px; 
+  font-size: 13px; 
+  letter-spacing: 2px;
   color: #6b7280; 
   margin-top: 2px; 
 }
 
 .rel-doc-meta { 
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   text-align: right; 
-  font-size: 10.5px; 
+  font-size: 13px; 
+  letter-spacing: 2px;
   color: #9ca3af; 
 }
 
@@ -195,29 +335,11 @@
   color: #374151; 
 }
 
-.rel-info-ligne span:first-child { color: #9ca3af; }
-
-.rel-table { 
-  width: 100%; 
-  border-collapse: collapse; 
-  margin-bottom: 20px; 
+.rel-info-ligne span:first-child { 
+  color: #9ca3af; 
 }
 
-.rel-table th { 
-  background: #eff6ff; 
-  color: #1e40af; 
-  font-size: 10.5px; 
-  text-transform: uppercase; 
-  padding: 9px 10px; 
-  text-align: left; 
-}
 
-.rel-table td { 
-  padding: 9px 10px; 
-  font-size: 12.5px; 
-  border-bottom: 1px solid #f1f5f9; 
-  color: #374151; 
-}
 
 .rel-footer-grid { 
   display: grid; 
@@ -230,9 +352,13 @@
   padding: 14px; 
 }
 
-.rel-footer-box.bleu { background: #eff6ff; }
+.rel-footer-box.bleu { 
+  background: #eff6ff; 
+}
 
-.rel-footer-box.vert { background: #f0fdf4; }
+.rel-footer-box.vert { 
+  background: #f0fdf4; 
+}
 
 .rel-footer-box span { 
   font-size: 10.5px; 
@@ -256,12 +382,13 @@
 }
 
 .rel-side-card { 
-  background: #fff; 
-  border-radius: 16px; 
+  background: var(--card); 
+  border-radius: 15px; 
   box-shadow: 0 2px 14px rgba(0,0,0,.05); 
   padding: 18px 20px; 
-  margin-bottom: 16px; 
 }
+
+
 
 .rel-side-titre { 
   display: flex; 
@@ -269,7 +396,7 @@
   gap: 8px; 
   font-size: 13.5px; 
   font-weight: 800; 
-  color: #1f2937; 
+  color: var(--text); 
   margin-bottom: 12px; 
 }
 
@@ -277,13 +404,13 @@
   display: flex; 
   justify-content: space-between; 
   font-size: 12.5px; 
-  padding: 8px 0; 
-  border-bottom: 1px solid #f8fafc; 
+  padding: 15px 0; 
+  border-bottom: 1px solid var(--input); 
 }
 
 .rel-side-ligne:last-child { border-bottom: none; }
 
-.rel-side-ligne b { color: #1f2937; }
+.rel-side-ligne b { color: var(--text); }
 
 .rel-action-btn { 
   display: flex; 
@@ -291,9 +418,9 @@
   gap: 8px; 
   padding: 11px 14px; 
   border-radius: 10px; 
-  background: #eff6ff; 
-  color: #1e40af; 
-  border: none; 
+  background: var(--bg); 
+  color: #4441ff; 
+  border: solid 1px var(--input); 
   width: 100%; 
   font-size: 12.5px; 
   font-weight: 700; 
@@ -302,23 +429,24 @@
 }
 
 .rel-info-box { 
-  background: #f8fafc; 
-  border-radius: 12px; 
+  background: var(--bg); 
+  border-radius: 10px; 
   padding: 14px; 
   display: flex; 
   gap: 10px; 
 }
 
 .rel-info-box i { 
-  color: #6366f1; 
+  color: #787ae7; 
   font-size: 14px; 
   margin-top: 2px; 
 }
 
 .rel-info-box p { 
-  font-size: 11.5px; 
+  font-size: 12px; 
   color: #6b7280; 
-  line-height: 1.5; 
+  line-height: 1.8; 
+  letter-spacing: 1px;
 }
 
 
@@ -334,3 +462,18 @@
 }
 
 
+@media (max-width: 700px) 
+{
+  .card-perso-mere {
+    flex-direction: column;
+    padding: 0;
+  }
+
+  .dl-group {
+    padding: 0 !important;
+  }
+
+  .card-perso{
+    max-width: 100%;
+  }
+}

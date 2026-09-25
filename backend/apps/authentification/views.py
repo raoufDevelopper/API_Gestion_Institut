@@ -46,7 +46,7 @@ def login_view(request):
 
     if cache.get(f'login_bloque_compte:{email}') or cache.get(f'login_bloque_ip:{ip}'):
         return Response(
-            {'detail': "Trop de tentatives échouées. Réessayez dans 15 minutes."},
+            {'detail': "Réessayez dans 02 heurs."},
             status=status.HTTP_429_TOO_MANY_REQUESTS,
         )
 

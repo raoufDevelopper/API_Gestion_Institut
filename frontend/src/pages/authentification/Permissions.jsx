@@ -5,6 +5,8 @@ import { useAlert } from '../../context/AlertContext';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import '../../assets/css/crud.css'
 
+import { useAffichage } from '../../context/AffichageContext';
+
 
 function Permissions() {
   const [permissions, setPermissions] = useState([]);
@@ -29,6 +31,9 @@ function Permissions() {
   });
 
 
+  const { modeAffichage: vue } = useAffichage();
+
+
 
   return (
     <div className="container-principal">
@@ -40,7 +45,6 @@ function Permissions() {
             <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>Gestion des permissions</h3>
             <div className="sub">{permissions.length} permissions</div>
           </div>
-          
         </div>
         
         {/* TOOLBAR */}
@@ -58,48 +62,52 @@ function Permissions() {
           </div>
         </div>
         
-        {/* TABLE */}
-        <div className="department-card table-card">
-          <div className="table-title">
-            <h2>Liste des permissions</h2>
-            <span>{permissionsFiltrees.length} permissions</span>
-          </div>
-          <div className="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th style={{ minWidth: '400px' }}>Code</th>
-                  <th>Nom</th>
-                  <th style={{ minWidth: '150px' }}>Ajoutée le</th>
-                  <th>Description</th>
-                  <th style={{ minWidth: '50px' }}>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {permissionsFiltrees.map((p) => (
-                  <tr className="row-link" key={p.id}>
-                    <td><div className="cell-strong mono">{p.code}</div></td>
-                    <td>{p.nom}</td>
-                    <td>{new Date(p.date_ajout).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
-                    <td><div className="cell-sub description">{p.description || '—'}</div></td>
-                    <td>
-                      <button className="table-btn view" onClick={() => setPermissionEnDetail(p)}>
-                        <i className="fas fa-eye"></i> 
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-                {permissionsFiltrees.length === 0 && (
+
+
+        {vue === 'tableau' ? (
+
+          <div className="department-card table-card">
+            <div className="table-title">
+              <h2>Liste des permissions</h2>
+              <span>{permissionsFiltrees.length} permissions</span>
+            </div>
+            <div className="table-scroll">
+              <table>
+                <thead>
                   <tr>
-                    <td colSpan="5">
-                      <div className="empty">Aucune permission ne correspond à cette recherche.</div>
-                    </td>
+                    <th style={{ minWidth: '400px' }}>Code</th>
+                    <th style={{ minWidth: '400px' }}>Nom</th>
+                    <th style={{ minWidth: '150px' }}>Ajoutée le</th>
+                    <th>Description</th>
                   </tr>
-                )}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {permissionsFiltrees.map((p) => (
+                    <tr className="row-link" key={p.id} onClick={() => setPermissionEnDetail(p)} style={{ cursor: 'pointer' }}>
+                      <td><div className="cell-strong mono">{p.code}</div></td>
+                      <td>{p.nom}</td>
+                      <td>{new Date(p.date_ajout).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
+                      <td><div className="cell-sub description">{p.description || '—'}</div></td>
+                    </tr>
+                  ))}
+                  {permissionsFiltrees.length === 0 && (
+                    <tr>
+                      <td colSpan="5">
+                        <div className="empty">Aucune permission ne correspond à cette recherche.</div>
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+
+        ) : (
+
+          <div>fadil</div>
+
+        )}
+
       </div>
 
 

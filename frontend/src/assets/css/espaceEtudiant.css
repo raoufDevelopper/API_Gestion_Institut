@@ -37,6 +37,7 @@
     margin-left: 10px; 
 }
 
+
 .semaine-titre {
     margin: 15px 0 -25px 0;
     font-size: 20px;
@@ -48,9 +49,8 @@
 }
 
 .ee-planning-nav { 
-    display: flex; 
-    flex: 1;
-    align-items: center;  
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 15px;
     flex-wrap: wrap;
     margin-bottom: 8px;
@@ -84,6 +84,9 @@
     background: #a338c4;
 }
 
+#btn-download {
+    background: #02aca3;
+}
 
 
 

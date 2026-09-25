@@ -365,6 +365,29 @@ class EmploiDuTemps(models.Model):
                         "La date de début de la semaine doit être un lundi."
                     )
                 })
+
+
+        conflit = EmploiDuTemps.objects.filter(
+            semaine_debut=self.semaine_debut,
+            semaine_fin=self.semaine_fin,
+            semestre=self.semestre,
+            annee_academique=self.annee_academique,
+            classe=self.classe,
+            statut=self.statut,
+        )
+
+        # Lors d'une modification, ne pas se comparer à lui-même
+        if self.pk:
+            conflit = conflit.exclude(pk=self.pk)
+            
+        if conflit.exists():
+            raise ValidationError({
+                "__all__": (
+                    "Un emploi du temps existe déjà pour cette classe, "
+                    "cette année académique, ce semestre, cette semaine "
+                    "et ce statut."
+                )
+            })
             
 
     def save(self, *args, **kwargs):

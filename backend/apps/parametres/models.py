@@ -377,65 +377,45 @@ class Abonnement(models.Model):
     def est_actif(self):
         if not self.date_expiration:
             return False
-        return timezone.localdate() <= self.date_expiration
+        return timezone.now() <= self.date_expiration
 
     @property
     def jours_restants(self):
         if not self.date_expiration:
             return 0
-        delta = (self.date_expiration - timezone.localdate()).days
+        delta = (self.date_expiration - timezone.now()).days
         return max(delta, 0)
 
 
-    def activer_avec_code(self, code):
-        """
-        Vérifie et applique un code d'activation de 25 caractères.
-        Retourne (succes: bool, message: str).
-        """
 
-        if len(code) != 25:
-            return False, "Format de code invalide."
-
-        institut_code = code[:5]
-        date_encodee = code[5:11]
-        signature_fournie = code[11:]
-
-        if institut_code != settings.INSTITUT_LICENCE_CODE:
-            return False, "Ce code n'est pas destiné à cet institut."
-
-        payload = institut_code + date_encodee
-
-        signature_attendue = hmac.new(
-            settings.LICENCE_SECRET_KEY.encode(), payload.encode(), hashlib.sha256
-        ).hexdigest()[:14].upper()
-
-        if not hmac.compare_digest(signature_fournie.upper(), signature_attendue):
-            return False, "Code invalide ou falsifié."
-
-        try:
-            date_expiration = datetime.strptime(date_encodee, '%y%m%d').date()
-
-        except ValueError:
-            return False, "Code corrompu (date illisible)."
-        # On ne recule jamais l'expiration : on prend la plus tardive entre
-        # l'actuelle et celle du code (utile si le code est réutilisé par erreur).
-    
-        nouvelle_expiration = max(date_expiration, self.date_expiration or date_expiration)
-
-        self.date_expiration = nouvelle_expiration
-
-        self.date_derniere_activation = timezone.now()
-
-        self.dernier_code_utilise = code
-
-        self.save(update_fields=['date_expiration', 'date_derniere_activation', 'dernier_code_utilise'])
-
-        self.date_activation = timezone.now()
-
-        self.date_expiration = self.date_activation + timedelta(days=DUREE_ABONNEMENT_JOURS)  # remplace par ta durée réelle
-
-        self.save(update_fields=['date_activation', 'date_expiration', ...])  # garde tes autres champs déjà présents
-
-        return True, f"Abonnement activé jusqu'au {nouvelle_expiration.strftime('%d/%m/%Y')}."
-
-    
+def activer_avec_code(self, code):
+    """
+    Vérifie et applique un code d'activation de 25 caractères.
+    Retourne (succes: bool, message: str).
+    """
+    if len(code) != 25:
+        return False, "Format de code invalide."
+    institut_code = code[:5]
+    date_encodee = code[5:11]
+    signature_fournie = code[11:]
+    if institut_code != settings.INSTITUT_LICENCE_CODE:
+        return False, "Ce code n'est pas destiné à cet institut."
+    payload = institut_code + date_encodee
+    signature_attendue = hmac.new(
+        settings.LICENCE_SECRET_KEY.encode(), payload.encode(), hashlib.sha256
+    ).hexdigest()[:14].upper()
+    if not hmac.compare_digest(signature_fournie.upper(), signature_attendue):
+        return False, "Code invalide ou falsifié."
+    try:
+        date_expiration = datetime.strptime(date_encodee, '%y%m%d').date()
+    except ValueError:
+        return False, "Code corrompu (date illisible)."
+    # On ne recule jamais l'expiration : on prend la plus tardive entre
+    # l'actuelle et celle du code (utile si le code est réutilisé par erreur).
+    nouvelle_expiration = max(date_expiration, self.date_expiration or date_expiration)
+    self.date_expiration = nouvelle_expiration
+    self.date_activation = timezone.now()
+    self.date_derniere_activation = timezone.now()
+    self.dernier_code_utilise = code
+    self.save(update_fields=['date_expiration', 'date_activation', 'date_derniere_activation', 'dernier_code_utilise'])
+    return True, f"Abonnement activé jusqu'au {nouvelle_expiration.strftime('%d/%m/%Y')}."

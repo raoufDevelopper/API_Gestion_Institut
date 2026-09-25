@@ -1,0 +1,99 @@
+.en-page { padding: 20px; }
+
+.en-carte { 
+    background: var(--card); 
+    border-radius: 16px; 
+    box-shadow: 0 2px 14px rgba(0,0,0,.05); 
+    padding: 18px 20px; 
+}
+
+
+.en-jour-carte { 
+    background: #fff; 
+    border-radius: 12px; 
+    box-shadow: 0 2px 10px rgba(0,0,0,.05); 
+    padding: 12px; 
+    min-height: 130px; 
+}
+
+.en-jour-titre { 
+    font-size: 12px; 
+    font-weight: 700; color: #400c7c; 
+    margin-bottom: 8px; 
+    text-align: center; 
+}
+
+.en-seance-mini { 
+    background: #ede4fb; 
+    border-left: 3px solid #400c7c; 
+    border-radius: 6px; 
+    padding: 6px 8px; 
+    margin-bottom: 6px; 
+    font-size: 10.5px; 
+}
+
+.en-seance-mini b { 
+    display: block; 
+    color: #400c7c; 
+    font-size: 11px; 
+}
+
+.en-jour-vide { 
+    font-size: 10.5px; 
+    color: #d1d5db; 
+    text-align: center; 
+    margin-top: 20px; 
+}
+
+.en-planning-nav {
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    margin-bottom: 14px;
+}
+
+.en-planning-nav button { 
+    background: #f1f5f9; 
+    border: none; 
+    padding: 8px 14px; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    font-size: 12px; 
+    font-weight: 600; 
+}
+
+.en-verrou-badge { 
+    display: inline-flex; 
+    align-items: center; 
+    gap: 4px; 
+    font-size: 10px; 
+    color: #dc2626; 
+    font-weight: 700; 
+}
+
+
+
+.btn-edt-dwl {
+    display: flex;
+    width: 100%;
+    padding: 8px 15px;
+    cursor: pointer;
+
+    border: solid 1px var(--input);
+    border-radius: 5px;
+    background: var(--card);
+}
+
+.title-classe {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+@media (max-width: 900px) 
+{ 
+    .en-semaine-grille { 
+        grid-template-columns: repeat(2, 1fr); 
+    } 
+}
+

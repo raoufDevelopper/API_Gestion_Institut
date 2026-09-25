@@ -4,7 +4,12 @@ import { getUtilisateurs, creerUtilisateur, modifierUtilisateur, supprimerUtilis
 import { getRoles } from '../../api/roles';
 import { useAlert } from '../../context/AlertContext';
 import ConfirmationModal from '../../components/ConfirmationModal';
+
 import '../../assets/css/crud.css';
+import '../../assets/css/affichageBloc.css';
+
+import { useAffichage } from '../../context/AffichageContext';
+
 
 
 
@@ -146,6 +151,9 @@ function Utilisateurs() {
     
     const { total = 0, actifs = 0, desactives = 0 } = donnees.kpis;
   
+
+    const { modeAffichage: vue } = useAffichage();
+
   
   
   
@@ -186,6 +194,7 @@ function Utilisateurs() {
                 </div>
                 
                 
+
                 {/* TOOLBAR */}
                 <div className="department-toolbar">
                     <div className="toolbar-left">
@@ -197,78 +206,138 @@ function Utilisateurs() {
                 </div>
                 
                 
-                {/* TABLE */}
-                <div className="department-card table-card">
-                    
-                    <div className="table-title">
-                        <h2>Liste des utilisateurs</h2>
-                        <span>{utilisateursFiltres.length} utilisateurs</span>
-                    </div>
-                    
-                    <div className="table-scroll">
-
-                        <table>
-
-                            <thead>
-                                <tr>
-                                    <th>Utilisateur</th>
-                                    <th>Email</th>
-                                    <th>Rôle</th>
-                                    <th>Statut</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                {utilisateursFiltres.map((u) => (
-                                <tr className="row-link" key={u.id}>
-                                    <td>
-                                        <div className="cell-with-avatar">
-                                            {u.photo_profil ? (
-                                            <img src={u.photo_profil} alt="" className="avatar-mini" />
-                                            ) : (
-                                            <div className="avatar-mini avatar-placeholder"><i className="fas fa-user"></i></div>
-                                            )}
-                                            <div className="cell-strong">{u.username}</div>
-                                        </div>
-                                    </td>
-                                    <td>{u.email}</td>
-                                    <td>{u.role_nom || '—'}</td>
-                                    <td>
-                                        <span className={`badge-${u.is_active ? 'success' : 'danger'}`}>
-                                            <p className='bull'>&bull;</p>
-                                            {u.is_active ? 'Actif' : 'Désactivé'}
-                                        </span>
-                                    </td>
-                                    <td>
-                                    <button className="table-btn view" onClick={() => setUtilisateurEnDetail(u)}>
-                                        <i className="fas fa-eye"></i>
-                                    </button>
-                                    <button className="table-btn edit" onClick={() => ouvrirEdition(u)}>
-                                        <i className="fas fa-pen"></i>
-                                    </button>
-                                    <button className="table-btn delete" onClick={() => setUtilisateurASupprimer(u)}>
-                                        <i className="fas fa-trash"></i>
-                                    </button>
-                                    </td>
-                                </tr>
-                                ))}
-                                {utilisateursFiltres.length === 0 && (
-                                <tr>
-                                    <td colSpan="5">
-                                    <div className="empty">Aucun utilisateur ne correspond à cette recherche.</div>
-                                    </td>
-                                </tr>
-                                )}
-                            </tbody>
-                        
-                        </table>
-                    
-                    </div>
                 
-                </div>
+
+                {vue === 'tableau' ? (
+
+                    <div className="department-card table-card">
+                        
+                        <div className="table-title">
+                            <h2>Liste des utilisateurs</h2>
+                            <span>{utilisateursFiltres.length} utilisateurs</span>
+                        </div>
+                        
+                        <div className="table-scroll">
+
+                            <table>
+
+                                <thead>
+                                    <tr>
+                                        <th>Utilisateur</th>
+                                        <th>Email</th>
+                                        <th>Rôle</th>
+                                        <th>Statut</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {utilisateursFiltres.map((u) => (
+                                        <tr className="row-link" key={u.id}>
+                                            <td>
+                                                <div className="cell-with-avatar">
+                                                    {u.photo_profil ? (
+                                                    <img src={u.photo_profil} alt="" className="avatar-mini" />
+                                                    ) : (
+                                                    <div className="avatar-mini avatar-placeholder"><i className="fas fa-user"></i></div>
+                                                    )}
+                                                    <div className="cell-strong">{u.username}</div>
+                                                </div>
+                                            </td>
+                                            <td>{u.email}</td>
+                                            <td>{u.role_nom || '—'}</td>
+                                            <td>
+                                                <span className={`badge-${u.is_active ? 'success' : 'danger'}`}>
+                                                    <p className='bull'>&bull;</p>
+                                                    {u.is_active ? 'Actif' : 'Désactivé'}
+                                                </span>
+                                            </td>
+                                            <td>
+                                            <button className="table-btn view" onClick={() => setUtilisateurEnDetail(u)}>
+                                                <i className="fas fa-eye"></i>
+                                            </button>
+                                            <button className="table-btn edit" onClick={() => ouvrirEdition(u)}>
+                                                <i className="fas fa-pen"></i>
+                                            </button>
+                                            <button className="table-btn delete" onClick={() => setUtilisateurASupprimer(u)}>
+                                                <i className="fas fa-trash"></i>
+                                            </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {utilisateursFiltres.length === 0 && (
+                                        <tr>
+                                            <td colSpan="5">
+                                            <div className="empty">Aucun utilisateur ne correspond à cette recherche.</div>
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            
+                            </table>
+                        
+                        </div>
+                    
+                    </div>
+
+                ) : (
+
+                    <section className="grid-bloc-user" aria-label="Liste des utilisateurs">
+                       
+                        {utilisateursFiltres.map((u) => ( 
+
+                            <article class="card-bloc-user" tabindex="0" onClick={() => setUtilisateurEnDetail(u)}>
+                                <div class="card-top">
+                                    {u.photo_profil ? (
+                                        <img src={u.photo_profil} alt="" className="avatar-bloc-user" />
+                                    ) : (
+                                        <div className="avatar-bloc-user"><i className="fas fa-user"></i></div>
+                                    )}
+                                    <div className="identity">
+                                        <h3 className="name">{u.username || '—'}</h3>
+                                        <p className="email">{u.email}</p>
+                                    </div>
+                                </div>
+                                <dl className="meta">
+                                    <div className="meta-row">
+                                        <dt>Rôle</dt>
+                                        <dd>{u.role_nom || '—'}</dd>
+                                    </div>
+                                    <div className="meta-row">
+                                        <dt>Statut</dt>
+                                        <dd>
+                                            <span className={`badge-${u.is_active ? 'success' : 'danger'}`}>
+                                                <p className='bull'>&bull;</p>
+                                                {u.is_active ? 'Actif' : 'Désactivé'}
+                                            </span>
+                                        </dd>
+                                    </div>
+                                </dl>
+                                <div class="card-actions">
+                                    <button class="btn-bloc-user btn-ghost" onClick={() => ouvrirEdition(u)}>
+                                        Modifier
+                                    </button>
+                                    <button class="btn-bloc-user btn-danger-2" onClick={() => setUtilisateurASupprimer(u)}>
+                                        Supprimer
+                                    </button>
+                                </div>
+                            </article>
+
+                        ))}        
+
+                        {utilisateursFiltres.length === 0 && (
+                            <div className="empty">Aucun utilisateur ne correspond à cette recherche.</div>
+                        )}                
+
+                    </section>
+
+                )}
 
             </div>
+
+
+
+
 
 
 
@@ -322,7 +391,7 @@ function Utilisateurs() {
                             <div className="text-help">
                                 Cette adresse mail peut être differente de celle 
                                 que vous allez renseigner au niveau des informations 
-                                personnel de l'étudiant ou du personnel.
+                                personnelles de l'étudiant ou du personnel.
                             </div>
                         </div>
                        
@@ -397,45 +466,54 @@ function Utilisateurs() {
             
             {/* MODAL DETAIL */}
             <div className="department-modal" style={{ display: utilisateurEnDetail ? 'flex' : 'none' }}>
+                
                 <div className="modal-content model-detail">
-                <div className="modal-header">
-                    <h2>Détail de l'utilisateur</h2>
-                    <button onClick={() => setUtilisateurEnDetail(null)} className='btn-primary'>
-                    <i className="fas fa-times"></i>
-                    </button>
-                </div>
-                {utilisateurEnDetail && (
-                    <div className="form-grid" style={{ padding: '20px' }}>
-                    <div className="form-group" style={{ display: "flex", alignItems: "center", flexDirection: "initial", gap: "20px" }}>
-                        {utilisateurEnDetail.photo_profil ? (
-                        <img src={utilisateurEnDetail.photo_profil} alt={utilisateurEnDetail.username} className="avatar-detail" id='detail-img'/>
-                        ) : (
-                        <div className="avatar-detail avatar-placeholder"><i className="fas fa-user"></i></div>
-                        )}
-                        <label>photo de profil</label>
+                
+                    <div className="modal-header">
+                        <h2>Détail de l'utilisateur</h2>
+                        <button onClick={() => setUtilisateurEnDetail(null)} className='btn-primary'>
+                        <i className="fas fa-times"></i>
+                        </button>
                     </div>
-                    <div className="form-group">
-                        <label>Nom d'utilisateur</label>
-                        <p>{utilisateurEnDetail.username}</p>
-                    </div>
-                    <div className="form-group">
-                        <label>Email</label>
-                        <p>{utilisateurEnDetail.email}</p>
-                    </div>
-                    <div className="form-group">
-                        <label>Rôle</label>
-                        <p>{utilisateurEnDetail.role_nom || '—'}</p>
-                    </div>
-                    <div className="form-group">
-                        <label>Statut</label>
-                        <p>{utilisateurEnDetail.is_active ? 'Actif' : 'Désactivé'}</p>
-                    </div>
-                    <div className="form-group">
-                        <label>Inscrit le</label>
-                        <p>{new Date(utilisateurEnDetail.date_joined).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
-                    </div>
-                    </div>
-                )}
+
+                    {utilisateurEnDetail && (
+                        <div className="form-grid" style={{ padding: '20px' }}>
+                        <div className="form-group" style={{ display: "flex", alignItems: "center", justifyContent: 'center', borderBottom: 'none'}}>
+                            {utilisateurEnDetail.photo_profil ? (
+                            <img src={utilisateurEnDetail.photo_profil} alt={utilisateurEnDetail.username} className="avatar-detail" id='detail-img'/>
+                            ) : (
+                            <div className="avatar-detail avatar-placeholder"><i className="fas fa-user"></i></div>
+                            )}
+                        </div>
+                        <div className="form-group">
+                            <label>Nom d'utilisateur</label>
+                            <p>{utilisateurEnDetail.username}</p>
+                        </div>
+                        <div className="form-group">
+                            <label>Email</label>
+                            <p>{utilisateurEnDetail.email}</p>
+                        </div>
+                        <div className="form-group">
+                            <label>Rôle</label>
+                            <p>{utilisateurEnDetail.role_nom || '—'}</p>
+                        </div>
+                        <div className="form-group">
+                            <label>Statut</label>
+                            <p>{utilisateurEnDetail.is_active ? 'Actif' : 'Désactivé'}</p>
+                        </div>
+                        <div className="form-group">
+                            <label>Inscrit le</label>
+                            <p>{new Date(utilisateurEnDetail.date_joined).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                        </div>
+                        </div>
+                    )}
+
+                    <hr />
+                    
+                    <p id="consigne">
+                        Scrollez de haut en bas pour voir toutes les informations 
+                        de cet utilisateur.
+                    </p>
 
                 </div>
             

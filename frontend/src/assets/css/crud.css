@@ -227,13 +227,17 @@ main {
 }
 
 .kpi-icon{
-    width:65px;
-    height:65px;
+    padding: 30px;
     border-radius:50%;
     display:flex;
     justify-content:center;
     align-items:center;
-    font-size:1.4rem;
+    font-size: 20px;
+}
+
+
+.department-kpi.academique .department-card {
+    flex-wrap: wrap;
 }
 
 .department-kpi.academique .department-card .kpi-icon {
@@ -1090,6 +1094,10 @@ td:not(:first-of-type){
     .toolbar-right{
         width:100%;
     }
+
+    .bloc-semestre {
+        gap: 80px !important;
+    }
 }
 
 
@@ -1128,6 +1136,7 @@ td:not(:first-of-type){
         max-height:90vh;
         overflow-y:auto;
     }
+
 }
 
 @media(max-width:576px)
@@ -1193,4 +1202,175 @@ hr {
     font-weight: 400;
     font-family: Arial, Helvetica, sans-serif;
     letter-spacing: 1px;
+}
+
+
+
+
+
+
+
+
+
+
+
+.bloc-semestre {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+
+    gap: 40px;
+    padding: 30px 0;
+}
+
+
+/* Le cadre principal */
+.bloc-principal {
+    background: var(--card);
+    box-shadow: 0 0 20px rgba(0,0,0,.15);
+    position: relative;
+    max-width: 400px;
+    width: 500px;
+    padding: 50px 30px 60px 30px; /* Espace en haut pour le titre, en bas pour le cercle */
+    border: none;
+    border-radius: 10px;
+    color: #333;
+}
+
+
+
+/* Le titre (Semestre 1) */
+.titre-bloc {
+    position: absolute;
+    top: -25px; /* Remonte le titre pour chevaucher la bordure */
+    left: 50%;
+    transform: translateX(-50%);
+
+    background: linear-gradient(rgb(32, 168, 5), rgb(5, 150, 12), rgb(1, 87, 15));
+    color: var(--bg);
+    border-radius: 15px;
+    padding: 10px 15px;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-align: center;
+    border: solid 8px var(--bg);
+}
+
+
+/* Contenu interne */
+.bloc-principal .contenu {
+    display: flex;
+    flex-direction: column;
+}
+
+.texte-intro {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 20px;
+
+    font-style: italic;
+    font-weight: 400px;
+    font-size: 12px;
+    letter-spacing: 2px;
+    line-height: 23px;
+    color: var(--text);
+}
+
+.contenu .valeur {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+/* Lignes de notes (CC, SN, EXO) */
+.ligne-notes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    gap: 10px;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--input);
+    font-size: 13px;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 23px;
+    letter-spacing: 1px;
+    color: var(--text);
+}
+
+/* Enlever la bordure de la dernière ligne si nécessaire */
+.ligne-notes:last-child {
+    border-bottom: none;
+}
+
+
+/* Le cercle en bas */
+.cercle-bas {
+    position: absolute;
+    bottom: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 90px;
+    height: 90px;
+    border: 8px solid var(--bg);
+    border-radius: 50%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 14px;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.reuissit {
+    background: linear-gradient(rgb(32, 168, 5), rgb(5, 150, 12), rgb(1, 87, 15));
+    color: var(--bg)
+}
+
+.echouer {
+    background: linear-gradient(rgb(255, 85, 85), rgb(179, 17, 17), rgb(155, 19, 19));
+    color: var(--bg)
+}
+
+#sur-20 {
+    font-size: 8px;
+}
+
+
+
+#nom-matiere {
+    font-size: 15px;
+    font-weight: 500;
+
+    letter-spacing: 1px;
+    line-height: 25px;
+    margin-bottom: 10px;
+    color: var(--text);
+}
+
+#nom-classe {
+    font-size: 13px;
+    font-weight: 300;
+    letter-spacing: 2px;
+    line-height: 23px;
+
+    margin-bottom: 10px;
+}
+
+#effectif-classe {
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    padding: 10px;
+    border-radius: 30px;
+
+    background: var(--bg);
+}
+
+#effectif-classe i {
+    margin-right: 10px;
 }

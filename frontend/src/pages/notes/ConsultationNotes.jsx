@@ -221,7 +221,7 @@ function ConsultationNotes() {
                         </td>
                         <td>
                           {l.matieres_a_rattraper?.length > 0 ? (
-                            <span style={{ fontSize: '11px', color: '#dc2626' }}>{l.matieres_a_rattraper.join(', ')}</span>
+                            <span style={{ fontSize: '11px', color: '#ee3333' }}>{l.matieres_a_rattraper.join(', ')}</span>
                           ) : (
                             <span style={{ color: '#9ca3af' }}>—</span>
                           )}
@@ -312,4 +312,5 @@ function ConsultationNotes() {
     </div>
   );
 }
+
 export default ConsultationNotes;

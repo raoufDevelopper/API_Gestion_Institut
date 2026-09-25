@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from apps.authentification.decorators import permission_requise
 from apps.utilisateurs.models import Etudiant
-from apps.academique.models import Matiere, Seance, AnneeAcademique
+from apps.academique.models import EmploiDuTemps, Matiere, Seance, AnneeAcademique
 from apps.notes.models import Note, Deliberation, TypeEvaluation
 from apps.notes.services import calculer_moyenne_matiere, calculer_moyenne_generale, mention
 from apps.finances.models import Inscription
@@ -182,6 +182,38 @@ def planning(request):
 
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@permission_requise('voir_espace_etudiant')
+def telecharger_planning(request):
+    
+    etu = _mon_etudiant(request)
+
+    if not etu.classe:
+        return Response(
+            {'detail': 'Aucune classe associée.'},
+            status=status.HTTP_404_NOT_FOUND
+        )
+    
+    edt = EmploiDuTemps.objects.filter(
+        classe=etu.classe,
+        statut='publie'
+    ).order_by('-semaine_debut').first()
+
+    if not edt:
+        return Response(
+            {'detail': 'Aucun emploi du temps publié pour votre classe.'},
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+    from apps.academique.views import export_emploi_du_temps_pdf
+
+    return export_emploi_du_temps_pdf(request._request, edt.pk)
+
+
+
+
+
 
 
 
@@ -303,40 +335,74 @@ def mes_resultats_complet(request):
 @permission_classes([IsAuthenticated])
 @permission_requise('voir_espace_etudiant')
 def mon_releve_complet(request):
+
     """Données pour la page 'Mon relevé' — même logique de calcul que mes_resultats_complet,
     reformatée pour l'affichage type document officiel."""
+
     etu = _mon_etudiant(request)
+
     annee_id = request.GET.get('annee_academique')
+
     periode = request.GET.get('periode', 'S1')
+
     annee = AnneeAcademique.objects.filter(pk=annee_id).first() if annee_id else AnneeAcademique.objects.filter(statut=True).first()
+
+
     if not annee:
         return Response({'detail': 'Aucune année académique active.'}, status=status.HTTP_404_NOT_FOUND)
+
+
     matieres = _matieres_etudiant(etu)
+
     matieres_data = []
+
     moyennes_matieres = []
+
+
     for mat in matieres:
+
         moy = _moyenne_matiere_periode(etu, mat, annee, periode)
+
         statut = 'en_attente'
+
         if moy is not None:
             statut = 'validee' if moy >= 10 else 'non_validee'
+
         matieres_data.append({'matiere': mat.nom, 'coefficient': mat.coefficient, 'moyenne': moy, 'statut': statut})
+
         if moy is not None:
             moyennes_matieres.append(moy)
+
     deliberation = Deliberation.objects.filter(etudiant=etu, annee_academique=annee, periode=periode).first()
+
     rang, effectif = None, None
+
+
     if etu.classe:
+
         dl_classe = Deliberation.objects.filter(
             etudiant__classe=etu.classe, annee_academique=annee, periode=periode
         ).exclude(moyenne_generale__isnull=True).order_by('-moyenne_generale')
+
         effectif = dl_classe.count()
+
         ids = list(dl_classe.values_list('etudiant_id', flat=True))
+
         if etu.id in ids:
             rang = ids.index(etu.id) + 1
+
+
     decision = deliberation.decision if deliberation else 'EN_ATTENTE'
+
     non_validees = (deliberation.matieres_non_validees or []) if deliberation else []
-    decision_label = {'ADMIS': 'SEMESTRE VALIDÉ', 'RATTRAPAGE': 'RATTRAPAGE', 'REDOUBLANT': 'NON VALIDÉ', 'EN_ATTENTE': 'EN ATTENTE'}.get(decision, 'EN ATTENTE')
-    decision_sous_texte = 'Toutes les matières sont validées.' if decision == 'ADMIS' else (f"Matière(s) non validée(s) : {', '.join(non_validees)}" if non_validees else '')
+
+    decision_label = {'ADMIS': 'VALIDÉ', 'RATTRAPAGE': 'RATTRAPAGE', 'REDOUBLANT': 'NON VALIDÉ', 'EN_ATTENTE': 'EN ATTENTE'}.get(decision, 'EN ATTENTE')
+
+    decision_sous_texte = 'Toutes les matières sont validées.'
+
     taux_reussite = round((sum(1 for m in moyennes_matieres if m >= 10) / len(moyennes_matieres)) * 100, 1) if moyennes_matieres else None
+
+
     return Response({
         'etudiant': _infos_identite(etu, request),
         'annee_academique': annee.libelle, 'periode': periode,
@@ -548,7 +614,6 @@ def dossier(request):
 # ======================= MON COMPTE =======================
 @api_view(['GET', 'PATCH'])
 @permission_classes([IsAuthenticated])
-@permission_requise('voir_espace_etudiant')
 @parser_classes([MultiPartParser, FormParser])
 def mon_compte(request):
     user = request.user

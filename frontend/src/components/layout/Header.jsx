@@ -1,5 +1,6 @@
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
+import { useAffichage } from '../../context/AffichageContext';
 
 
 function Header({ onToggleSidebar, onToggleNotifications }) {
@@ -7,6 +8,8 @@ function Header({ onToggleSidebar, onToggleNotifications }) {
     const { theme, toggleTheme } = useTheme();
 
     const { notificationsNonLues } = useAuth();
+
+    const { modeAffichage, toggleAffichage } = useAffichage();
 
     return (
 
@@ -24,13 +27,13 @@ function Header({ onToggleSidebar, onToggleNotifications }) {
                         {notificationsNonLues > 0 && ( <span className="notif-badge">{notificationsNonLues}</span> )}
                     </button>
                 </div>
-                
-                <button>
-                    <i className="fas fa-shield-alt"></i>
-                </button>
-                
+
                 <button>
                     <i className="fas fa-cog"></i>
+                </button>
+
+                <button onClick={toggleAffichage} title="Changer le mode d'affichage">
+                    <i className={`fas ${modeAffichage === 'tableau' ? 'fa-grip' : 'fa-table-list'}`}></i>
                 </button>
                 
                 <button id="themeToggle" onClick={toggleTheme}>

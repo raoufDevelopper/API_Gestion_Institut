@@ -35,18 +35,21 @@ function AbonnementExpire() {
             <rect x="235" y="290" width="210" height="20" rx="8" className="hourglass-frame" />
             <rect x="235" y="430" width="210" height="20" rx="8" className="hourglass-frame" />
           </svg>
+
         </div>
+
+        
         <section className="subscription-content">
           <h1>ABONNEMENT ARRIVÉ À EXPIRATION</h1>
-          <p className="desc">
+          <p>
             Votre période d’abonnement est arrivée à son terme
             et l’accès à cette fonctionnalité n’est plus disponible.
           </p>
-          <p className="desc">
+          <p>
             Pour continuer à utiliser l’ensemble des fonctionnalités
             de la plateforme, veuillez renouveler votre abonnement.
           </p>
-          <p className="desc">
+          <p>
             Si vous avez déjà effectué un renouvellement, veuillez
             patienter quelques instants ou contacter l’administrateur.
           </p>

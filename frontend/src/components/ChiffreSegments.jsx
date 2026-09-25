@@ -10,9 +10,15 @@ const SEGMENTS_PAR_CHIFFRE = {
   8: ['a', 'b', 'c', 'd', 'e', 'f', 'g'],
   9: ['a', 'b', 'c', 'd', 'f', 'g'],
 };
+
+
 const TOUS_SEGMENTS = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
+
+
 function ChiffreSegments({ valeur }) {
+
   const actifs = SEGMENTS_PAR_CHIFFRE[valeur] ?? [];
+  
   return (
     <div className="ca-digit">
       {TOUS_SEGMENTS.map((seg) => (
@@ -20,5 +26,9 @@ function ChiffreSegments({ valeur }) {
       ))}
     </div>
   );
+  
 }
+
+
 export default ChiffreSegments;
+

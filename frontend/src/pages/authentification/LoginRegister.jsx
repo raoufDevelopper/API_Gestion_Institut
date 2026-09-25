@@ -81,7 +81,7 @@ function LoginRegister() {
     } 
     catch (err) 
     {
-      setErreurGlobale(err.response?.data?.detail || 'Une erreur est survenue.');
+      setErreurGlobale(err.response?.data?.detail || "L'adresse mail ou le mot de passe est incorrect !");
     }
 
   };

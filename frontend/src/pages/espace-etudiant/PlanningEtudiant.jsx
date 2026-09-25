@@ -1,6 +1,6 @@
-
 import { useState, useEffect } from 'react';
-import { getPlanningEtudiant } from '../../api/espaceEtudiant';
+import { getPlanningEtudiant, telechargerMonPlanning } from '../../api/espaceEtudiant';
+import { getMesEmploisDuTemps, telechargerMonPlanningEnseignant } from '../../api/espaceEnseignant';
 import Loader from '../../components/Loader';
 import '../../assets/css/crud.css';
 import '../../assets/css/espaceEtudiant.css';
@@ -33,30 +33,45 @@ function PlanningEtudiant() {
   return (
     
     <div className="container-principal">
+      
       <div className="department-page">
 
 
         <div className="panel-head">
 
           <div>
-            <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>Mon planning</h3>
+            <h3 style={{ fontSize: '20px'}}>Mon planning</h3>
             <div className="sub">Consultez votre emploi du temps de la semaine</div>
           </div>
 
           <div>
             <div className="ee-planning-nav">
+
               <button id='btn-pre' onClick={() => setOffset((o) => o - 1)}>
                 <i className="fas fa-chevron-left"></i> Précédente
               </button>
+              
               <button id='btn-maint' onClick={() => setOffset(0)}>
                 Cette semaine
               </button>
+              
               <button id='btn-suiv' onClick={() => setOffset((o) => o + 1)}>
                 Suivante <i className="fas fa-chevron-right"></i>
               </button>
+
+              <button id="btn-download" onClick={() => {
+                telechargerMonPlanning().then((res) => {
+                  const url = window.URL.createObjectURL(new Blob([res.data]));
+                  const link = document.createElement('a');
+                  link.href = url; link.setAttribute('download', 'mon_emploi_du_temps.pdf');
+                  document.body.appendChild(link); link.click(); link.remove();
+                });
+              }}>
+                <i className="fas fa-download"></i> Télécharger
+              </button>
+            
             </div>
 
-            <div className="sub">Naviguez entre plusieurs semaines en un clique.</div>
           </div>
         
         </div>
@@ -90,6 +105,7 @@ function PlanningEtudiant() {
             
               <div className="edt-jour-entete">
                 <span>{j.jour}</span>
+                <span>{new Date(j.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}</span>
               </div>
             
               <div className="ud-grid-2">

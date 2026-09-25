@@ -5,6 +5,8 @@ export const getAccueilEtudiant = () => api.get('espace-etudiant/accueil/');
 
 export const getPlanningEtudiant = (params) => api.get('espace-etudiant/planning/', { params });
 
+export const telechargerMonPlanning = () => api.get('espace-etudiant/planning/pdf/', { responseType: 'blob' });
+
 export const getResultatsEtudiant = (params) => api.get('espace-etudiant/resultats/', { params });
 
 export const getFormationEtudiant = () => api.get('espace-etudiant/formation/');

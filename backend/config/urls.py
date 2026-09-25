@@ -31,6 +31,8 @@ urlpatterns = [
     path('api/parametres/', include('apps.parametres.urls')), 
 
     path('api/espace-etudiant/', include('apps.espace_etudiant.urls')),
+
+    path('api/espace-enseignant/', include('apps.espace_enseignant.urls')),
 ]
 
 

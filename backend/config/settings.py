@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'apps.bibliotheque',
     'apps.parametres',
     'apps.espace_etudiant',
+    'apps.espace_enseignant',
 
     #applications API REST
     'rest_framework',
@@ -92,7 +93,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
     'http://127.0.0.1:5173',
-    'http://10.17.180.142:5173',
+    'http://10.86.236.142:5173',
 ]
 
 #ajouté

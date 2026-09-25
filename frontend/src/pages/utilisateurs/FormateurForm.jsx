@@ -18,7 +18,7 @@ function FormateurForm() {
   const modeEdition = !!id;
   const navigate = useNavigate();
   const { afficherSucces, afficherErreur } = useAlert();
-  const ONGLETS = ['Informations personnelles', 'Informations formateur']
+  const ONGLETS = ['Informations personnelles']
   const [ongletActif, setOngletActif] = useState(0);
   const [ongletsValides, setOngletsValides] = useState([]);
   const [apercuPhoto, setApercuPhoto] = useState(null);
@@ -406,23 +406,6 @@ function FormateurForm() {
               </div>
             )}
 
-
-            <div className="fi-footer">
-              {ongletActif > 0 && (
-                <button type="button" className="fi-btn-precedent" onClick={() => setOngletActif((o) => o - 1)}>
-                  Précédent
-                </button>
-              )}
-              {ongletActif < ONGLETS.length - 1 ? (
-                <button type="button" className="fi-btn-continuer" onClick={allerSuivant}>
-                  Continuer
-                </button>
-              ) : (
-                <button type="submit" className="fi-btn-continuer" disabled={isSubmitting}>
-                  {isSubmitting ? 'Enregistrement...' : modeEdition ? 'Enregistrer les modifications' : 'Créer le formateur'}
-                </button>
-              )}
-            </div>
           </form>
         </div>
 

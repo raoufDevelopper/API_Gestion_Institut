@@ -908,6 +908,7 @@ button:hover,
     background: radial-gradient(circle at 50% 40%, rgba(84, 35, 160, .25), transparent 45%), #260866;
 }
 
+
 .access-container {
     display: flex;
     flex-direction: column;
@@ -915,6 +916,13 @@ button:hover,
     justify-content: center;
     position: relative;
     text-align: center;
+}
+
+.subscription-page.abonnement {
+    background: linear-gradient(rgba(0,0,0, .9), rgba(0,0,0, .9)), url('/images/images4.jpeg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .illustration {
@@ -1104,8 +1112,9 @@ button:hover,
     align-items: center;
     justify-content: center;
     padding: 40px 30px;
-    background: #f4f6fa;
+    background: #e1e3e7;
 }
+
 .subscription-container {
     width: min(1200px, 100%);
     min-height: 700px;
@@ -1191,6 +1200,10 @@ button:hover,
         transform: translateY(-10px);
     }
 }
+
+
+
+
 .subscription-content {
     width: min(560px, 100%);
     display: flex;
@@ -1198,12 +1211,21 @@ button:hover,
     align-items: flex-start;
 }
 .subscription-content h1 {
-    margin-bottom: 25px;
-    color: #171a2b;
+    margin-bottom: 15px;
+    color: #242323;
     font-size: clamp(2rem, 4vw, 3rem);
     font-weight: 800;
     line-height: 1.15;
     letter-spacing: -.5px;
+}
+
+.subscription-content p {
+    color: #111827;
+    font-size: 13px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    letter-spacing: 2px;
+    line-height: 25px;
 }
 
 .subscription-button {

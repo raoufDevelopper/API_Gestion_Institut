@@ -8,6 +8,7 @@ app_name = 'espace_etudiant'
 urlpatterns = [
     path('accueil/', views.accueil, name='accueil'),
     path('planning/', views.planning, name='planning'),
+    path('planning/pdf/', views.telecharger_planning, name='telecharger_planning'),
     path('formation/', views.formation, name='formation'),
     path('finances/', views.finances, name='finances'),
     path('documents/', views.documents, name='documents'),

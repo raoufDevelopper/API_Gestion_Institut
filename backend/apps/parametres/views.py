@@ -1,5 +1,7 @@
 
 
+from datetime import datetime, time
+
 from django.contrib.auth import update_session_auth_hash
 
 from django.utils import timezone
@@ -15,6 +17,8 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from apps.authentification.decorators import permission_requise
+
+from dateutil.relativedelta import relativedelta
 
 from apps.authentification.serializers import UserSerializer
 
@@ -40,15 +44,24 @@ from .serializers import ParametreInstitutSerializer, ConfigurationMatriculeSeri
 @api_view(['GET', 'PATCH'])
 @permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
-@permission_requise('gerer_parametres')
 def parametre_institut(request):
+
     parametre = ParametreInstitut.get_solo()
+
     if request.method == 'GET':
         return Response(ParametreInstitutSerializer(parametre, context = {'request': request}).data)
+    
+
     serializer = ParametreInstitutSerializer(parametre, data=request.data, partial=True, context = {'request': request})
+
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data)
+
+
+    if request.method == 'PATCH' and not request.user.has_perm_personnalisee('gerer_parametres'):
+        return Response({'detail': "Vous n'avez pas la permission de modifier ces paramètres."}, status=status.HTTP_403_FORBIDDEN)
+
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -59,6 +72,91 @@ def parametre_institut(request):
 
 
 
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def temps_restant_abonnement(request):
+
+    abonnement = Abonnement.objects.first()
+
+    if not abonnement or not abonnement.date_expiration or not abonnement.date_activation:
+        return Response({'actif': False, 'detail': "Aucun abonnement actif."})
+
+    maintenant = timezone.now()
+
+
+    expiration = abonnement.date_expiration
+    activation = abonnement.date_activation
+    
+    if isinstance(expiration, datetime):
+        # Datetime déjà complet (avec heure précise) → on ne le modifie surtout pas
+        if timezone.is_naive(expiration):
+            expiration = timezone.make_aware(expiration)
+    else:
+        # Simple date sans heure (ancien format) → seul ce cas justifie un repli sur 23:59:59
+        expiration = timezone.make_aware(datetime.combine(expiration, time(23, 59, 59)))
+    if timezone.is_naive(activation):
+        activation = timezone.make_aware(activation)
+    
+    # Normalise : si un champ est naive (pas de tzinfo), le rendre aware dans le fuseau courant du projet
+    if timezone.is_naive(expiration):
+        expiration = timezone.make_aware(expiration)
+
+    if expiration <= maintenant:
+        return Response({
+            'actif': False, 'expire': True,
+            'date_expiration': expiration.isoformat(),
+        })
+
+
+    # ---- Décomposition calendaire réelle (mois civils, pas une approximation en /30) ----
+    mois, jours, heures, minutes, secondes = _decomposer_duree_calendaire(maintenant, expiration)
+
+    return Response({
+        'actif': True, 'expire': False,
+        'date_expiration': expiration.isoformat(),
+        'date_activation': activation.isoformat(),
+        'mois': mois, 'jours': jours, 'heures': heures, 'minutes': minutes, 'secondes': secondes,
+        'expiration_epoch_ms': int(expiration.timestamp() * 1000),  # ancre immuable pour le frontend
+    })
+
+
+
+
+def _decomposer_duree_calendaire(debut, fin):
+    """Décompose l'intervalle [debut, fin] en mois civils réels + reste en jours/heures/min/sec."""
+
+    mois = (fin.year - debut.year) * 12 + (fin.month - debut.month)
+
+    # Ajuste si le jour du mois de fin n'est pas encore atteint (ex: 15 jan → 10 mars = 1 mois, pas 2)
+    date_test = debut.replace(year=debut.year + (debut.month - 1 + mois) // 12, month=(debut.month - 1 + mois) % 12 + 1)
+
+    try:
+        date_test = date_test.replace(day=min(debut.day, 28))  # simplifié pour éviter les erreurs de fin de mois
+
+    except ValueError:
+        pass
+
+    if date_test > fin:
+        mois -= 1
+
+
+    # Point de départ = debut + mois entiers, puis reste en jours/h/min/sec
+    point_apres_mois = debut + relativedelta(months = mois)
+
+    reste = fin - point_apres_mois
+
+    secondes_totales = int(reste.total_seconds())
+
+    jours = secondes_totales // 86400
+
+    heures = (secondes_totales % 86400) // 3600
+
+    minutes = (secondes_totales % 3600) // 60
+
+    secondes = secondes_totales % 60
+
+    return max(mois, 0), max(jours, 0), heures, minutes, secondes
 
     
 

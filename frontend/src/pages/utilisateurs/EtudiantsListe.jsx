@@ -8,6 +8,9 @@ import { STATUTS_ETUDIANT, BADGE_STATUT_ETUDIANT } from './utilisateursConstante
 import '../../assets/css/crud.css';
 
 
+
+
+
 function EtudiantsListe() {
   const [etudiants, setEtudiants] = useState([]);
   const [recherche, setRecherche] = useState('');
@@ -62,32 +65,45 @@ function EtudiantsListe() {
           </button>
         </div>
         
-        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))' }}>
-            <div className="department-card">
-                <div className="kpi-icon blue"><i className="fas fa-user-graduate"></i></div>
-                <div className="count-top"><h2>{etudiants.length}</h2><span>Total</span></div>
-            </div>
-            <div className="department-card">
-                <div className="kpi-icon green"><i className="fas fa-check-circle"></i></div>
-                <div className="count-top"><h2>{nbActif}</h2><span>Actifs</span></div>
-            </div>
-            <div className="department-card">
-                <div className="kpi-icon violet"><i className="fas fa-pause-circle"></i></div>
-                <div className="count-top"><h2>{nbAbandon}</h2><span>Abandon</span></div>
-            </div>
-            <div className="department-card">
-                <div className="kpi-icon aqua"><i className="fas fa-graduation-cap"></i></div>
-                <div className="count-top"><h2>{nbDiplome}</h2><span>Diplômés</span></div>
-            </div>
-            <div className="department-card">
-                <div className="kpi-icon red"><i className="fas fa-ban"></i></div>
-                <div className="count-top"><h2>{nbExclu}</h2><span>Exclus</span></div>
-            </div>
-            <div className="department-card">
-                <div className="kpi-icon orange"><i className="fas fa-door-closed"></i></div>
-                <div className="count-top"><h2>{nbDemissionnaire}</h2><span>Démissionnaires</span></div>
-            </div>
+
+
+        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
+          <div className="department-card">
+            <div className="kpi-icon blue"><i className="fas fa-user-graduate"></i></div>
+            <div className="count-top"><h2>{etudiants.length}</h2><span>Total</span></div>
+          </div>
+          <div className="department-card">
+            <div className="kpi-icon green"><i className="fas fa-check-circle"></i></div>
+            <div className="count-top"><h2>{nbActif}</h2><span>Actifs</span></div>
+          </div>
+          <div className="department-card">
+            <div className="kpi-icon violet"><i className="fas fa-pause-circle"></i></div>
+            <div className="count-top"><h2>{nbAbandon}</h2><span>Abandon</span></div>
+          </div>
         </div>
+
+
+        <div className="department-kpi" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
+          <div className="department-card">
+            <div className="kpi-icon aqua"><i className="fas fa-graduation-cap"></i></div>
+            <div className="count-top"><h2>{nbDiplome}</h2><span>Diplômés</span></div>
+          </div>
+          <div className="department-card">
+            <div className="kpi-icon red"><i className="fas fa-ban"></i></div>
+            <div className="count-top"><h2>{nbExclu}</h2><span>Exclus</span></div>
+          </div>
+          <div className="department-card">
+            <div className="kpi-icon orange"><i className="fas fa-door-closed"></i></div>
+            <div className="count-top"><h2>{nbDemissionnaire}</h2><span>Démissionnaires</span></div>
+          </div>
+        </div>
+
+
+
+
+
+
+
 
         <div className="department-toolbar">
           <div className="toolbar-left">
